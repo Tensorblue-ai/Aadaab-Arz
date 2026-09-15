@@ -1272,6 +1272,18 @@ a { -webkit-tap-highlight-color: transparent; }
   background: linear-gradient(180deg, rgb(8 5 3 / 58%), rgb(8 5 3 / 88%));
 }
 
+.foreign-link {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius: 999px;
+  color: var(--gold);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .archive-layout,
 .guidelines-layout,
 .join-layout {
@@ -1699,6 +1711,7 @@ a { -webkit-tap-highlight-color: transparent; }
 
   .main-nav,
   .join-button,
+  .foreign-link,
   .sound-toggle > span:last-child { display: none; }
 
   .header-actions { gap: 0.25rem; }
