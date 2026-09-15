@@ -14,10 +14,13 @@ const SCENES = [
   { id: 'stories', label: 'Stories' },
   { id: 'craft', label: 'Craft' },
   { id: 'community', label: 'Community' },
-  { id: 'invitation', label: 'Invitation' },
+  { id: 'archive', label: 'Archive' },
+  { id: 'guidelines', label: 'Guidelines' },
+  { id: 'join', label: 'Join' },
+  { id: 'contact', label: 'Contact' },
 ] as const;
 
-const DARK_SCENES = new Set([1, 2, 3, 5, 6]);
+const DARK_SCENES = new Set([1, 2, 3, 5, 6, 7, 8, 9]);
 
 type PanelKey =
   | 'event-walk'
@@ -152,6 +155,22 @@ const STORY_LINKS = [
   { key: 'story-craft' as const, number: '03', title: 'Craft Traditions of Awadh' },
 ];
 
+const ARCHIVE_CATEGORIES = [
+  ['Heritage & Architecture', 'Historic buildings, monuments, gateways, neighbourhoods and restoration stories.'],
+  ['History', 'People, documents, discoveries, references and original research connected to Lucknow.'],
+  ['Craft', 'Chikankari, traditional craftsmanship, artisans, techniques and workshops.'],
+  ['Music & Dance', 'Musical traditions, performers, instruments, dance forms and cultural performances.'],
+  ['Wildlife & Nature', 'Natural spaces, gardens, landscapes and Lucknow’s ecological heritage.'],
+  ['Memories', 'Photographs, family stories, neighbourhood histories and everyday moments.'],
+] as const;
+
+const GUIDELINES = [
+  ['Be respectful', 'Honour people, places, traditions and different perspectives.'],
+  ['Be relevant', 'Share content that adds value to conversations around Lucknow and Awadh.'],
+  ['Be responsible', 'Check information before sharing it and credit reliable sources.'],
+  ['Respect privacy', 'Do not share private information or identifiable stories without permission.'],
+] as const;
+
 function Rosette({ small = false }: { small?: boolean }) {
   return (
     <span className={small ? 'rosette rosette--small' : 'rosette'} aria-hidden="true">
@@ -282,20 +301,44 @@ function ContributionForm() {
         <input name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
       </label>
       <label>
-        What would you like to share?
-        <select name="contribution" defaultValue="memory">
-          <option value="memory">A family memory</option>
-          <option value="photograph">A photograph</option>
-          <option value="craft">A craft or maker</option>
-          <option value="place">A place worth remembering</option>
-          <option value="music">A song, verse or performance</option>
-        </select>
+        Phone number <span>Optional</span>
+        <input name="phone" type="tel" autoComplete="tel" placeholder="Your phone number" />
       </label>
       <label>
-        A short note
-        <textarea name="note" rows={4} placeholder="Tell us what makes it part of your Lucknow…" />
+        City / Location
+        <input name="city" autoComplete="address-level2" required placeholder="Your city or location" />
       </label>
-      <button className="primary-action" type="submit">Begin your contribution <span>→</span></button>
+      <label>
+        How did you hear about Aadaab Arz Lucknow?
+        <select name="source" defaultValue="">
+          <option value="" disabled>Select an option</option>
+          <option value="friend">Friend or family</option>
+          <option value="social">Social media</option>
+          <option value="event">A community event</option>
+          <option value="search">Online search</option>
+        </select>
+      </label>
+      <label className="form-wide">
+        Why do you want to join the community?
+        <textarea name="reason" rows={3} required placeholder="Share a few lines about your interest in Lucknow and Awadh…" />
+      </label>
+      <fieldset className="form-wide topic-fieldset">
+        <legend>What topics interest you most?</legend>
+        <div className="topic-options">
+          {ARCHIVE_CATEGORIES.map(([title]) => (
+            <label key={title}><input type="checkbox" name="topics" value={title} />{title}</label>
+          ))}
+        </div>
+      </fieldset>
+      <label className="form-wide">
+        Do you have something to contribute? <span>Optional</span>
+        <input name="contribution" placeholder="Stories, research, photographs, documents or skills" />
+      </label>
+      <label className="form-wide consent-label">
+        <input type="checkbox" name="guidelines" required />
+        I have read and agree to follow the Community Guidelines.
+      </label>
+      <button className="primary-action" type="submit">Request to join the community <span>→</span></button>
     </form>
   );
 }
@@ -431,14 +474,15 @@ function Header({
           <a href="#heritage" aria-current={active <= 1 ? 'page' : undefined}>Explore Lucknow</a>
           <a href="#events" aria-current={active === 2 ? 'page' : undefined}>Events</a>
           <a href="#stories" aria-current={active === 3 || active === 4 ? 'page' : undefined}>Stories</a>
-          <a href="#community" aria-current={active >= 5 ? 'page' : undefined}>Community</a>
+          <a href="#community" aria-current={active >= 5 && active <= 8 ? 'page' : undefined}>Community</a>
+          <a href="#contact" aria-current={active === 9 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
           <button className="sound-toggle" type="button" onClick={onSound} aria-pressed={soundOn} aria-label={soundOn ? 'Turn ambient sound off' : 'Turn ambient sound on'}>
             <span aria-hidden="true">{soundOn ? '◖))' : '◖·'}</span>
             <span>{soundOn ? 'Sound on' : 'Sound off'}</span>
           </button>
-          <a className="join-button" href="#community">Join the community</a>
+          <a className="join-button" href="#join">Join the community</a>
           <button className="menu-button" type="button" onClick={onMenu} aria-expanded={menuOpen} aria-controls="mobile-menu">
             <span /><span /><span className="sr-only">Menu</span>
           </button>
@@ -766,8 +810,59 @@ export default function ImmersiveExperience() {
         <div className="floating-seal floating-seal--two" aria-hidden="true"><Rosette /></div>
       </section>
 
-      <section className="scene invitation-scene scene--dark" id="invitation" data-scene="6" aria-labelledby="invitation-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 6} position="center" className="invitation-background" />
+      <section className="scene archive-scene scene--dark" id="archive" data-scene="6" aria-labelledby="archive-title">
+        <SceneBackground src="/images/community/archive-collage.webp" active={activeScene === 6} position="center" />
+        <div className="archive-shade" aria-hidden="true" />
+        <div className="archive-layout">
+          <div className="archive-intro">
+            <p className="scene-eyebrow"><span />A living archive</p>
+            <h2 id="archive-title">Bring something<br />to the archive.</h2>
+            <p>Some of Lucknow’s most valuable stories live in family albums, neighbourhood memories, traditional crafts and the people who carry them forward.</p>
+          </div>
+          <div className="archive-grid">
+            {ARCHIVE_CATEGORIES.map(([title, body], index) => (
+              <article key={title}>
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{body}</p>
+                <a href="#join">Explore <b aria-hidden="true">→</b></a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="scene guidelines-scene scene--dark" id="guidelines" data-scene="7" aria-labelledby="guidelines-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 7} position="center" />
+        <div className="guidelines-shade" aria-hidden="true" />
+        <div className="guidelines-layout">
+          <p className="scene-eyebrow"><span />Community guidelines<span /></p>
+          <h2 id="guidelines-title">Aadaab begins<br />with respect.</h2>
+          <p>Help us keep this a thoughtful, welcoming and trustworthy space for conversations about Lucknow.</p>
+          <div className="guidelines-grid">
+            {GUIDELINES.map(([title, body], index) => (
+              <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></article>
+            ))}
+          </div>
+          <a className="primary-action" href="#join">I understand — continue <span>→</span></a>
+        </div>
+      </section>
+
+      <section className="scene join-scene scene--dark" id="join" data-scene="8" aria-labelledby="join-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 8} position="center" />
+        <div className="join-shade" aria-hidden="true" />
+        <div className="join-layout">
+          <div className="join-heading">
+            <p className="scene-eyebrow"><span />Aadaab Arz · Lucknow<span /></p>
+            <h2 id="join-title">Join the community.</h2>
+            <p>Become part of a growing community that celebrates, documents and preserves the heritage and culture of Lucknow and Awadh.</p>
+          </div>
+          <div className="join-form-shell"><ContributionForm /></div>
+        </div>
+      </section>
+
+      <section className="scene invitation-scene scene--dark" id="contact" data-scene="9" aria-labelledby="invitation-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 9} position="center" className="invitation-background" />
         <div className="invitation-shade" aria-hidden="true" />
         <motion.div
           className="invitation-copy"
@@ -781,14 +876,14 @@ export default function ImmersiveExperience() {
           <h2 id="invitation-title">Preserve the past.<br />Celebrate the present.<br />Carry Lucknow forward.</h2>
           <p>Join a thoughtful community for the heritage and culture of Lucknow & Awadh.</p>
           <div className="invitation-actions">
-            <button className="primary-action" type="button" onClick={() => setPanel('community')}>Join the community <span>→</span></button>
+            <a className="primary-action" href="#join">Join the community <span>→</span></a>
             <a className="ghost-action" href="#salaam">Return to the beginning <span>↑</span></a>
           </div>
         </motion.div>
         <footer className="site-footer">
           <span>© 2026 Aadaab Arz Lucknow</span>
           <span>Made with care in Lucknow</span>
-          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="#community">Community</a></nav>
+          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
         </footer>
       </section>
 
