@@ -1980,6 +1980,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .managed-event-hero dt { color: #d2aa68; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
 .managed-event-hero dd { margin: 0; color: #eee7df; }
 .managed-event-action { display: inline-flex; align-items: center; justify-content: space-between; gap: 2rem; min-height: 3.2rem; padding: 0.8rem 1.2rem; border: 1px solid #d2aa68; background: #d2aa68; color: #17100c; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.1em; text-decoration: none; text-transform: uppercase; }
+.managed-event-action.is-placeholder { cursor: default; opacity: 0.72; }
 .managed-event-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 390px); gap: clamp(2rem, 7vw, 7rem); max-width: 1280px; margin: auto; padding: clamp(5rem, 9vw, 9rem) clamp(1.25rem, 5vw, 5rem); }
 .managed-event-body article { max-width: 760px; }
 .managed-event-body h2, .managed-event-gallery h2 { margin: 0.8rem 0 2rem; font-size: clamp(2.8rem, 5vw, 5.4rem); }
@@ -1987,6 +1988,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .managed-event-payment { align-self: start; padding: 2rem; border: 1px solid #b58a4355; background: #fffaf1; }
 .managed-event-payment h2 { margin: 0.3rem 0 1.5rem; font-size: 2.8rem; }
 .managed-event-payment img { width: min(100%, 280px); aspect-ratio: 1; margin: 0 auto 1.5rem; object-fit: contain; background: white; }
+.managed-payment-placeholder { display: grid; width: min(100%, 280px); aspect-ratio: 1; margin: 0 auto 1.5rem; place-content: center; border: 1px dashed #b58a4388; background: #f4ead8; color: #8a682f; text-align: center; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; }
 .managed-event-payment > p:not(.managed-event-eyebrow) { display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.8rem; border-top: 1px solid #58391f22; font-size: 0.85rem; }
 .managed-event-payment strong { color: #8a682f; text-transform: uppercase; }
 .managed-event-content { max-width: 980px; margin: auto; padding: 0 clamp(1.25rem, 5vw, 5rem) clamp(5rem, 9vw, 9rem); }

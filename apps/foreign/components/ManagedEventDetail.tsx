@@ -55,16 +55,14 @@ export default function ManagedEventDetail() {
   if (!event) return <main className="managed-event-state"><p>Loading event…</p></main>;
 
   const paragraphs = (event.fullDescription || event.description).split(/\n+/).filter(Boolean);
-  const showPayment = event.upiId || event.qrImageUrl || event.paymentAmount;
-
   return <Shell active="events"><main className="managed-event-page">
     <section className="managed-event-hero">
-      <div><p className="eyebrow">Aadaab Arz · Gathering</p><h1>{event.title}</h1><p>{event.description}</p><dl><div><dt>Date</dt><dd>{event.dateLabel}</dd></div><div><dt>Time</dt><dd>{event.time}</dd></div><div><dt>Venue</dt><dd>{event.place}</dd></div></dl><div className="managed-event-actions">{event.registrationUrl && <a className="button" href={event.registrationUrl} target="_blank" rel="noreferrer">Join this gathering <span>↗</span></a>}<a className="outline" href="/events">Back to Events</a></div></div>
+      <div><p className="eyebrow">Aadaab Arz · Gathering</p><h1>{event.title}</h1><p>{event.description}</p><dl><div><dt>Date</dt><dd>{event.dateLabel}</dd></div><div><dt>Time</dt><dd>{event.time}</dd></div><div><dt>Venue</dt><dd>{event.place}</dd></div></dl><div className="managed-event-actions">{event.registrationUrl ? <a className="button" href={event.registrationUrl} target="_blank" rel="noreferrer">Join this gathering <span>↗</span></a> : <span className="button is-placeholder" aria-disabled="true">Registration opening soon</span>}<a className="outline" href="/events">Back to Events</a></div></div>
       <div className="managed-event-cover"><img src={event.imageUrl} alt={event.title} /><blockquote>People · Place · Purpose</blockquote></div>
     </section>
     <section className="managed-event-body">
       <article><p className="eyebrow">A closer look</p><h2>More than an event.<br />A living experience.</h2>{paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article>
-      {showPayment && <aside className="managed-event-payment"><p className="eyebrow">Registration payment</p><h2>Pay by UPI</h2>{event.qrImageUrl && <img src={event.qrImageUrl} alt="UPI payment QR code" />}{event.paymentAmount && <p><strong>Fee</strong><span>{event.paymentAmount}</span></p>}{event.upiId && <p><strong>UPI ID</strong><span>{event.upiId}</span></p>}</aside>}
+      <aside className="managed-event-payment"><p className="eyebrow">Registration payment</p><h2>Pay by UPI</h2>{event.qrImageUrl ? <img src={event.qrImageUrl} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}<p><strong>Fee</strong><span>{event.paymentAmount || 'To be announced'}</span></p><p><strong>UPI ID</strong><span>{event.upiId || 'Coming soon'}</span></p></aside>
     </section>
     <section className="managed-event-features"><div><span>✣</span><h3>Meet Local People</h3><p>Real people, real stories</p></div><div><span>◫</span><h3>Living Traditions</h3><p>See heritage in action</p></div><div><span>◌</span><h3>Meaningful Conversations</h3><p>Ask, learn and connect</p></div><div><span>◇</span><h3>Support Heritage</h3><p>Help keep traditions alive</p></div></section>
     {event.contentBlocks?.length > 0 && <section className="managed-event-content">{event.contentBlocks.map((block) => <EventContentBlock key={block.id} block={block} />)}</section>}

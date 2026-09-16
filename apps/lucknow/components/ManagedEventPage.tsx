@@ -60,8 +60,6 @@ export default function ManagedEventPage() {
   if (!event) return <main className="managed-event-state"><p>Loading event…</p></main>;
 
   const paragraphs = (event.fullDescription || event.description).split(/\n+/).filter(Boolean);
-  const showPayment = event.upiId || event.qrImageUrl || event.paymentAmount;
-
   return (
     <div className="managed-event-page">
       <header className="managed-event-header">
@@ -76,7 +74,7 @@ export default function ManagedEventPage() {
             <h1>{event.title}</h1>
             <p>{event.description}</p>
             <dl><div><dt>Date</dt><dd>{event.dateLabel}</dd></div><div><dt>Time</dt><dd>{event.time}</dd></div><div><dt>Venue</dt><dd>{event.place}</dd></div></dl>
-            {event.registrationUrl && <a className="managed-event-action" href={event.registrationUrl} target="_blank" rel="noreferrer">Register for this event <span>↗</span></a>}
+            {event.registrationUrl ? <a className="managed-event-action" href={event.registrationUrl} target="_blank" rel="noreferrer">Register for this event <span>↗</span></a> : <span className="managed-event-action is-placeholder" aria-disabled="true">Registration opening soon</span>}
           </div>
         </section>
 
@@ -86,13 +84,13 @@ export default function ManagedEventPage() {
             <h2>Everything you need to know.</h2>
             {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </article>
-          {showPayment && <aside className="managed-event-payment">
+          <aside className="managed-event-payment">
             <p className="managed-event-eyebrow">Registration payment</p>
             <h2>Pay by UPI</h2>
-            {event.qrImageUrl && <img src={event.qrImageUrl} alt="UPI payment QR code" />}
-            {event.paymentAmount && <p><strong>Fee</strong><span>{event.paymentAmount}</span></p>}
-            {event.upiId && <p><strong>UPI ID</strong><span>{event.upiId}</span></p>}
-          </aside>}
+            {event.qrImageUrl ? <img src={event.qrImageUrl} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}
+            <p><strong>Fee</strong><span>{event.paymentAmount || 'To be announced'}</span></p>
+            <p><strong>UPI ID</strong><span>{event.upiId || 'Coming soon'}</span></p>
+          </aside>
         </section>
 
         {event.contentBlocks?.length > 0 && <section className="managed-event-content">
