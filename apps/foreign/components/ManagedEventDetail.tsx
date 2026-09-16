@@ -59,13 +59,14 @@ export default function ManagedEventDetail() {
 
   return <Shell active="events"><main className="managed-event-page">
     <section className="managed-event-hero">
-      <div><p className="eyebrow">Aadaab Arz · Gathering</p><h1>{event.title}</h1><p>{event.description}</p><dl><div><dt>Date</dt><dd>{event.dateLabel}</dd></div><div><dt>Time</dt><dd>{event.time}</dd></div><div><dt>Venue</dt><dd>{event.place}</dd></div></dl>{event.registrationUrl && <a className="button" href={event.registrationUrl} target="_blank" rel="noreferrer">Register for this event <span>↗</span></a>}</div>
-      <img src={event.imageUrl} alt={event.title} />
+      <div><p className="eyebrow">Aadaab Arz · Gathering</p><h1>{event.title}</h1><p>{event.description}</p><dl><div><dt>Date</dt><dd>{event.dateLabel}</dd></div><div><dt>Time</dt><dd>{event.time}</dd></div><div><dt>Venue</dt><dd>{event.place}</dd></div></dl><div className="managed-event-actions">{event.registrationUrl && <a className="button" href={event.registrationUrl} target="_blank" rel="noreferrer">Join this gathering <span>↗</span></a>}<a className="outline" href="/events">Back to Events</a></div></div>
+      <div className="managed-event-cover"><img src={event.imageUrl} alt={event.title} /><blockquote>People · Place · Purpose</blockquote></div>
     </section>
     <section className="managed-event-body">
-      <article><p className="eyebrow">About the gathering</p><h2>Everything you need to know.</h2>{paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article>
+      <article><p className="eyebrow">A closer look</p><h2>More than an event.<br />A living experience.</h2>{paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</article>
       {showPayment && <aside className="managed-event-payment"><p className="eyebrow">Registration payment</p><h2>Pay by UPI</h2>{event.qrImageUrl && <img src={event.qrImageUrl} alt="UPI payment QR code" />}{event.paymentAmount && <p><strong>Fee</strong><span>{event.paymentAmount}</span></p>}{event.upiId && <p><strong>UPI ID</strong><span>{event.upiId}</span></p>}</aside>}
     </section>
+    <section className="managed-event-features"><div><span>✣</span><h3>Meet Local People</h3><p>Real people, real stories</p></div><div><span>◫</span><h3>Living Traditions</h3><p>See heritage in action</p></div><div><span>◌</span><h3>Meaningful Conversations</h3><p>Ask, learn and connect</p></div><div><span>◇</span><h3>Support Heritage</h3><p>Help keep traditions alive</p></div></section>
     {event.contentBlocks?.length > 0 && <section className="managed-event-content">{event.contentBlocks.map((block) => <EventContentBlock key={block.id} block={block} />)}</section>}
     {event.gallery.length > 0 && <section className="managed-event-gallery"><p className="eyebrow">Event gallery</p><h2>A glimpse of the experience.</h2><div>{event.gallery.map((image, index) => <img key={image} src={image} alt={`${event.title} gallery ${index + 1}`} />)}</div></section>}
   </main></Shell>;
