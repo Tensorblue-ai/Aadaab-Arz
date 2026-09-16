@@ -14,7 +14,7 @@
           <span class="mark">✣</span>
           <p class="eyebrow">Aadaab Arz</p>
           <h1>Content Admin</h1>
-          <p>Sign in to manage events and photographs across both websites.</p>
+          <p>Sign in to manage content across both websites.</p>
           <form id="login-form">
             <label>Username<input name="username" autocomplete="username" required /></label>
             <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
@@ -24,57 +24,14 @@
         </div>
       </section>
 
-      <section id="dashboard-view" class="dashboard" hidden>
+      <section id="dashboard-view" class="dashboard admin-home" hidden>
         <header>
-          <div><span class="mark">✣</span><div><p class="eyebrow">Aadaab Arz</p><h1>Events & Media</h1></div></div>
+          <div><span class="mark">✣</span><div><p class="eyebrow">Aadaab Arz</p><h1>Admin Home</h1></div></div>
           <button id="logout-button" class="secondary">Sign out</button>
         </header>
-        <div class="dashboard-grid">
-          <form id="event-form" class="editor" enctype="multipart/form-data">
-            <div class="editor-heading"><div><p class="eyebrow">Publish</p><h2 id="form-title">Add an event</h2></div><button type="button" id="cancel-edit" class="text-button" hidden>Cancel edit</button></div>
-            <input type="hidden" name="id" />
-            <div class="form-grid">
-              <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
-              <label>Display order<input name="sortOrder" type="number" value="0" /></label>
-              <label class="wide">Event title<input name="title" required placeholder="Heritage Walk" /></label>
-              <label>Event date<input name="eventDate" type="date" required /></label>
-              <label>Start time<input name="startTime" type="time" required /></label>
-              <label>End time<input name="endTime" type="time" required /></label>
-              <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
-              <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>
-              <label class="wide">Full event details<textarea name="fullDescription" rows="8" placeholder="Complete information shown on the event page"></textarea></label>
-              <section class="wide page-builder" aria-labelledby="page-builder-title">
-                <div class="builder-heading"><div><p class="eyebrow">Event page</p><h3 id="page-builder-title">Build page sections</h3></div><small>Event title is the H1. Add and arrange sections below it.</small></div>
-                <div id="content-blocks" class="content-blocks"></div>
-                <div class="block-picker" aria-label="Add a section">
-                  <span>Add section</span>
-                  <button type="button" data-add-block="heading">Heading</button>
-                  <button type="button" data-add-block="text">Text</button>
-                  <button type="button" data-add-block="image">Image</button>
-                  <button type="button" data-add-block="video">Video</button>
-                  <button type="button" data-add-block="quote">Quote</button>
-                  <button type="button" data-add-block="callout">Callout</button>
-                  <button type="button" data-add-block="list">List</button>
-                  <button type="button" data-add-block="divider">Divider</button>
-                </div>
-                <input id="content-json" name="contentJson" type="hidden" value="[]" />
-              </section>
-              <label class="wide">Registration link<input name="registrationUrl" type="url" placeholder="https://forms.example.com/register" /></label>
-              <label>UPI ID<input name="upiId" placeholder="name@bank" /></label>
-              <label>Payment amount / fee<input name="paymentAmount" placeholder="₹500 per person" /></label>
-              <label class="wide upload">Event cover photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Used on the card and page hero · maximum 8 MB</small></label>
-              <label class="wide upload">UPI payment QR<input name="qrImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Optional · uploading a new QR replaces the current one</small></label>
-              <label class="wide publish"><input name="removeQr" type="checkbox" /> Remove current payment QR</label>
-              <label class="wide upload">Event gallery<input name="gallery" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" /><small>Up to 8 images · a new upload replaces the current gallery</small></label>
-              <label class="publish"><input name="published" type="checkbox" checked /> Published</label>
-            </div>
-            <p class="message" id="form-message" role="status"></p>
-            <button type="submit" id="save-button">Publish event <span>→</span></button>
-          </form>
-          <section class="listing">
-            <div class="listing-heading"><div><p class="eyebrow">Live content</p><h2>Current events</h2></div><button id="refresh-button" class="secondary">Refresh</button></div>
-            <div id="events-list" class="events-list"></div>
-          </section>
+        <div class="admin-home-grid">
+          <a class="admin-link-card" href="/admin/create-event"><span>01</span><p class="eyebrow">Events</p><h2>Create an event</h2><p>Add the card, event page, registration, payment and media.</p><strong>Open editor →</strong></a>
+          <a class="admin-link-card" href="/admin/current-events"><span>02</span><p class="eyebrow">Live content</p><h2>Current events</h2><p>Review, edit or delete events from both websites.</p><strong>Manage events →</strong></a>
         </div>
       </section>
     </main>

@@ -20,14 +20,21 @@ async function request(url, options = {}) {
   return body;
 }
 
-function showLogin() { loginView.hidden = false; dashboardView.hidden = true; }
-function showDashboard() { loginView.hidden = true; dashboardView.hidden = false; loadEvents(); }
+function showLogin() { if (loginView) loginView.hidden = false; if (dashboardView) dashboardView.hidden = true; }
+function showDashboard() { if (loginView) loginView.hidden = true; if (dashboardView) dashboardView.hidden = false; if (eventsList) loadEvents(); }
 
 async function checkSession() {
-  try { await request('/admin/api/session'); showDashboard(); } catch { showLogin(); }
+  try {
+    await request('/admin/api/session');
+    showDashboard();
+    if (eventForm) loadEventForEditing();
+  } catch {
+    if (loginView) showLogin();
+    else window.location.replace('/admin');
+  }
 }
 
-loginForm.addEventListener('submit', async (event) => {
+loginForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   loginMessage.textContent = '';
   const data = Object.fromEntries(new FormData(loginForm));
@@ -38,13 +45,14 @@ loginForm.addEventListener('submit', async (event) => {
   } catch (error) { loginMessage.textContent = error.message; }
 });
 
-document.querySelector('#logout-button').addEventListener('click', async () => {
+document.querySelector('#logout-button')?.addEventListener('click', async () => {
   await request('/admin/api/logout', { method: 'POST' });
-  showLogin();
+  window.location.replace('/admin');
 });
-document.querySelector('#refresh-button').addEventListener('click', loadEvents);
+document.querySelector('#refresh-button')?.addEventListener('click', loadEvents);
 
 function render() {
+  if (!eventsList) return;
   eventsList.innerHTML = '';
   if (!events.length) {
     eventsList.innerHTML = '<div class="empty">No events have been added yet.</div>';
@@ -64,6 +72,7 @@ function render() {
 }
 
 async function loadEvents() {
+  if (!eventsList) return;
   try { events = await request('/admin/api/events'); render(); }
   catch (error) {
     if (error.message === 'Authentication required') showLogin();
@@ -78,6 +87,7 @@ function newBlock(type) {
 }
 
 function syncContentBlocks() {
+  if (!contentJsonInput) return;
   contentJsonInput.value = JSON.stringify(contentBlocks.map((block) => ({ ...block, url: block.storedUrl || block.url })));
 }
 
@@ -118,6 +128,7 @@ async function uploadBlockImage(block, file, status) {
 }
 
 function renderContentBlocks() {
+  if (!contentBlocksElement) return;
   contentBlocksElement.innerHTML = '';
   if (!contentBlocks.length) {
     const empty = document.createElement('div');
@@ -218,6 +229,10 @@ document.querySelectorAll('[data-add-block]').forEach((button) => {
 });
 
 function editEvent(item) {
+  if (!eventForm) {
+    window.location.href = `/admin/create-event?id=${encodeURIComponent(item.id)}`;
+    return;
+  }
   const form = eventForm.elements;
   form.id.value = item.id;
   form.site.value = item.site;
@@ -243,6 +258,7 @@ function editEvent(item) {
 }
 
 function resetForm() {
+  if (!eventForm) return;
   eventForm.reset();
   eventForm.elements.id.value = '';
   eventForm.elements.site.value = 'both';
@@ -256,9 +272,19 @@ function resetForm() {
   cancelEdit.hidden = true;
   formMessage.textContent = '';
 }
-cancelEdit.addEventListener('click', resetForm);
 
-eventForm.addEventListener('submit', async (event) => {
+async function loadEventForEditing() {
+  const id = new URLSearchParams(window.location.search).get('id');
+  if (!id) return;
+  try {
+    const items = await request('/admin/api/events');
+    const item = items.find((entry) => String(entry.id) === id);
+    if (!item) throw new Error('Event not found');
+    editEvent(item);
+  } catch (error) { formMessage.textContent = error.message; }
+}
+
+eventForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   formMessage.textContent = 'Saving…';
   syncContentBlocks();
@@ -267,8 +293,7 @@ eventForm.addEventListener('submit', async (event) => {
   const id = data.get('id');
   try {
     await request(id ? `/admin/api/events/${id}` : '/admin/api/events', { method: id ? 'PUT' : 'POST', body: data });
-    resetForm();
-    await loadEvents();
+    window.location.href = '/admin/current-events';
   } catch (error) { formMessage.textContent = error.message; }
 });
 
@@ -278,5 +303,5 @@ async function deleteEvent(item) {
   catch (error) { alert(error.message); }
 }
 
-renderContentBlocks();
+if (contentBlocksElement) renderContentBlocks();
 checkSession();

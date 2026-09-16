@@ -197,6 +197,11 @@ function requireAdmin(request, response, next) {
   next();
 }
 
+function requireAdminPage(request, response, next) {
+  if (!hasValidSession(request)) return response.redirect('/admin');
+  next();
+}
+
 function verifyPassword(password) {
   const [salt, stored] = adminPasswordHash.split(':');
   if (!salt || !stored) return false;
@@ -332,6 +337,8 @@ function removeRequestUploads(request) {
 }
 
 app.get('/admin', (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'admin.html')));
+app.get('/admin/create-event', requireAdminPage, (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'create-event.html')));
+app.get('/admin/current-events', requireAdminPage, (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'current-events.html')));
 app.get('/admin/api/session', requireAdmin, (_request, response) => response.json({ authenticated: true, username: adminUsername }));
 app.post('/admin/api/login', (request, response) => {
   const usernameMatches = request.body?.username === adminUsername;

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Current Events · Aadaab Arz Admin</title>
+    <link rel="stylesheet" href="/admin/assets/admin.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <main class="dashboard">
+      <header>
+        <div><a class="admin-back" href="/admin">← Admin home</a><div><p class="eyebrow">Aadaab Arz</p><h1>Current Events</h1></div></div>
+        <div class="admin-header-actions"><a href="/admin/create-event">Create event</a><button id="logout-button" class="secondary">Sign out</button></div>
+      </header>
+      <div class="admin-page">
+        <section class="listing">
+          <div class="listing-heading"><div><p class="eyebrow">Live content</p><h2>Current events</h2></div><button id="refresh-button" class="secondary">Refresh</button></div>
+          <div id="events-list" class="events-list"></div>
+        </section>
+      </div>
+    </main>
+    <script src="/admin/assets/admin.js" defer></script>
+  </body>
+</html>
