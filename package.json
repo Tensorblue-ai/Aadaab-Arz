@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run build:lucknow && npm run build:foreign",
+    "build": "npm run build:lucknow && npm run build:foreign && npm run build:admin",
     "build:lucknow": "npm --prefix apps/lucknow run build",
     "build:foreign": "npm --prefix apps/foreign run build",
+    "build:admin": "npm --prefix apps/admin run build",
     "dev:lucknow": "npm --prefix apps/lucknow run dev",
     "dev:foreign": "npm --prefix apps/foreign run dev"
   }

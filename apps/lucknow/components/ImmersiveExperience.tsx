@@ -116,36 +116,47 @@ const DETAILS: Record<Exclude<PanelKey, 'community'>, DetailPanel> = {
   },
 };
 
-const EVENT_CARDS = [
+type ManagedEvent = {
+  id: number;
+  day: string;
+  month: string;
+  title: string;
+  location: string;
+  time: string;
+  image: string;
+  description: string;
+};
+
+const DEFAULT_EVENTS: ManagedEvent[] = [
   {
-    key: 'event-walk' as const,
+    id: 1,
     day: '22',
     month: 'Jun',
     title: 'Heritage Walk at Bara Imambara',
     location: 'Bara Imambara',
     time: '7:00 — 10:30 AM',
     image: '/images/events/heritage-walk.webp',
-    alt: 'Bara Imambara at sunset',
+    description: 'Walk through one of Awadh’s most ingenious monuments with storytellers who bring its courtyards, corridors and legends to life.',
   },
   {
-    key: 'event-music' as const,
+    id: 2,
     day: '06',
     month: 'Jul',
     title: 'The Music Evening',
     location: 'Rumi Darwaza Courtyard',
     time: '6:30 — 9:00 PM',
     image: '/images/events/music-evening.webp',
-    alt: 'A candlelit Hindustani music ensemble',
+    description: 'An intimate evening of ghazal, thumri, poetry and conversation in the heart of Lucknow.',
   },
   {
-    key: 'event-craft' as const,
+    id: 3,
     day: '19',
     month: 'Jul',
     title: 'Craft & Culture Baithak',
     location: 'Husainabad Heritage Centre',
     time: '4:00 — 7:00 PM',
     image: '/images/events/craft-baithak.webp',
-    alt: 'Artisans embroidering cloth by lantern light',
+    description: 'Meet the artisans keeping chikankari and zardozi alive through material, memory and making.',
   },
 ];
 
@@ -243,9 +254,9 @@ function EventCard({
   index,
   onOpen,
 }: {
-  event: (typeof EVENT_CARDS)[number];
+  event: ManagedEvent;
   index: number;
-  onOpen: (key: PanelKey) => void;
+  onOpen: (event: ManagedEvent) => void;
 }) {
   return (
     <motion.article
@@ -256,7 +267,7 @@ function EventCard({
       transition={{ duration: 0.85, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="event-card__image">
-        <Image src={event.image} alt={event.alt} fill sizes="(max-width: 800px) 75vw, 28vw" />
+        <img src={event.image} alt="" />
         <span className="date-badge"><small>{event.month}</small>{event.day}</span>
       </div>
       <div className="event-card__copy">
@@ -264,7 +275,7 @@ function EventCard({
         <h3>{event.title}</h3>
         <p><span aria-hidden="true">⌖</span>{event.location}</p>
         <p><span aria-hidden="true">◷</span>{event.time}</p>
-        <button type="button" onClick={() => onOpen(event.key)}>
+        <button type="button" onClick={() => onOpen(event)}>
           View gathering <span aria-hidden="true">↗</span>
         </button>
       </div>
@@ -343,12 +354,12 @@ function ContributionForm() {
   );
 }
 
-function DetailOverlay({ panel, onClose }: { panel: PanelKey | null; onClose: () => void }) {
+function DetailOverlay({ panel, event, onClose }: { panel: PanelKey | null; event: ManagedEvent | null; onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (!panel) return;
+    if (!panel && !event) return;
     const previousOverflow = document.body.style.overflow;
     const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const backgroundElements = Array.from(
@@ -390,11 +401,11 @@ function DetailOverlay({ panel, onClose }: { panel: PanelKey | null; onClose: ()
       window.removeEventListener('keydown', handleKey);
       previousFocus?.focus();
     };
-  }, [panel, onClose]);
+  }, [panel, event, onClose]);
 
   return (
     <AnimatePresence>
-      {panel ? (
+      {panel || event ? (
         <motion.div
           className="detail-backdrop"
           role="presentation"
@@ -417,14 +428,27 @@ function DetailOverlay({ panel, onClose }: { panel: PanelKey | null; onClose: ()
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
             <button ref={closeRef} className="detail-close" type="button" onClick={onClose} aria-label="Close detail panel">×</button>
-            {panel === 'community' ? (
+            {event ? (
+              <>
+                <div className="detail-panel__image">
+                  <img src={event.image} alt="" />
+                </div>
+                <div className="detail-panel__copy">
+                  <p className="scene-eyebrow"><span />{event.day} {event.month}</p>
+                  <h2 id="detail-title">{event.title}</h2>
+                  <div className="detail-meta"><span>{event.location}</span><span>{event.time}</span></div>
+                  <p>{event.description}</p>
+                  <button className="primary-action" type="button" onClick={onClose}>Return to the journey <span aria-hidden="true">←</span></button>
+                </div>
+              </>
+            ) : panel === 'community' ? (
               <div className="detail-panel__form-copy">
                 <p className="scene-eyebrow"><span />A living archive</p>
                 <h2 id="detail-title">Bring something to the archive.</h2>
                 <p>A photograph, a family memory, a neighbourhood tale, a recipe or a place worth remembering.</p>
                 <ContributionForm />
               </div>
-            ) : (
+            ) : panel ? (
               <>
                 <div className="detail-panel__image">
                   <Image src={DETAILS[panel].image} alt={DETAILS[panel].imageAlt} fill sizes="(max-width: 760px) 100vw, 48vw" />
@@ -441,7 +465,7 @@ function DetailOverlay({ panel, onClose }: { panel: PanelKey | null; onClose: ()
                   </button>
                 </div>
               </>
-            )}
+            ) : null}
           </motion.section>
         </motion.div>
       ) : null}
@@ -543,12 +567,29 @@ function ProgressRail({ active }: { active: number }) {
 export default function ImmersiveExperience() {
   const [activeScene, setActiveScene] = useState(0);
   const [panel, setPanel] = useState<PanelKey | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<ManagedEvent | null>(null);
+  const [events, setEvents] = useState<ManagedEvent[]>(DEFAULT_EVENTS);
   const [menuOpen, setMenuOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<AudioContext | null>(null);
   const prefersReducedMotion = useReducedMotion();
-  const closePanel = useCallback(() => setPanel(null), []);
+  const closePanel = useCallback(() => { setPanel(null); setSelectedEvent(null); }, []);
   const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
+
+  useEffect(() => {
+    let active = true;
+    fetch('/api/public/events?site=lucknow', { cache: 'no-store' })
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((items: Array<{ id: number; title: string; dateLabel: string; place: string; time: string; description: string; imageUrl: string }>) => {
+        if (!active || !Array.isArray(items)) return;
+        setEvents(items.map((item) => {
+          const [day, ...month] = item.dateLabel.trim().split(/\s+/);
+          return { id: item.id, day: day || '', month: month.join(' '), title: item.title, location: item.place, time: item.time, image: item.imageUrl, description: item.description };
+        }));
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
 
   useEffect(() => {
     const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-scene]'));
@@ -740,7 +781,7 @@ export default function ImmersiveExperience() {
             <p>Walk, listen and make alongside the people who carry Awadh’s living traditions forward.</p>
           </div>
           <div className="events-grid">
-            {EVENT_CARDS.map((event, index) => <EventCard key={event.key} event={event} index={index} onOpen={setPanel} />)}
+            {events.map((event, index) => <EventCard key={event.id} event={event} index={index} onOpen={setSelectedEvent} />)}
           </div>
         </div>
       </section>
@@ -891,7 +932,7 @@ export default function ImmersiveExperience() {
         </footer>
       </section>
 
-      <DetailOverlay panel={panel} onClose={closePanel} />
+      <DetailOverlay panel={panel} event={selectedEvent} onClose={closePanel} />
     </main>
     </MotionConfig>
   );

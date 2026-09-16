@@ -3,7 +3,9 @@
 import { FormEvent, useEffect, useState } from "react";
 
 const MAIN_SITE = "https://settlement-fcc-processes-tones.trycloudflare.com";
-const events = [
+const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? MAIN_SITE;
+type ContentEvent = { id?: number; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
+const DEFAULT_EVENTS: ContentEvent[] = [
   { date: "22 Jun", title: "Heritage Walk at Bara Imambara", place: "Bara Imambara, Lucknow", time: "7:00 AM – 10:30 AM", image: "/images/events/heritage-walk.webp", href: "/events" },
   { date: "06 Jul", title: "The Music Evening", place: "Rumi Darwaza Courtyard", time: "6:30 PM – 9:00 PM", image: "/images/events/music-evening.webp", href: "/events" },
   { date: "19 Jul", title: "Craft & Culture Baithak", place: "Husainabad Heritage Centre", time: "4:00 PM – 7:00 PM", image: "/images/events/craft-baithak.webp", href: "/events/craft-culture-baithak" },
@@ -84,7 +86,21 @@ function AmbientMotion() {
   return <div className="ambient-motion" aria-hidden="true"><i /><i /><i /></div>;
 }
 function Shell({ active, children }: { active?: string; children: React.ReactNode }) { return <><AmbientMotion /><ScrollProgress /><Header active={active} />{children}<Footer /></>; }
-function EventCards({ onePage = false }: { onePage?: boolean }) { return <div className="event-grid">{events.map((event) => <article className="event-card" key={event.title}><div className="event-image"><img src={event.image} alt="" /><span>{event.date}</span></div><div><p className="kicker">Featured experience</p><h3>{event.title}</h3><p>{event.place}</p><p>{event.time}</p><Link href={onePage ? "#join" : event.href}>View Event <span>→</span></Link></div></article>)}</div>; }
+function EventCards({ onePage = false }: { onePage?: boolean }) {
+  const [events, setEvents] = useState<ContentEvent[]>(DEFAULT_EVENTS);
+  useEffect(() => {
+    let active = true;
+    fetch(`${CONTENT_API_BASE}/api/public/events?site=foreign`, { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((items: Array<{ id: number; dateLabel: string; title: string; place: string; time: string; imageUrl: string; description: string }>) => {
+        if (!active || !Array.isArray(items)) return;
+        setEvents(items.map((item) => ({ id: item.id, date: item.dateLabel, title: item.title, place: item.place, time: item.time, image: item.imageUrl, description: item.description, href: "#join" })));
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, []);
+  return <div className="event-grid">{events.map((event) => <article className="event-card" key={event.id ?? event.title}><div className="event-image"><img src={event.image} alt="" /><span>{event.date}</span></div><div><p className="kicker">Featured experience</p><h3>{event.title}</h3><p>{event.place}</p><p>{event.time}</p><Link href={onePage ? "#join" : event.href}>View Event <span>→</span></Link></div></article>)}</div>;
+}
 
 function JoinSection() {
   const [done, setDone] = useState(false);

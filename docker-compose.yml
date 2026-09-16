@@ -3,8 +3,8 @@ services:
     build: ./apps/lucknow
     container_name: aadaab-arz-lucknow
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:3200:3000"
+    expose:
+      - "3000"
 
   foreign:
     build: ./apps/foreign
@@ -12,3 +12,30 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:3300:3000"
+
+  admin:
+    build: ./apps/admin
+    container_name: aadaab-arz-admin
+    restart: unless-stopped
+    env_file:
+      - path: .env.admin
+        required: false
+    volumes:
+      - admin-data:/data
+    expose:
+      - "3400"
+
+  gateway:
+    image: nginx:1.27-alpine
+    container_name: aadaab-arz-gateway
+    restart: unless-stopped
+    depends_on:
+      - lucknow
+      - admin
+    ports:
+      - "127.0.0.1:3200:80"
+    volumes:
+      - ./ops/nginx.conf:/etc/nginx/nginx.conf:ro
+
+volumes:
+  admin-data:

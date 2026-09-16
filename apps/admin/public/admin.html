@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aadaab Arz Admin</title>
+    <link rel="stylesheet" href="/admin/assets/admin.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <main>
+      <section id="login-view" class="login-shell">
+        <div class="login-card">
+          <span class="mark">✣</span>
+          <p class="eyebrow">Aadaab Arz</p>
+          <h1>Content Admin</h1>
+          <p>Sign in to manage events and photographs across both websites.</p>
+          <form id="login-form">
+            <label>Username<input name="username" autocomplete="username" required /></label>
+            <label>Password<input name="password" type="password" autocomplete="current-password" required /></label>
+            <p class="message" id="login-message" role="alert"></p>
+            <button type="submit">Sign in <span>→</span></button>
+          </form>
+        </div>
+      </section>
+
+      <section id="dashboard-view" class="dashboard" hidden>
+        <header>
+          <div><span class="mark">✣</span><div><p class="eyebrow">Aadaab Arz</p><h1>Events & Media</h1></div></div>
+          <button id="logout-button" class="secondary">Sign out</button>
+        </header>
+        <div class="dashboard-grid">
+          <form id="event-form" class="editor" enctype="multipart/form-data">
+            <div class="editor-heading"><div><p class="eyebrow">Publish</p><h2 id="form-title">Add an event</h2></div><button type="button" id="cancel-edit" class="text-button" hidden>Cancel edit</button></div>
+            <input type="hidden" name="id" />
+            <div class="form-grid">
+              <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
+              <label>Display order<input name="sortOrder" type="number" value="0" /></label>
+              <label class="wide">Event title<input name="title" required placeholder="Heritage Walk" /></label>
+              <label>Date label<input name="dateLabel" required placeholder="22 Jun" /></label>
+              <label>Time<input name="time" required placeholder="7:00 AM – 10:30 AM" /></label>
+              <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
+              <label class="wide">Description<textarea name="description" rows="4" placeholder="Tell visitors what to expect"></textarea></label>
+              <label class="wide upload">Event photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>JPG, PNG, WebP or GIF · maximum 8 MB</small></label>
+              <label class="publish"><input name="published" type="checkbox" checked /> Published</label>
+            </div>
+            <p class="message" id="form-message" role="status"></p>
+            <button type="submit" id="save-button">Publish event <span>→</span></button>
+          </form>
+          <section class="listing">
+            <div class="listing-heading"><div><p class="eyebrow">Live content</p><h2>Current events</h2></div><button id="refresh-button" class="secondary">Refresh</button></div>
+            <div id="events-list" class="events-list"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+    <script src="/admin/assets/admin.js" defer></script>
+  </body>
+</html>
