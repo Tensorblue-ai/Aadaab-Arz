@@ -63,6 +63,50 @@ function slugify(value) {
   return String(value ?? '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function calendarDateValue(value) {
+  const text = String(value ?? '').trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  const legacy = text.match(/^(\d{1,2})\s+([A-Za-z]{3})$/);
+  const month = legacy ? monthNames.findIndex((name) => name.toLowerCase() === legacy[2].toLowerCase()) : -1;
+  if (!legacy || month < 0) return '';
+  return `${new Date().getUTCFullYear()}-${String(month + 1).padStart(2, '0')}-${legacy[1].padStart(2, '0')}`;
+}
+
+function displayDate(value) {
+  const iso = calendarDateValue(value);
+  if (!iso) return String(value ?? '');
+  const [, month, day] = iso.split('-').map(Number);
+  return `${String(day).padStart(2, '0')} ${monthNames[month - 1]}`;
+}
+
+function to24Hour(value) {
+  const match = String(value ?? '').trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!match) return '';
+  let hour = Number(match[1]) % 12;
+  if (match[3].toUpperCase() === 'PM') hour += 12;
+  return `${String(hour).padStart(2, '0')}:${match[2]}`;
+}
+
+function timeInputValues(value) {
+  const text = String(value ?? '').trim();
+  const stored = text.match(/^(\d{2}:\d{2})\|(\d{2}:\d{2})$/);
+  if (stored) return [stored[1], stored[2]];
+  const legacy = text.split(/\s+[–—-]\s+/);
+  return legacy.length === 2 ? [to24Hour(legacy[0]), to24Hour(legacy[1])] : ['', ''];
+}
+
+function displayTime(value) {
+  const [start, end] = timeInputValues(value);
+  if (!start || !end) return String(value ?? '');
+  const format = (time) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return `${hours % 12 || 12}:${String(minutes).padStart(2, '0')} ${hours >= 12 ? 'PM' : 'AM'}`;
+  };
+  return `${format(start)} – ${format(end)}`;
+}
+
 const usedSlugs = new Set();
 const updateSlug = db.prepare('UPDATE events SET slug = ? WHERE id = ?');
 db.prepare('SELECT id, title, slug FROM events ORDER BY id').all().forEach((event) => {
@@ -176,13 +220,17 @@ function parseGallery(value) {
 }
 
 function eventPayload(row, request) {
+  const [startTime, endTime] = timeInputValues(row.time_label);
   return {
     id: row.id,
     site: row.site,
     title: row.title,
-    dateLabel: row.date_label,
+    dateLabel: displayDate(row.date_label),
+    eventDate: calendarDateValue(row.date_label),
     place: row.place,
-    time: row.time_label,
+    time: displayTime(row.time_label),
+    startTime,
+    endTime,
     description: row.description,
     slug: row.slug,
     fullDescription: row.full_description,
@@ -200,9 +248,11 @@ function eventPayload(row, request) {
 function cleanEventInput(body) {
   const site = ['lucknow', 'foreign', 'both'].includes(body.site) ? body.site : 'both';
   const title = String(body.title ?? '').trim();
-  const dateLabel = String(body.dateLabel ?? '').trim();
+  const dateLabel = String(body.eventDate ?? body.dateLabel ?? '').trim();
   const place = String(body.place ?? '').trim();
-  const time = String(body.time ?? '').trim();
+  const startTime = String(body.startTime ?? '').trim();
+  const endTime = String(body.endTime ?? '').trim();
+  const time = startTime && endTime ? `${startTime}|${endTime}` : String(body.time ?? '').trim();
   const description = String(body.description ?? '').trim();
   const slug = slugify(body.slug || title);
   const fullDescription = String(body.fullDescription ?? '').trim();

@@ -37,9 +37,9 @@
               <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
               <label>Display order<input name="sortOrder" type="number" value="0" /></label>
               <label class="wide">Event title<input name="title" required placeholder="Heritage Walk" /></label>
-              <label class="wide">Page slug<input name="slug" placeholder="heritage-walk (auto-generated if blank)" pattern="[a-z0-9-]+" /></label>
-              <label>Date label<input name="dateLabel" required placeholder="22 Jun" /></label>
-              <label>Time<input name="time" required placeholder="7:00 AM – 10:30 AM" /></label>
+              <label>Event date<input name="eventDate" type="date" required /></label>
+              <label>Start time<input name="startTime" type="time" required /></label>
+              <label>End time<input name="endTime" type="time" required /></label>
               <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
               <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>
               <label class="wide">Full event details<textarea name="fullDescription" rows="8" placeholder="Complete information shown on the event page"></textarea></label>
