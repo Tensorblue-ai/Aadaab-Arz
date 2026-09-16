@@ -1,0 +1,14 @@
+services:
+  lucknow:
+    build: ./apps/lucknow
+    container_name: aadaab-arz-lucknow
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3200:3000"
+
+  foreign:
+    build: ./apps/foreign
+    container_name: aadaab-arz-foreign
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3300:3000"
