@@ -37,11 +37,19 @@
               <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
               <label>Display order<input name="sortOrder" type="number" value="0" /></label>
               <label class="wide">Event title<input name="title" required placeholder="Heritage Walk" /></label>
+              <label class="wide">Page slug<input name="slug" placeholder="heritage-walk (auto-generated if blank)" pattern="[a-z0-9-]+" /></label>
               <label>Date label<input name="dateLabel" required placeholder="22 Jun" /></label>
               <label>Time<input name="time" required placeholder="7:00 AM – 10:30 AM" /></label>
               <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
-              <label class="wide">Description<textarea name="description" rows="4" placeholder="Tell visitors what to expect"></textarea></label>
-              <label class="wide upload">Event photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>JPG, PNG, WebP or GIF · maximum 8 MB</small></label>
+              <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>
+              <label class="wide">Full event details<textarea name="fullDescription" rows="8" placeholder="Complete information shown on the event page"></textarea></label>
+              <label class="wide">Registration link<input name="registrationUrl" type="url" placeholder="https://forms.example.com/register" /></label>
+              <label>UPI ID<input name="upiId" placeholder="name@bank" /></label>
+              <label>Payment amount / fee<input name="paymentAmount" placeholder="₹500 per person" /></label>
+              <label class="wide upload">Event cover photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Used on the card and page hero · maximum 8 MB</small></label>
+              <label class="wide upload">UPI payment QR<input name="qrImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Optional · uploading a new QR replaces the current one</small></label>
+              <label class="wide publish"><input name="removeQr" type="checkbox" /> Remove current payment QR</label>
+              <label class="wide upload">Event gallery<input name="gallery" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" /><small>Up to 8 images · a new upload replaces the current gallery</small></label>
               <label class="publish"><input name="published" type="checkbox" checked /> Published</label>
             </div>
             <p class="message" id="form-message" role="status"></p>

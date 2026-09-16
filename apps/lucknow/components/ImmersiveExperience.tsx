@@ -118,6 +118,7 @@ const DETAILS: Record<Exclude<PanelKey, 'community'>, DetailPanel> = {
 
 type ManagedEvent = {
   id: number;
+  slug: string;
   day: string;
   month: string;
   title: string;
@@ -130,6 +131,7 @@ type ManagedEvent = {
 const DEFAULT_EVENTS: ManagedEvent[] = [
   {
     id: 1,
+    slug: 'heritage-walk-at-bara-imambara',
     day: '22',
     month: 'Jun',
     title: 'Heritage Walk at Bara Imambara',
@@ -140,6 +142,7 @@ const DEFAULT_EVENTS: ManagedEvent[] = [
   },
   {
     id: 2,
+    slug: 'the-music-evening',
     day: '06',
     month: 'Jul',
     title: 'The Music Evening',
@@ -150,6 +153,7 @@ const DEFAULT_EVENTS: ManagedEvent[] = [
   },
   {
     id: 3,
+    slug: 'craft-culture-baithak',
     day: '19',
     month: 'Jul',
     title: 'Craft & Culture Baithak',
@@ -252,11 +256,9 @@ function SceneHeading({
 function EventCard({
   event,
   index,
-  onOpen,
 }: {
   event: ManagedEvent;
   index: number;
-  onOpen: (event: ManagedEvent) => void;
 }) {
   return (
     <motion.article
@@ -275,9 +277,9 @@ function EventCard({
         <h3>{event.title}</h3>
         <p><span aria-hidden="true">⌖</span>{event.location}</p>
         <p><span aria-hidden="true">◷</span>{event.time}</p>
-        <button type="button" onClick={() => onOpen(event)}>
+        <a href={`/events/${event.slug}`}>
           View gathering <span aria-hidden="true">↗</span>
-        </button>
+        </a>
       </div>
     </motion.article>
   );
@@ -580,11 +582,11 @@ export default function ImmersiveExperience() {
     let active = true;
     fetch('/api/public/events?site=lucknow', { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : Promise.reject())
-      .then((items: Array<{ id: number; title: string; dateLabel: string; place: string; time: string; description: string; imageUrl: string }>) => {
+      .then((items: Array<{ id: number; slug: string; title: string; dateLabel: string; place: string; time: string; description: string; imageUrl: string }>) => {
         if (!active || !Array.isArray(items)) return;
         setEvents(items.map((item) => {
           const [day, ...month] = item.dateLabel.trim().split(/\s+/);
-          return { id: item.id, day: day || '', month: month.join(' '), title: item.title, location: item.place, time: item.time, image: item.imageUrl, description: item.description };
+          return { id: item.id, slug: item.slug, day: day || '', month: month.join(' '), title: item.title, location: item.place, time: item.time, image: item.imageUrl, description: item.description };
         }));
       })
       .catch(() => undefined);
@@ -781,7 +783,7 @@ export default function ImmersiveExperience() {
             <p>Walk, listen and make alongside the people who carry Awadh’s living traditions forward.</p>
           </div>
           <div className="events-grid">
-            {events.map((event, index) => <EventCard key={event.id} event={event} index={index} onOpen={setSelectedEvent} />)}
+            {events.map((event, index) => <EventCard key={event.id} event={event} index={index} />)}
           </div>
         </div>
       </section>
