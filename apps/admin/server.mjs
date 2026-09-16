@@ -35,6 +35,7 @@ db.exec(`
     payment_amount TEXT NOT NULL DEFAULT '',
     qr_image_url TEXT NOT NULL DEFAULT '',
     gallery_json TEXT NOT NULL DEFAULT '[]',
+    content_json TEXT NOT NULL DEFAULT '[]',
     image_url TEXT NOT NULL,
     published INTEGER NOT NULL DEFAULT 1,
     sort_order INTEGER NOT NULL DEFAULT 0,
@@ -54,6 +55,7 @@ const eventMigrations = [
   ['payment_amount', "TEXT NOT NULL DEFAULT ''"],
   ['qr_image_url', "TEXT NOT NULL DEFAULT ''"],
   ['gallery_json', "TEXT NOT NULL DEFAULT '[]'"],
+  ['content_json', "TEXT NOT NULL DEFAULT '[]'"],
 ];
 eventMigrations.forEach(([name, definition]) => {
   if (!eventColumns.has(name)) db.exec(`ALTER TABLE events ADD COLUMN ${name} ${definition}`);
@@ -219,6 +221,48 @@ function parseGallery(value) {
   }
 }
 
+const contentBlockTypes = new Set(['heading', 'text', 'image', 'video', 'quote', 'callout', 'list', 'divider']);
+
+function parseContentBlocks(value) {
+  try {
+    const blocks = typeof value === 'string' ? JSON.parse(value || '[]') : value;
+    return Array.isArray(blocks) ? blocks : [];
+  } catch {
+    return [];
+  }
+}
+
+function cleanContentBlocks(value) {
+  const blocks = parseContentBlocks(value);
+  return blocks.slice(0, 80).flatMap((block, index) => {
+    if (!block || !contentBlockTypes.has(block.type)) return [];
+    const type = block.type;
+    const cleaned = {
+      id: String(block.id || `${type}-${index}`).slice(0, 80),
+      type,
+      level: block.level === 'h3' ? 'h3' : 'h2',
+      title: String(block.title ?? '').trim().slice(0, 300),
+      text: String(block.text ?? '').trim().slice(0, 12000),
+      url: String(block.storedUrl || block.url || '').trim().slice(0, 2000),
+      caption: String(block.caption ?? '').trim().slice(0, 500),
+      attribution: String(block.attribution ?? '').trim().slice(0, 300),
+      items: Array.isArray(block.items) ? block.items.map((item) => String(item).trim().slice(0, 500)).filter(Boolean).slice(0, 30) : [],
+    };
+    if (cleaned.url && !cleaned.url.startsWith('/uploads/') && !/^https?:\/\//i.test(cleaned.url)) cleaned.url = '';
+    return [cleaned];
+  });
+}
+
+function contentBlockPayload(block, request) {
+  return block.type === 'image'
+    ? { ...block, storedUrl: block.url, url: publicAssetUrl(block.url, request) }
+    : block;
+}
+
+function contentImageUrls(blocks) {
+  return blocks.filter((block) => block.type === 'image' && block.url).map((block) => block.url);
+}
+
 function eventPayload(row, request) {
   const [startTime, endTime] = timeInputValues(row.time_label);
   return {
@@ -240,6 +284,7 @@ function eventPayload(row, request) {
     imageUrl: publicAssetUrl(row.image_url, request),
     qrImageUrl: publicAssetUrl(row.qr_image_url, request),
     gallery: parseGallery(row.gallery_json).map((image) => publicAssetUrl(image, request)),
+    contentBlocks: parseContentBlocks(row.content_json).map((block) => contentBlockPayload(block, request)),
     published: Boolean(row.published),
     sortOrder: row.sort_order,
   };
@@ -259,12 +304,13 @@ function cleanEventInput(body) {
   const registrationUrl = String(body.registrationUrl ?? '').trim();
   const upiId = String(body.upiId ?? '').trim();
   const paymentAmount = String(body.paymentAmount ?? '').trim();
+  const contentBlocks = cleanContentBlocks(body.contentJson);
   const published = body.published === 'true' || body.published === true || body.published === 'on' ? 1 : 0;
   const sortOrder = Number.isFinite(Number(body.sortOrder)) ? Number(body.sortOrder) : 0;
   if (!title || !dateLabel || !place || !time) throw new Error('Title, date, place and time are required');
   if (!slug) throw new Error('A valid page slug is required');
   if (registrationUrl && !/^https?:\/\//i.test(registrationUrl)) throw new Error('Registration link must start with http:// or https://');
-  return { site, title, dateLabel, place, time, description, slug, fullDescription, registrationUrl, upiId, paymentAmount, published, sortOrder };
+  return { site, title, dateLabel, place, time, description, slug, fullDescription, registrationUrl, upiId, paymentAmount, contentBlocks, published, sortOrder };
 }
 
 function removeUploadedImage(imageUrl) {
@@ -297,6 +343,11 @@ app.post('/admin/api/login', (request, response) => {
 app.post('/admin/api/logout', (_request, response) => {
   response.clearCookie('aadaab_admin', { path: '/' });
   response.json({ ok: true });
+});
+
+app.post('/admin/api/media', requireAdmin, upload.single('file'), (request, response) => {
+  if (!request.file) return response.status(400).json({ error: 'Choose an image to upload' });
+  response.status(201).json({ url: `/uploads/${request.file.filename}` });
 });
 
 app.get('/api/public/events', (request, response) => {
@@ -335,9 +386,9 @@ app.post('/admin/api/events', requireAdmin, eventUploads, (request, response) =>
     const qrImageUrl = uploadedUrl(request, 'qrImage');
     const gallery = uploadedGallery(request);
     const result = db.prepare(`
-      INSERT INTO events (site, title, date_label, place, time_label, description, slug, full_description, registration_url, upi_id, payment_amount, image_url, qr_image_url, gallery_json, published, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), input.published, input.sortOrder);
+      INSERT INTO events (site, title, date_label, place, time_label, description, slug, full_description, registration_url, upi_id, payment_amount, image_url, qr_image_url, gallery_json, content_json, published, sort_order)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), JSON.stringify(input.contentBlocks), input.published, input.sortOrder);
     const row = db.prepare('SELECT * FROM events WHERE id = ?').get(result.lastInsertRowid);
     response.status(201).json(eventPayload(row, request));
   } catch (error) {
@@ -355,16 +406,19 @@ app.put('/admin/api/events/:id', requireAdmin, eventUploads, (request, response)
     const newQrImageUrl = uploadedUrl(request, 'qrImage');
     const newGallery = uploadedGallery(request);
     const currentGallery = parseGallery(current.gallery_json);
+    const currentContentBlocks = parseContentBlocks(current.content_json);
     const imageUrl = newImageUrl || current.image_url;
     const qrImageUrl = request.body.removeQr === 'true' ? '' : (newQrImageUrl || current.qr_image_url);
     const gallery = newGallery.length ? newGallery : currentGallery;
     db.prepare(`
-      UPDATE events SET site = ?, title = ?, date_label = ?, place = ?, time_label = ?, description = ?, slug = ?, full_description = ?, registration_url = ?, upi_id = ?, payment_amount = ?, image_url = ?, qr_image_url = ?, gallery_json = ?, published = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
+      UPDATE events SET site = ?, title = ?, date_label = ?, place = ?, time_label = ?, description = ?, slug = ?, full_description = ?, registration_url = ?, upi_id = ?, payment_amount = ?, image_url = ?, qr_image_url = ?, gallery_json = ?, content_json = ?, published = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), input.published, input.sortOrder, request.params.id);
+    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), JSON.stringify(input.contentBlocks), input.published, input.sortOrder, request.params.id);
     if (newImageUrl) removeUploadedImage(current.image_url);
     if (newQrImageUrl || request.body.removeQr === 'true') removeUploadedImage(current.qr_image_url);
     if (newGallery.length) currentGallery.forEach(removeUploadedImage);
+    const nextContentImages = new Set(contentImageUrls(input.contentBlocks));
+    contentImageUrls(currentContentBlocks).filter((image) => !nextContentImages.has(image)).forEach(removeUploadedImage);
     const row = db.prepare('SELECT * FROM events WHERE id = ?').get(request.params.id);
     response.json(eventPayload(row, request));
   } catch (error) {
@@ -380,6 +434,7 @@ app.delete('/admin/api/events/:id', requireAdmin, (request, response) => {
   removeUploadedImage(current.image_url);
   removeUploadedImage(current.qr_image_url);
   parseGallery(current.gallery_json).forEach(removeUploadedImage);
+  contentImageUrls(parseContentBlocks(current.content_json)).forEach(removeUploadedImage);
   response.json({ ok: true });
 });
 

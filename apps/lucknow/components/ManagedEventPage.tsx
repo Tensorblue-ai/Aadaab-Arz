@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+type ContentBlock = { id: string; type: 'heading' | 'text' | 'image' | 'video' | 'quote' | 'callout' | 'list' | 'divider'; level?: 'h2' | 'h3'; title?: string; text?: string; url?: string; caption?: string; attribution?: string; items?: string[] };
+
 type EventDetails = {
   title: string;
   dateLabel: string;
@@ -15,7 +17,32 @@ type EventDetails = {
   registrationUrl: string;
   upiId: string;
   paymentAmount: string;
+  contentBlocks: ContentBlock[];
 };
+
+function videoEmbedUrl(url = '') {
+  const youtube = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
+  if (youtube) return `https://www.youtube.com/embed/${youtube[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(\d+)/);
+  return vimeo ? `https://player.vimeo.com/video/${vimeo[1]}` : '';
+}
+
+function EventContentBlock({ block }: { block: ContentBlock }) {
+  if (block.type === 'heading') {
+    const Heading = block.level === 'h3' ? 'h3' : 'h2';
+    return <Heading className="event-content-heading">{block.text}</Heading>;
+  }
+  if (block.type === 'text') return <div className="event-content-text">{block.text?.split(/\n+/).filter(Boolean).map((text) => <p key={text}>{text}</p>)}</div>;
+  if (block.type === 'image') return <figure className="event-content-image"><img src={block.url} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
+  if (block.type === 'video') {
+    const embed = videoEmbedUrl(block.url);
+    return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
+  }
+  if (block.type === 'quote') return <blockquote className="event-content-quote"><p>{block.text}</p>{block.attribution && <cite>— {block.attribution}</cite>}</blockquote>;
+  if (block.type === 'callout') return <aside className="event-content-callout"><h3>{block.title}</h3><p>{block.text}</p></aside>;
+  if (block.type === 'list') return <ul className="event-content-list">{block.items?.map((item) => <li key={item}>{item}</li>)}</ul>;
+  return <hr className="event-content-divider" />;
+}
 
 export default function ManagedEventPage() {
   const [event, setEvent] = useState<EventDetails | null>(null);
@@ -67,6 +94,10 @@ export default function ManagedEventPage() {
             {event.upiId && <p><strong>UPI ID</strong><span>{event.upiId}</span></p>}
           </aside>}
         </section>
+
+        {event.contentBlocks?.length > 0 && <section className="managed-event-content">
+          {event.contentBlocks.map((block) => <EventContentBlock key={block.id} block={block} />)}
+        </section>}
 
         {event.gallery.length > 0 && <section className="managed-event-gallery">
           <p className="managed-event-eyebrow">Event gallery</p>

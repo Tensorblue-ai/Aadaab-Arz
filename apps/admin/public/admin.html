@@ -43,6 +43,22 @@
               <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
               <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>
               <label class="wide">Full event details<textarea name="fullDescription" rows="8" placeholder="Complete information shown on the event page"></textarea></label>
+              <section class="wide page-builder" aria-labelledby="page-builder-title">
+                <div class="builder-heading"><div><p class="eyebrow">Event page</p><h3 id="page-builder-title">Build page sections</h3></div><small>Event title is the H1. Add and arrange sections below it.</small></div>
+                <div id="content-blocks" class="content-blocks"></div>
+                <div class="block-picker" aria-label="Add a section">
+                  <span>Add section</span>
+                  <button type="button" data-add-block="heading">Heading</button>
+                  <button type="button" data-add-block="text">Text</button>
+                  <button type="button" data-add-block="image">Image</button>
+                  <button type="button" data-add-block="video">Video</button>
+                  <button type="button" data-add-block="quote">Quote</button>
+                  <button type="button" data-add-block="callout">Callout</button>
+                  <button type="button" data-add-block="list">List</button>
+                  <button type="button" data-add-block="divider">Divider</button>
+                </div>
+                <input id="content-json" name="contentJson" type="hidden" value="[]" />
+              </section>
               <label class="wide">Registration link<input name="registrationUrl" type="url" placeholder="https://forms.example.com/register" /></label>
               <label>UPI ID<input name="upiId" placeholder="name@bank" /></label>
               <label>Payment amount / fee<input name="paymentAmount" placeholder="₹500 per person" /></label>
