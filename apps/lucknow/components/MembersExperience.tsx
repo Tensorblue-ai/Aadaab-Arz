@@ -10,7 +10,10 @@ export const MEMBERS = [
 function MembersHeader() {
   return (
     <header className="members-header">
-      <Link className="members-brand" href="/"><span aria-hidden="true">✣</span>Aadaab Arz Lucknow</Link>
+      <Link className="members-brand" href="/">
+        <span className="rosette rosette--small" aria-hidden="true"><span /><span /><span /><span /></span>
+        Aadaab Arz Lucknow
+      </Link>
       <nav aria-label="Members page navigation">
         <Link href="/#heritage">Explore</Link>
         <Link href="/#events">Events</Link>

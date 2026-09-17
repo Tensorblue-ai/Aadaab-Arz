@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -512,7 +513,7 @@ function Header({
           <a href="#events" aria-current={active === 2 ? 'page' : undefined}>Events</a>
           <a href="#stories" aria-current={active === 3 || active === 4 ? 'page' : undefined}>Stories</a>
           <a href="#community" aria-current={active >= 5 && active <= 8 ? 'page' : undefined}>Community</a>
-          <a href="/members">Members</a>
+          <Link href="/members">Members</Link>
           <a href="#contact" aria-current={active === 9 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
@@ -543,7 +544,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <a href="/members" onClick={onMenu}><span>↗</span>Members</a>
+            <Link href="/members" onClick={onMenu}><span>↗</span>Members</Link>
             <a href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
               <span>↗</span>Aadaab Arz Foreign
             </a>
