@@ -11,7 +11,11 @@ export const MEMBERS = [
   },
   {
     slug: 'sheikh-tariq', name: 'Sheikh Mohammad Tariq', role: 'Vice President', initials: 'ST',
-    image: '/images/members/sheikh-mohammad-tariq.png', qualification: null, bio: [],
+    image: '/images/members/sheikh-mohammad-tariq.png', qualification: 'Senior Cambridge — La Martiniere College, Lucknow · Graduate — Aligarh Muslim University',
+    bio: [
+      'Sheikh Mohammad Tariq completed his Senior Cambridge education at La Martiniere College, Lucknow, and graduated from Aligarh Muslim University, Aligarh. He is presently a business entrepreneur and belongs to Malihabad, famous for its mangoes and the celebrated poet Josh Malihabadi.',
+      'He is closely connected to the culture, heritage and tehzeeb of the Awadh region.',
+    ],
   },
   {
     slug: 'murad', name: 'Murad Khan', role: 'Secretary, Aadaab Arz Lucknow', initials: 'MK',
