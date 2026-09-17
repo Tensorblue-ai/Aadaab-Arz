@@ -784,7 +784,7 @@ export default function ImmersiveExperience() {
         <div className="portal-rings" aria-hidden="true"><span /><span /><span /></div>
       </section>
 
-      <section className="scene events-scene scene--dark" id="events" data-scene="2" aria-labelledby="events-title">
+      <section className={`scene events-scene scene--dark${events.length > 3 ? ' events-scene--expanded' : ''}`} id="events" data-scene="2" aria-labelledby="events-title">
         <SceneBackground src="/images/heritage-arch.webp" active={activeScene === 2} position="center" className="events-background" />
         <div className="events-shade" aria-hidden="true" />
         <div className="events-layout">
@@ -793,7 +793,7 @@ export default function ImmersiveExperience() {
             <h2 id="events-title">Meet Lucknow<br />in the present.</h2>
             <p>Walk, listen and make alongside the people who carry Awadh’s living traditions forward.</p>
           </div>
-          <div className={`events-grid${events.length > 3 ? ' events-grid--scroll' : ''}`}>
+          <div className={`events-grid${events.length > 3 ? ' events-grid--expanded' : ''}`}>
             {events.map((event, index) => <EventCard key={event.id} event={event} index={index} />)}
           </div>
         </div>
