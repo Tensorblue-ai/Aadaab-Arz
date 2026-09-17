@@ -839,7 +839,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .events-grid--scroll::-webkit-scrollbar-track { background: rgb(255 255 255 / 12%); }
 .events-grid--scroll::-webkit-scrollbar-thumb { border-radius: 999px; background: var(--gold); }
 .events-grid--scroll .event-card { scroll-snap-align: start; }
-.events-grid--scroll .event-card:nth-child(2) { transform: none; }
+.events-grid--scroll .event-card:nth-child(2):not(:hover) { transform: none; }
 
 .event-card {
   position: relative;
