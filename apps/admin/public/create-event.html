@@ -18,13 +18,16 @@
           <div class="editor-heading"><div><p class="eyebrow">Publish</p><h2 id="form-title">Add an event</h2></div><a id="cancel-edit" class="text-button" href="/admin/current-events" hidden>Cancel edit</a></div>
           <input type="hidden" name="id" />
           <div class="form-grid">
+            <div class="wide form-section-heading"><span>01</span><div><p class="eyebrow">Visibility</p><h3>Event basics</h3></div></div>
             <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
             <label>Display order<input name="sortOrder" type="number" value="0" /></label>
             <label class="wide">Event title<input name="title" required placeholder="Heritage Walk" /></label>
+            <div class="wide form-section-heading"><span>02</span><div><p class="eyebrow">When and where</p><h3>Schedule & venue</h3></div></div>
             <label>Event date<input name="eventDate" type="date" required /></label>
             <label>Start time<input name="startTime" type="time" required /></label>
             <label>End time<input name="endTime" type="time" required /></label>
             <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
+            <div class="wide form-section-heading"><span>03</span><div><p class="eyebrow">Story</p><h3>Card & event page</h3></div></div>
             <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>
             <label class="wide">Full event details<textarea name="fullDescription" rows="8" placeholder="Complete information shown on the event page"></textarea></label>
             <section class="wide page-builder" aria-labelledby="page-builder-title">
@@ -35,9 +38,11 @@
               </div>
               <input id="content-json" name="contentJson" type="hidden" value="[]" />
             </section>
+            <div class="wide form-section-heading"><span>04</span><div><p class="eyebrow">Conversion</p><h3>Registration & payment</h3></div></div>
             <label class="wide">Registration link<input name="registrationUrl" type="url" placeholder="https://forms.example.com/register" /></label>
             <label>UPI ID<input name="upiId" placeholder="name@bank" /></label>
             <label>Payment amount / fee<input name="paymentAmount" placeholder="₹500 per person" /></label>
+            <div class="wide form-section-heading"><span>05</span><div><p class="eyebrow">Visuals</p><h3>Event media</h3></div></div>
             <label class="wide upload">Event cover photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Used on the card and page hero · maximum 8 MB</small><div id="cover-preview" class="asset-preview" hidden></div></label>
             <label class="wide upload">UPI payment QR<input name="qrImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Optional · uploading a new QR replaces the current one</small><div id="qr-preview" class="asset-preview asset-preview--qr" hidden></div></label>
             <label class="wide publish"><input name="removeQr" type="checkbox" /> Remove current payment QR</label>
@@ -45,7 +50,7 @@
             <label class="publish"><input name="published" type="checkbox" checked /> Published</label>
           </div>
           <p class="message" id="form-message" role="status"></p>
-          <button type="submit" id="save-button">Publish event <span>→</span></button>
+          <div class="editor-save-bar"><p><strong>Ready to publish?</strong><span>Your changes will update the selected website.</span></p><button type="submit" id="save-button">Publish event <span>→</span></button></div>
         </form>
       </div>
     </main>
