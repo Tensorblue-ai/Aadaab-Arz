@@ -6,9 +6,10 @@ const MAIN_SITE = "https://settlement-fcc-processes-tones.trycloudflare.com";
 export const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? MAIN_SITE;
 type ContentEvent = { id?: number; slug: string; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
 const DEFAULT_EVENTS: ContentEvent[] = [
-  { slug: "heritage-walk-at-bara-imambara", date: "22 Jun", title: "Heritage Walk at Bara Imambara", place: "Bara Imambara, Lucknow", time: "7:00 AM – 10:30 AM", image: "/images/events/heritage-walk.webp", href: "/events/heritage-walk-at-bara-imambara" },
-  { slug: "the-music-evening", date: "06 Jul", title: "The Music Evening", place: "Rumi Darwaza Courtyard", time: "6:30 PM – 9:00 PM", image: "/images/events/music-evening.webp", href: "/events/the-music-evening" },
-  { slug: "craft-culture-baithak", date: "19 Jul", title: "Craft & Culture Baithak", place: "Husainabad Heritage Centre", time: "4:00 PM – 7:00 PM", image: "/images/events/craft-baithak.webp", href: "/events/craft-culture-baithak" },
+  { slug: "heritage-walk-at-bara-imambara", date: "22 Jun", title: "Heritage Walk at Bara Imambara", place: "Bara Imambara, Lucknow", time: "7:00 AM – 10:30 AM", image: "/images/events/heritage-walk-v2.png", href: "/events/heritage-walk-at-bara-imambara" },
+  { slug: "the-music-evening", date: "06 Jul", title: "The Music Evening", place: "Rumi Darwaza Courtyard", time: "6:30 PM – 9:00 PM", image: "/images/events/music-evening-v2.png", href: "/events/the-music-evening" },
+  { slug: "craft-culture-baithak", date: "19 Jul", title: "Craft & Culture Baithak", place: "Husainabad Heritage Centre", time: "4:00 PM – 7:00 PM", image: "/images/events/craft-baithak-v2.png", href: "/events/craft-culture-baithak" },
+  { slug: "dastangoi-under-the-stars", date: "03 Aug", title: "Dastangoi Under the Stars", place: "Residency Gardens, Lucknow", time: "6:00 PM – 8:30 PM", image: "/images/events/dastangoi-under-stars-v2.png", href: "/events/dastangoi-under-the-stars" },
 ];
 const stories = [
   { title: "The Arches of Rumi Darwaza", text: "Explore the grace, detail and enduring beauty of Lucknow’s iconic gateway.", image: "/images/stories/rumi-gateway.webp", href: "/stories/rumi-darwaza" },

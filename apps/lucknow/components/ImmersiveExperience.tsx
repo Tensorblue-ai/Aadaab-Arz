@@ -137,7 +137,7 @@ const DEFAULT_EVENTS: ManagedEvent[] = [
     title: 'Heritage Walk at Bara Imambara',
     location: 'Bara Imambara',
     time: '7:00 — 10:30 AM',
-    image: '/images/events/heritage-walk.webp',
+    image: '/images/events/heritage-walk-v2.png',
     description: 'Walk through one of Awadh’s most ingenious monuments with storytellers who bring its courtyards, corridors and legends to life.',
   },
   {
@@ -148,7 +148,7 @@ const DEFAULT_EVENTS: ManagedEvent[] = [
     title: 'The Music Evening',
     location: 'Rumi Darwaza Courtyard',
     time: '6:30 — 9:00 PM',
-    image: '/images/events/music-evening.webp',
+    image: '/images/events/music-evening-v2.png',
     description: 'An intimate evening of ghazal, thumri, poetry and conversation in the heart of Lucknow.',
   },
   {
@@ -159,8 +159,19 @@ const DEFAULT_EVENTS: ManagedEvent[] = [
     title: 'Craft & Culture Baithak',
     location: 'Husainabad Heritage Centre',
     time: '4:00 — 7:00 PM',
-    image: '/images/events/craft-baithak.webp',
+    image: '/images/events/craft-baithak-v2.png',
     description: 'Meet the artisans keeping chikankari and zardozi alive through material, memory and making.',
+  },
+  {
+    id: 4,
+    slug: 'dastangoi-under-the-stars',
+    day: '03',
+    month: 'Aug',
+    title: 'Dastangoi Under the Stars',
+    location: 'Residency Gardens',
+    time: '6:00 — 8:30 PM',
+    image: '/images/events/dastangoi-under-stars-v2.png',
+    description: 'An evening of classical oral storytelling, poetry and conversation beneath the Lucknow sky.',
   },
 ];
 

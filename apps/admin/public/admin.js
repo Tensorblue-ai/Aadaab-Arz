@@ -10,6 +10,9 @@ const saveButton = document.querySelector('#save-button');
 const cancelEdit = document.querySelector('#cancel-edit');
 const contentBlocksElement = document.querySelector('#content-blocks');
 const contentJsonInput = document.querySelector('#content-json');
+const coverPreview = document.querySelector('#cover-preview');
+const qrPreview = document.querySelector('#qr-preview');
+const galleryPreview = document.querySelector('#gallery-preview');
 let events = [];
 let contentBlocks = [];
 
@@ -228,6 +231,41 @@ document.querySelectorAll('[data-add-block]').forEach((button) => {
   });
 });
 
+function renderAssetPreview(container, urls, label) {
+  if (!container) return;
+  container.replaceChildren();
+  const list = (Array.isArray(urls) ? urls : [urls]).filter(Boolean);
+  container.hidden = list.length === 0;
+  list.forEach((url, index) => {
+    const figure = document.createElement('figure');
+    const image = document.createElement('img');
+    const caption = document.createElement('figcaption');
+    image.src = url;
+    image.alt = `${label} ${index + 1}`;
+    caption.textContent = list.length > 1 ? `${label} ${index + 1}` : label;
+    figure.append(image, caption);
+    container.append(figure);
+  });
+}
+
+function renderEventMedia(item) {
+  renderAssetPreview(coverPreview, item?.imageUrl, item ? 'Current cover' : '');
+  renderAssetPreview(qrPreview, item?.qrImageUrl, item ? 'Current payment QR' : '');
+  renderAssetPreview(galleryPreview, item?.gallery || [], item ? 'Current gallery image' : '');
+}
+
+function bindFilePreview(name, container, multiple = false) {
+  const input = eventForm?.elements[name];
+  input?.addEventListener('change', () => {
+    const files = [...(input.files || [])];
+    renderAssetPreview(container, (multiple ? files : files.slice(0, 1)).map((file) => URL.createObjectURL(file)), 'New selection');
+  });
+}
+
+bindFilePreview('image', coverPreview);
+bindFilePreview('qrImage', qrPreview);
+bindFilePreview('gallery', galleryPreview, true);
+
 function editEvent(item) {
   if (!eventForm) {
     window.location.href = `/admin/create-event?id=${encodeURIComponent(item.id)}`;
@@ -249,6 +287,7 @@ function editEvent(item) {
   form.paymentAmount.value = item.paymentAmount || '';
   form.removeQr.checked = false;
   form.published.checked = item.published;
+  renderEventMedia(item);
   contentBlocks = structuredClone(item.contentBlocks || []);
   renderContentBlocks();
   formTitle.textContent = 'Edit event';
@@ -265,6 +304,7 @@ function resetForm() {
   eventForm.elements.sortOrder.value = '0';
   eventForm.elements.removeQr.checked = false;
   eventForm.elements.published.checked = true;
+  renderEventMedia(null);
   contentBlocks = [];
   renderContentBlocks();
   formTitle.textContent = 'Add an event';

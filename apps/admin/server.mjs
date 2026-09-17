@@ -135,6 +135,32 @@ if (eventCount === 0) {
   ];
   defaults.forEach((event) => insert.run(...event));
 }
+
+const seededImages = [
+  ['heritage-walk-at-bara-imambara', '/images/events/heritage-walk.webp', '/images/events/heritage-walk-v2.png'],
+  ['the-music-evening', '/images/events/music-evening.webp', '/images/events/music-evening-v2.png'],
+  ['craft-culture-baithak', '/images/events/craft-baithak.webp', '/images/events/craft-baithak-v2.png'],
+];
+const updateSeedImage = db.prepare('UPDATE events SET image_url = ? WHERE slug = ? AND image_url = ?');
+seededImages.forEach(([slug, previous, next]) => updateSeedImage.run(next, slug, previous));
+
+const insertSeedEvent = db.prepare(`
+  INSERT OR IGNORE INTO events
+    (site, title, date_label, place, time_label, description, slug, full_description, image_url, published, sort_order)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
+`);
+insertSeedEvent.run(
+  'both',
+  'Dastangoi Under the Stars',
+  '2026-08-03',
+  'Residency Gardens, Lucknow',
+  '18:00|20:30',
+  'An evening of classical oral storytelling, poetry and conversation beneath the Lucknow sky.',
+  'dastangoi-under-the-stars',
+  'Gather in the Residency gardens for an intimate evening of dastangoi, where voice, memory and imagination bring old Lucknow stories to life.',
+  '/images/events/dastangoi-under-stars-v2.png',
+  4,
+);
 db.exec('PRAGMA optimize');
 
 const upload = multer({
