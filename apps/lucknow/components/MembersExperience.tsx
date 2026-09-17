@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export const MEMBERS = [
   {
-    slug: 'iffat', name: 'Iffat Khan', role: 'Founder & President', initials: 'IK',
+    slug: 'iffat', name: 'Iffat Khan', role: 'Founder & President of AALA', initials: 'IK',
     image: '/images/members/iffat-khan.png', qualification: 'M.A., MBA — Dalhousie University, Canada',
     bio: [
       'As a passionate believer in the power of culture, art and community, my goal is to build an environment where every member feels inspired to express their unique creativity. Exposing the values, traditions and architecture of India to the world and its visitors is my aim.',
@@ -14,7 +14,7 @@ export const MEMBERS = [
     image: '/images/members/sheikh-mohammad-tariq.png', qualification: null, bio: [],
   },
   {
-    slug: 'murad', name: 'Murad Khan', role: 'Secretary', initials: 'MK',
+    slug: 'murad', name: 'Murad Khan', role: 'Secretary, Aadaab Arz Lucknow', initials: 'MK',
     image: '/images/members/murad-khan.png', qualification: null,
     bio: [
       'I have always been deeply passionate about the arts, music and celebrating our diverse traditions. As an active participant in college activities and event planning, I understand what it takes to bring people together and create a vibrant, inclusive environment.',
@@ -68,7 +68,7 @@ export function MembersPage() {
               <div className="member-card__copy">
                 <p className="members-eyebrow">0{index + 1} · {member.role}</p>
                 <h2>{member.name}</h2>
-                <p>{member.role}, Aadaab Arz Lucknow</p>
+                <p>{member.role}</p>
                 <Link href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></Link>
               </div>
             </article>
@@ -97,7 +97,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
           <div>
             <p className="members-eyebrow">Leadership profile</p>
             <h1>{member.name}</h1>
-            <h2>{member.role}<br />Aadaab Arz Lucknow</h2>
+            <h2>{member.role}</h2>
             <i aria-hidden="true" />
             {member.qualification && <p className="member-profile__qualification">{member.qualification}</p>}
             <p className="member-profile__statement">Serving Lucknow’s living culture with care, continuity and community.</p>
