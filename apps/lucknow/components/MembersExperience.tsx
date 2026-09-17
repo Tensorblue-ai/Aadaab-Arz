@@ -1,10 +1,30 @@
 import Link from 'next/link';
 
 export const MEMBERS = [
-  { slug: 'iffat', name: 'Iffat', role: 'President', initials: 'IF' },
-  { slug: 'sheikh-tariq', name: 'Sheikh Tariq', role: 'Vice President', initials: 'ST' },
-  { slug: 'murad', name: 'Murad', role: 'Secretary', initials: 'MU' },
-  { slug: 'tariq-durrani', name: 'Tariq Durrani', role: 'Treasurer', initials: 'TD' },
+  {
+    slug: 'iffat', name: 'Iffat Khan', role: 'Founder & President', initials: 'IK',
+    image: '/images/members/iffat-khan.png', qualification: 'M.A., MBA — Dalhousie University, Canada',
+    bio: [
+      'As a passionate believer in the power of culture, art and community, my goal is to build an environment where every member feels inspired to express their unique creativity. Exposing the values, traditions and architecture of India to the world and its visitors is my aim.',
+      'Having been actively involved in group activities around music, handicrafts, art and heritage walks, I understand the dedication it takes to keep our traditions alive while pushing for fresh, modern ideas. Together, we can make the future more vibrant and memorable.',
+    ],
+  },
+  {
+    slug: 'sheikh-tariq', name: 'Sheikh Mohammad Tariq', role: 'Vice President', initials: 'ST',
+    image: '/images/members/sheikh-mohammad-tariq.png', qualification: null, bio: [],
+  },
+  {
+    slug: 'murad', name: 'Murad Khan', role: 'Secretary', initials: 'MK',
+    image: '/images/members/murad-khan.png', qualification: null,
+    bio: [
+      'I have always been deeply passionate about the arts, music and celebrating our diverse traditions. As an active participant in college activities and event planning, I understand what it takes to bring people together and create a vibrant, inclusive environment.',
+      'My motive is to promote the art, culture and vibrant colours of India, especially Lucknow.',
+    ],
+  },
+  {
+    slug: 'tariq-durrani', name: 'Tariq Durrani', role: 'Treasurer', initials: 'TD',
+    image: null, qualification: null, bio: [],
+  },
 ] as const;
 
 function MembersHeader() {
@@ -42,9 +62,8 @@ export function MembersPage() {
         <section className="members-list" aria-label="Aadaab Arz Lucknow members">
           {MEMBERS.map((member, index) => (
             <article className="member-card" key={member.slug}>
-              <div className="member-portrait-placeholder" aria-label={`${member.name} photograph coming soon`}>
-                <span>{member.initials}</span>
-                <small>Portrait to follow</small>
+              <div className="member-portrait-placeholder">
+                {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
               </div>
               <div className="member-card__copy">
                 <p className="members-eyebrow">0{index + 1} · {member.role}</p>
@@ -72,15 +91,15 @@ export function MemberProfilePage({ slug }: { slug: string }) {
       <MembersHeader />
       <main className="member-profile">
         <section className="member-profile__hero">
-          <div className="member-portrait-placeholder member-portrait-placeholder--large" aria-label={`${member.name} photograph coming soon`}>
-            <span>{member.initials}</span>
-            <small>Portrait to follow</small>
+          <div className="member-portrait-placeholder member-portrait-placeholder--large">
+            {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
           </div>
           <div>
             <p className="members-eyebrow">Leadership profile</p>
             <h1>{member.name}</h1>
             <h2>{member.role}<br />Aadaab Arz Lucknow</h2>
             <i aria-hidden="true" />
+            {member.qualification && <p className="member-profile__qualification">{member.qualification}</p>}
             <p className="member-profile__statement">Serving Lucknow’s living culture with care, continuity and community.</p>
           </div>
         </section>
@@ -91,8 +110,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
             <h2>About {member.name}</h2>
           </div>
           <div>
-            <p>{member.name} serves as {member.role} of Aadaab Arz Lucknow.</p>
-            <p>A fuller introduction, photograph and personal message will be added here.</p>
+            {member.bio.length ? member.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Profile details will be added soon.</p>}
           </div>
           <blockquote>Culture continues when people come together with purpose.</blockquote>
         </section>

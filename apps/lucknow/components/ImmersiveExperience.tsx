@@ -884,8 +884,8 @@ export default function ImmersiveExperience() {
           <div className="home-members-grid">
             {MEMBERS.map((member, index) => (
               <article className="home-member-card" key={member.slug}>
-                <div className="home-member-portrait" aria-label={`${member.name} photograph coming soon`}>
-                  <span>{member.initials}</span><small>Portrait to follow</small>
+                <div className="home-member-portrait">
+                  {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
                 </div>
                 <div>
                   <p>0{index + 1} · {member.role}</p>
