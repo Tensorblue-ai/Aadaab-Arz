@@ -512,6 +512,7 @@ function Header({
           <a href="#events" aria-current={active === 2 ? 'page' : undefined}>Events</a>
           <a href="#stories" aria-current={active === 3 || active === 4 ? 'page' : undefined}>Stories</a>
           <a href="#community" aria-current={active >= 5 && active <= 8 ? 'page' : undefined}>Community</a>
+          <a href="/members">Members</a>
           <a href="#contact" aria-current={active === 9 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
@@ -542,6 +543,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
+            <a href="/members" onClick={onMenu}><span>↗</span>Members</a>
             <a href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
               <span>↗</span>Aadaab Arz Foreign
             </a>
@@ -941,7 +943,7 @@ export default function ImmersiveExperience() {
         <footer className="site-footer">
           <span>© 2026 Aadaab Arz Lucknow</span>
           <span>Made with care in Lucknow</span>
-          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
+          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="/members">Members</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
         </footer>
       </section>
 
