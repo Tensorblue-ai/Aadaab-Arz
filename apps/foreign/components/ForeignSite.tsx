@@ -34,9 +34,9 @@ export const FOREIGN_MEMBERS = [
       "Having been actively involved in group activities around music, handicrafts, art and heritage walks, I understand the dedication it takes to keep our traditions alive while pushing for fresh, modern ideas. Together, we can make the future more vibrant and memorable.",
     ],
   },
-  { slug: "saif", name: "Saif", role: "Secretary", initials: "SA", image: null, qualification: null, bio: [] },
-  { slug: "ghulam-mujtaba", name: "Ghulam Mujtaba", role: "Vice President", initials: "GM", image: null, qualification: null, bio: [] },
-  { slug: "dev-puri", name: "Dev Puri", role: "Treasurer", initials: "DP", image: null, qualification: null, bio: [] },
+  { slug: "saif-norris", name: "Saif Norris", role: "Secretary", initials: "SN", image: "/images/members/saif-norris.png", qualification: null, bio: [] },
+  { slug: "ghulam-mujtaba", name: "Ghulam Mujtaba", role: "Vice President", initials: "GM", image: "/images/members/ghulam-mujtaba.png", qualification: null, bio: [] },
+  { slug: "dev-puri", name: "Dev Puri", role: "Treasurer", initials: "DP", image: "/images/members/dev-puri.png", qualification: null, bio: [] },
 ] as const;
 
 function Link({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
