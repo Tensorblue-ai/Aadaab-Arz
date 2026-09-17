@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { MEMBERS } from './MembersExperience';
 
 const AtmosphereCanvas = dynamic(() => import('./AtmosphereCanvas'), { ssr: false });
 
@@ -15,13 +16,14 @@ const SCENES = [
   { id: 'stories', label: 'Stories' },
   { id: 'craft', label: 'Craft' },
   { id: 'community', label: 'Community' },
+  { id: 'members', label: 'Members' },
   { id: 'archive', label: 'Archive' },
   { id: 'guidelines', label: 'Guidelines' },
   { id: 'join', label: 'Join' },
   { id: 'contact', label: 'Contact' },
 ] as const;
 
-const DARK_SCENES = new Set([1, 2, 3, 5, 6, 7, 8, 9]);
+const DARK_SCENES = new Set([1, 2, 3, 5, 6, 7, 8, 9, 10]);
 
 type PanelKey =
   | 'event-walk'
@@ -512,9 +514,9 @@ function Header({
           <a href="#heritage" aria-current={active <= 1 ? 'page' : undefined}>Explore Lucknow</a>
           <a href="#events" aria-current={active === 2 ? 'page' : undefined}>Events</a>
           <a href="#stories" aria-current={active === 3 || active === 4 ? 'page' : undefined}>Stories</a>
-          <a href="#community" aria-current={active >= 5 && active <= 8 ? 'page' : undefined}>Community</a>
-          <Link href="/members">Members</Link>
-          <a href="#contact" aria-current={active === 9 ? 'page' : undefined}>Contact</a>
+          <a href="#community" aria-current={active === 5 || (active >= 7 && active <= 9) ? 'page' : undefined}>Community</a>
+          <a href="#members" aria-current={active === 6 ? 'page' : undefined}>Members</a>
+          <a href="#contact" aria-current={active === 10 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
           <a className="foreign-link" href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com">Foreign site ↗</a>
@@ -544,7 +546,6 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <Link href="/members" onClick={onMenu}><span>↗</span>Members</Link>
             <a href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
               <span>↗</span>Aadaab Arz Foreign
             </a>
@@ -871,8 +872,34 @@ export default function ImmersiveExperience() {
         <div className="floating-seal floating-seal--two" aria-hidden="true"><Rosette /></div>
       </section>
 
-      <section className="scene archive-scene scene--dark" id="archive" data-scene="6" aria-labelledby="archive-title">
-        <SceneBackground src="/images/community/archive-collage.webp" active={activeScene === 6} position="center" />
+      <section className="scene home-members-scene scene--dark" id="members" data-scene="6" aria-labelledby="members-title">
+        <SceneBackground src="/images/heritage-arch.webp" active={activeScene === 6} position="center" className="home-members-background" />
+        <div className="home-members-shade" aria-hidden="true" />
+        <div className="home-members-layout">
+          <div className="home-members-heading">
+            <p className="scene-eyebrow"><span />The people of Aadaab Arz</p>
+            <h2 id="members-title">The people who<br />hold the circle.</h2>
+            <p>Meet the team guiding Aadaab Arz Lucknow with care, continuity and a shared love for the city.</p>
+          </div>
+          <div className="home-members-grid">
+            {MEMBERS.map((member, index) => (
+              <article className="home-member-card" key={member.slug}>
+                <div className="home-member-portrait" aria-label={`${member.name} photograph coming soon`}>
+                  <span>{member.initials}</span><small>Portrait to follow</small>
+                </div>
+                <div>
+                  <p>0{index + 1} · {member.role}</p>
+                  <h3>{member.name}</h3>
+                  <Link href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="scene archive-scene scene--dark" id="archive" data-scene="7" aria-labelledby="archive-title">
+        <SceneBackground src="/images/community/archive-collage.webp" active={activeScene === 7} position="center" />
         <div className="archive-shade" aria-hidden="true" />
         <div className="archive-layout">
           <div className="archive-intro">
@@ -893,8 +920,8 @@ export default function ImmersiveExperience() {
         </div>
       </section>
 
-      <section className="scene guidelines-scene scene--dark" id="guidelines" data-scene="7" aria-labelledby="guidelines-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 7} position="center" />
+      <section className="scene guidelines-scene scene--dark" id="guidelines" data-scene="8" aria-labelledby="guidelines-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 8} position="center" />
         <div className="guidelines-shade" aria-hidden="true" />
         <div className="guidelines-layout">
           <p className="scene-eyebrow"><span />Community guidelines<span /></p>
@@ -909,8 +936,8 @@ export default function ImmersiveExperience() {
         </div>
       </section>
 
-      <section className="scene join-scene scene--dark" id="join" data-scene="8" aria-labelledby="join-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 8} position="center" />
+      <section className="scene join-scene scene--dark" id="join" data-scene="9" aria-labelledby="join-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 9} position="center" />
         <div className="join-shade" aria-hidden="true" />
         <div className="join-layout">
           <div className="join-heading">
@@ -922,8 +949,8 @@ export default function ImmersiveExperience() {
         </div>
       </section>
 
-      <section className="scene invitation-scene scene--dark" id="contact" data-scene="9" aria-labelledby="invitation-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 9} position="center" className="invitation-background" />
+      <section className="scene invitation-scene scene--dark" id="contact" data-scene="10" aria-labelledby="invitation-title">
+        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 10} position="center" className="invitation-background" />
         <div className="invitation-shade" aria-hidden="true" />
         <motion.div
           className="invitation-copy"
@@ -944,7 +971,7 @@ export default function ImmersiveExperience() {
         <footer className="site-footer">
           <span>© 2026 Aadaab Arz Lucknow</span>
           <span>Made with care in Lucknow</span>
-          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="/members">Members</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
+          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="#members">Members</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
         </footer>
       </section>
 

@@ -18,7 +18,7 @@ function MembersHeader() {
         <Link href="/#heritage">Explore</Link>
         <Link href="/#events">Events</Link>
         <Link href="/#stories">Stories</Link>
-        <Link className="is-active" href="/members">Members</Link>
+        <Link className="is-active" href="/#members">Members</Link>
         <Link href="/#community">Community</Link>
       </nav>
       <Link className="members-home-link" href="/">Back to Lucknow <span aria-hidden="true">→</span></Link>
@@ -64,7 +64,7 @@ export function MembersPage() {
 export function MemberProfilePage({ slug }: { slug: string }) {
   const member = MEMBERS.find((item) => item.slug === slug);
   if (!member) {
-    return <div className="members-shell"><MembersHeader /><main className="member-not-found"><p className="members-eyebrow">Member profile</p><h1>Profile not found.</h1><Link href="/members">View all members →</Link></main></div>;
+    return <div className="members-shell"><MembersHeader /><main className="member-not-found"><p className="members-eyebrow">Member profile</p><h1>Profile not found.</h1><Link href="/#members">View all members →</Link></main></div>;
   }
 
   return (
@@ -98,7 +98,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
         </section>
 
         <nav className="member-profile__nav" aria-label="Member profiles">
-          <Link href="/members">← All members</Link>
+          <Link href="/#members">← All members</Link>
           <Link href="/#community">Join the community →</Link>
         </nav>
       </main>
