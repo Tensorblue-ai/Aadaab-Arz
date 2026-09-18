@@ -82,7 +82,7 @@ export function MembersPage() {
                 <p className="members-eyebrow">0{index + 1} · {member.role}</p>
                 <h2>{member.name}</h2>
                 <p>{member.role}</p>
-                <Link href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></Link>
+                <a href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></a>
               </div>
             </article>
           ))}

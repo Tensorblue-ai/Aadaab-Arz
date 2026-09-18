@@ -899,7 +899,7 @@ export default function ImmersiveExperience() {
                 <div>
                   <p>0{index + 1} · {member.role}</p>
                   <h3>{member.name}</h3>
-                  <Link href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></Link>
+                  <a href={`/members/${member.slug}`}>View profile <span aria-hidden="true">↗</span></a>
                 </div>
               </article>
             ))}
