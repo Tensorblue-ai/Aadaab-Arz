@@ -44,7 +44,7 @@ function MembersHeader() {
   return (
     <header className="members-header">
       <Link className="members-brand" href="/">
-        <span className="rosette rosette--small" aria-hidden="true"><span /><span /><span /><span /></span>
+        <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
         Aadaab Arz Lucknow
       </Link>
       <nav aria-label="Members page navigation">

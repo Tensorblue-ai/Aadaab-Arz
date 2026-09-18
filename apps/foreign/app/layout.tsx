@@ -6,7 +6,7 @@ const display = Cormorant_Garamond({ variable: "--font-display", subsets: ["lati
 const sans = Manrope({ variable: "--font-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Aadaab Arz Foreign — Discover Lucknow",
+  title: "Aadaab Arz Lucknow Abroad — Discover Lucknow",
   description: "A thoughtful international guide to Lucknow’s heritage, people, craft and living culture.",
   icons: {
     icon: "/favicon.svg",

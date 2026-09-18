@@ -65,7 +65,7 @@ export default function ManagedEventPage() {
   return (
     <div className="managed-event-page">
       <header className="managed-event-header">
-        <a className="managed-event-brand" href="/"><span>✣</span>Aadaab Arz Lucknow</a>
+        <a className="managed-event-brand" href="/"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />Aadaab Arz Lucknow</a>
         <nav aria-label="Event page navigation">
           <a href="/#heritage">Explore</a>
           <a href="/#events">Events</a>
@@ -113,7 +113,7 @@ export default function ManagedEventPage() {
           <div>{event.gallery.map((image, index) => <img key={image} src={image} alt={`${event.title} gallery ${index + 1}`} />)}</div>
         </section>}
       </main>
-      <footer className="managed-event-footer"><span>✣</span><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
+      <footer className="managed-event-footer"><img className="footer-logo" src="/images/aadaab-arz-logo.png" alt="" /><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
     </div>
   );
 }

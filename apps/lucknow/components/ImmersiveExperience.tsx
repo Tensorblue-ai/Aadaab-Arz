@@ -507,7 +507,7 @@ function Header({
     <>
       <header className={`site-header ${dark ? 'site-header--dark' : ''}`}>
         <a className="brand" href="#salaam" aria-label="Aadaab Arz Lucknow home">
-          <Rosette />
+          <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
           <span>Aadaab Arz Lucknow</span>
         </a>
         <nav className="main-nav" aria-label="Primary navigation">
@@ -547,7 +547,7 @@ function Header({
               </a>
             ))}
             <a href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
-              <span>↗</span>Aadaab Arz Foreign
+              <span>↗</span>Aadaab Arz Lucknow Abroad
             </a>
           </motion.nav>
         ) : null}
