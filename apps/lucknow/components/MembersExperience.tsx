@@ -1,4 +1,8 @@
-import Link from 'next/link';
+import type { AnchorHTMLAttributes } from 'react';
+
+function Link({ href, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+  return <a href={href} {...props} />;
+}
 
 export const MEMBERS = [
   {
@@ -43,18 +47,18 @@ const MEMBER_FOCUS: Record<string, [string, string][]> = {
 function MembersHeader() {
   return (
     <header className="members-header">
-      <Link className="members-brand" href="/">
+      <a className="members-brand" href="/">
         <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
         Aadaab Arz Lucknow
-      </Link>
+      </a>
       <nav aria-label="Members page navigation">
-        <Link href="/#heritage">Explore</Link>
-        <Link href="/#events">Events</Link>
-        <Link href="/#stories">Stories</Link>
-        <Link className="is-active" href="/#members">Members</Link>
-        <Link href="/#community">Community</Link>
+        <a href="/#heritage">Explore</a>
+        <a href="/#events">Events</a>
+        <a href="/#stories">Stories</a>
+        <a className="is-active" href="/#members">Members</a>
+        <a href="/#community">Community</a>
       </nav>
-      <Link className="members-home-link" href="/">Back to Lucknow <span aria-hidden="true">→</span></Link>
+      <a className="members-home-link" href="/">Back to Lucknow <span aria-hidden="true">→</span></a>
     </header>
   );
 }

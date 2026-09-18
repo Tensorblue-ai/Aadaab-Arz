@@ -92,10 +92,16 @@ function Header({ active = "" }: { active?: string }) {
     window.addEventListener("hashchange", update);
     return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); window.removeEventListener("hashchange", update); };
   }, []);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1051px)");
+    const closeMenu = (event: MediaQueryListEvent) => { if (event.matches) setOpen(false); };
+    desktop.addEventListener("change", closeMenu);
+    return () => desktop.removeEventListener("change", closeMenu);
+  }, []);
   return <header className="header">
-    <Link href="/" className="brand"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" /><span>Aadaab Arz Lucknow <b>Abroad</b></span></Link>
+    <a href="/" className="brand"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" /><span>Aadaab Arz Lucknow <b>Abroad</b></span></a>
     <nav className={open ? "nav open" : "nav"} aria-label="Primary navigation" onClick={() => setOpen(false)}>
-      <Link className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</Link><Link className={current === "events" ? "active" : ""} href="/#events">Events</Link><Link className={current === "stories" ? "active" : ""} href="/#stories">Stories</Link><Link className={current === "community" ? "active" : ""} href="/#community">Community</Link><Link className={current === "members" ? "active" : ""} href="/#members">Members</Link><Link className={current === "contact" ? "active" : ""} href="/#footer">Contact</Link>
+      <a className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</a><a className={current === "events" ? "active" : ""} href="/#events">Events</a><a className={current === "stories" ? "active" : ""} href="/#stories">Stories</a><a className={current === "community" ? "active" : ""} href="/#community">Community</a><a className={current === "members" ? "active" : ""} href="/#members">Members</a><a className={current === "contact" ? "active" : ""} href="/#footer">Contact</a>
     </nav>
     <div className="header-actions"><span className="header-search" aria-hidden="true">⌕</span><a className="site-switch" href={MAIN_SITE}>Back to Aadaab Arz Lucknow <span>→</span></a><button className="menu" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">☰</button></div>
   </header>;
