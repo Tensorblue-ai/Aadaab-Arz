@@ -746,7 +746,7 @@ export default function ImmersiveExperience() {
       <section className="scene hero-scene" id="salaam" data-scene="0" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">A living inheritance</p>
-          <h1 id="hero-title">Aadaab,<br />Lucknow.</h1>
+          <h1 id="hero-title" className="official-hero-name">Aadaab Arz,<br />Lucknow.</h1>
           <div className="ornament" aria-hidden="true"><span /><Rosette small /><span /></div>
           <p className="hero-lede">Where heritage lives, stories gather, and culture continues.</p>
           <p className="hero-description">Step through a city remembered in stone, thread, rhythm and grace—an invitation to meet the Lucknow that still lives between generations.</p>
