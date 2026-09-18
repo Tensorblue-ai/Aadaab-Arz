@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
+const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? 'https://settlement-fcc-processes-tones.trycloudflare.com';
+
 type ContentBlock = { id: string; type: 'heading' | 'text' | 'image' | 'video' | 'quote' | 'callout' | 'list' | 'divider'; level?: 'h2' | 'h3'; title?: string; text?: string; url?: string; caption?: string; attribution?: string; items?: string[] };
 
 type EventDetails = {
@@ -50,7 +52,7 @@ export default function ManagedEventPage() {
 
   useEffect(() => {
     const slug = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() ?? '');
-    fetch(`/api/public/events/${encodeURIComponent(slug)}?site=lucknow`, { cache: 'no-store' })
+    fetch(`${CONTENT_API_BASE}/api/public/events/${encodeURIComponent(slug)}?site=lucknow`, { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : Promise.reject())
       .then(setEvent)
       .catch(() => setMissing(true));
@@ -64,7 +66,15 @@ export default function ManagedEventPage() {
     <div className="managed-event-page">
       <header className="managed-event-header">
         <a className="managed-event-brand" href="/"><span>✣</span>Aadaab Arz Lucknow</a>
-        <a href="/#events">All gatherings</a>
+        <nav aria-label="Event page navigation">
+          <a href="/#heritage">Explore</a>
+          <a href="/#events">Events</a>
+          <a href="/#stories">Stories</a>
+          <a href="/#community">Community</a>
+          <a href="/#members">Members</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+        <a className="managed-event-back" href="/#events">All gatherings</a>
       </header>
       <main>
         <section className="managed-event-hero">

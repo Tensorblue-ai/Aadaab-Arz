@@ -5,8 +5,10 @@ export const MEMBERS = [
     slug: 'iffat', name: 'Iffat Khan', role: 'Founder & President of AALA', initials: 'IK',
     image: '/images/members/iffat-khan.png', qualification: 'M.A., MBA — Dalhousie University, Canada',
     bio: [
-      'As a passionate believer in the power of culture, art and community, my goal is to build an environment where every member feels inspired to express their unique creativity. Exposing the values, traditions and architecture of India to the world and its visitors is my aim.',
-      'Having been actively involved in group activities around music, handicrafts, art and heritage walks, I understand the dedication it takes to keep our traditions alive while pushing for fresh, modern ideas. Together, we can make the future more vibrant and memorable.',
+      'As a passionate advocate for culture, art, heritage, and community, my vision is to create an environment where everyone feels inspired to discover, express, and celebrate their unique creativity.',
+      'I am especially passionate about showcasing India’s rich cultural heritage, timeless traditions, vibrant arts, and remarkable architecture to the world and to visitors from around the globe.',
+      'Through my involvement in community activities featuring music, handicrafts, art, and heritage walks, I have developed a deep appreciation for the dedication required to preserve our traditions while embracing fresh, modern ideas.',
+      'I believe that when we come together, we can celebrate our heritage, inspire creativity, and build a more vibrant and connected community.',
     ],
   },
   {
@@ -27,9 +29,16 @@ export const MEMBERS = [
   },
   {
     slug: 'tariq-durrani', name: 'Tariq Durrani', role: 'Treasurer', initials: 'TD',
-    image: null, qualification: null, bio: [],
+    image: '/images/members/tariq-durrani.png', qualification: null, bio: [],
   },
 ] as const;
+
+const MEMBER_FOCUS: Record<string, [string, string][]> = {
+  iffat: [['Culture & Community', 'Bringing people together through shared interests and meaningful engagement.'], ['Art & Heritage', 'Sharing the values, traditions and architecture of India.'], ['Creative Leadership', 'Encouraging fresh ideas and vibrant cultural experiences.']],
+  'sheikh-tariq': [['Awadhi Heritage', 'Celebrating the culture, heritage and tehzeeb of Awadh.'], ['Community', 'Creating lasting connections through shared cultural roots.'], ['Leadership', 'Supporting thoughtful programmes and community initiatives.']],
+  murad: [['Arts & Music', 'Celebrating India’s diverse artistic and musical traditions.'], ['Events', 'Bringing people together through inclusive cultural gatherings.'], ['Lucknow', 'Promoting the vibrant colours and culture of the city.']],
+  'tariq-durrani': [['Community', 'Supporting the people and programmes of Aadaab Arz Lucknow.'], ['Stewardship', 'Helping the organisation grow with care and continuity.'], ['Culture', 'Strengthening connections through shared heritage.']],
+};
 
 function MembersHeader() {
   return (
@@ -117,6 +126,11 @@ export function MemberProfilePage({ slug }: { slug: string }) {
             {member.bio.length ? member.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Profile details will be added soon.</p>}
           </div>
           <blockquote>Culture continues when people come together with purpose.</blockquote>
+        </section>
+
+        <section className="member-profile__focus">
+          <div className="member-profile__focus-heading"><p className="members-eyebrow">Areas of focus</p><h2>Purpose in practice.</h2></div>
+          <div>{MEMBER_FOCUS[member.slug].map(([title, text], index) => <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>)}</div>
         </section>
 
         <nav className="member-profile__nav" aria-label="Member profiles">

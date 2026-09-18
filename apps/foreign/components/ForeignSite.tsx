@@ -30,8 +30,10 @@ export const FOREIGN_MEMBERS = [
     slug: "iffat-khan", name: "Iffat Khan", role: "President", initials: "IK", image: "/images/members/iffat-khan.png",
     qualification: "M.A., MBA — Dalhousie University, Canada",
     bio: [
-      "As a passionate believer in the power of culture, art and community, my goal is to build an environment where every member feels inspired to express their unique creativity. Exposing the values, traditions and architecture of India to the world and its visitors is my aim.",
-      "Having been actively involved in group activities around music, handicrafts, art and heritage walks, I understand the dedication it takes to keep our traditions alive while pushing for fresh, modern ideas. Together, we can make the future more vibrant and memorable.",
+      "As a passionate advocate for culture, art, heritage, and community, my vision is to create an environment where everyone feels inspired to discover, express, and celebrate their unique creativity.",
+      "I am especially passionate about showcasing India’s rich cultural heritage, timeless traditions, vibrant arts, and remarkable architecture to the world and to visitors from around the globe.",
+      "Through my involvement in community activities featuring music, handicrafts, art, and heritage walks, I have developed a deep appreciation for the dedication required to preserve our traditions while embracing fresh, modern ideas.",
+      "I believe that when we come together, we can celebrate our heritage, inspire creativity, and build a more vibrant and connected community.",
     ],
   },
   {
@@ -56,6 +58,13 @@ export const FOREIGN_MEMBERS = [
     ],
   },
 ] as const;
+
+const FOREIGN_MEMBER_FOCUS: Record<string, [string, string][]> = {
+  "iffat-khan": [["Culture & Community", "Bringing people together across borders through shared interests."], ["Art & Heritage", "Sharing India’s traditions, architecture and creative heritage."], ["Creative Leadership", "Encouraging fresh ideas and connected cultural experiences."]],
+  "saif-norris": [["Business & Enterprise", "Creating positive opportunities through collaboration and experience."], ["Community Development", "Strengthening communities through meaningful engagement."], ["Cultural Connection", "Preserving Lucknow’s culture and traditions abroad."]],
+  "ghulam-mujtaba": [["Urdu", "Promoting the language at the heart of Lucknow’s civilisation."], ["Arts", "Celebrating ghazal, daastaan-goi, music, dance and theatre."], ["Community", "Supporting cultural exchange and community engagement."]],
+  "dev-puri": [["Banking Experience", "Bringing decades of public and private sector banking experience."], ["Community Support", "Supporting the society’s activities with steady commitment."], ["Vancouver", "Building cultural connections with the community in Canada."]],
+};
 
 function Link({ href, ...props }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
   return <a href={href} {...props} />;
@@ -158,7 +167,7 @@ function MembersSection() {
 export function ForeignMemberProfilePage({ slug }: { slug: string }) {
   const member = FOREIGN_MEMBERS.find((item) => item.slug === slug);
   if (!member) return <Shell active="members"><main className="foreign-member-not-found"><p className="eyebrow">Leadership profile</p><h1>Profile not found.</h1><Link className="button" href="/#members">Meet the team →</Link></main></Shell>;
-  return <Shell active="members"><main className="foreign-member-profile"><section className="foreign-member-profile-hero"><MemberPortrait member={member} large /><div><p className="eyebrow">Leadership profile</p><h1>{member.name}</h1><h2>{member.role}<br />Aadaab Arz Lucknow Abroad</h2>{member.qualification && <p className="foreign-member-qualification">{member.qualification}</p>}<p className="foreign-member-statement">Building a more connected world through culture, art and heritage.</p></div></section><section className="foreign-member-about"><div><p className="eyebrow">About</p><h2>About {member.name}</h2></div><div>{member.bio.length ? member.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Profile details will be added soon.</p>}</div><blockquote>Culture becomes stronger when people share it with the world.</blockquote></section><nav className="foreign-member-profile-nav"><Link href="/#members">← Meet the team</Link><Link href="/#join">Join the community →</Link></nav></main></Shell>;
+  return <Shell active="members"><main className="foreign-member-profile"><section className="foreign-member-profile-hero"><MemberPortrait member={member} large /><div><p className="eyebrow">Aadaab Arz Lucknow Abroad leadership</p><h1>{member.name}</h1><h2>{member.role}<br />Aadaab Arz Lucknow Abroad</h2>{member.qualification && <p className="foreign-member-qualification">{member.qualification}</p>}<p className="foreign-member-statement">Building a more connected world through culture, art and heritage.</p></div></section><section className="foreign-member-about"><div><p className="eyebrow">About our leadership</p><h2>{member.slug === "saif-norris" ? "My Journey" : `About ${member.name}`}</h2></div><div>{member.bio.length ? member.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Profile details will be added soon.</p>}</div><blockquote>Culture becomes stronger when people share it with the world.</blockquote></section><section className="foreign-member-focus"><div className="foreign-member-focus-heading"><p className="eyebrow">Areas of focus</p><h2>A richer tomorrow through shared heritage.</h2></div><div>{FOREIGN_MEMBER_FOCUS[member.slug].map(([title,text],index)=><article key={title}><span>0{index+1}</span><h3>{title}</h3><p>{text}</p></article>)}</div></section><section className="foreign-member-cta"><p className="eyebrow">Let’s stay connected</p><h2>Together for a More Connected World</h2><p>Meet our team and learn more about our mission, heritage and community.</p><div><Link className="button" href="/#members">Meet the team →</Link><a className="outline" href={MAIN_SITE}>Explore Aadaab Arz Lucknow →</a></div></section><nav className="foreign-member-profile-nav"><Link href="/#members">← Meet the team</Link><Link href="/#join">Join the community →</Link></nav></main></Shell>;
 }
 
 function JoinSection() {
