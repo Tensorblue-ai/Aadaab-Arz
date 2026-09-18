@@ -594,6 +594,15 @@ export default function ImmersiveExperience() {
   const toggleMenu = useCallback(() => setMenuOpen((open) => !open), []);
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 921px)');
+    const closeMobileMenu = (event: MediaQueryListEvent) => {
+      if (event.matches) setMenuOpen(false);
+    };
+    desktop.addEventListener('change', closeMobileMenu);
+    return () => desktop.removeEventListener('change', closeMobileMenu);
+  }, []);
+
+  useEffect(() => {
     let active = true;
     fetch('/api/public/events?site=lucknow', { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : Promise.reject())
