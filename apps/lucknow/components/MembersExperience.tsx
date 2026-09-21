@@ -107,26 +107,19 @@ export function MemberProfilePage({ slug }: { slug: string }) {
     <div className="members-shell">
       <MembersHeader />
       <main className="member-profile">
-        <section className="member-profile__hero">
-          <div className="member-portrait-placeholder member-portrait-placeholder--large">
-            {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
-          </div>
-          <div>
-            <p className="members-eyebrow">Leadership profile</p>
-            <h1>{member.name}</h1>
-            <h2>{member.role}</h2>
-            <i aria-hidden="true" />
-            {member.qualification && <p className="member-profile__qualification">{member.qualification}</p>}
-            <p className="member-profile__statement">Serving Lucknow’s living culture with care, continuity and community.</p>
-          </div>
+        <section className="member-profile__intro">
+          <p className="members-eyebrow">About</p>
+          <h1>About {member.name}</h1>
+          <i aria-hidden="true" />
         </section>
 
         <section className="member-profile__about">
-          <div>
-            <p className="members-eyebrow">About</p>
-            <h2>About {member.name}</h2>
+          <div className="member-portrait-placeholder member-portrait-placeholder--large">
+            {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
           </div>
-          <div>
+          <div className="member-profile__bio">
+            <p className="member-profile__role">{member.role}</p>
+            {member.qualification && <p className="member-profile__qualification">{member.qualification}</p>}
             {member.bio.length ? member.bio.map((paragraph) => <p key={paragraph}>{paragraph}</p>) : <p>Profile details will be added soon.</p>}
           </div>
           <blockquote>Culture continues when people come together with purpose.</blockquote>
@@ -141,6 +134,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
           <Link href="/#members">← All members</Link>
           <Link href="/#community">Join the community →</Link>
         </nav>
+        <footer className="member-profile__ribbon"><span>People</span><span>Heritage</span><span>Creativity</span><span>Community</span><strong>Lucknow lives on</strong></footer>
       </main>
     </div>
   );

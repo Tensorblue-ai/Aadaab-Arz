@@ -2206,5 +2206,40 @@ h3.event-content-heading { font-size: clamp(2rem, 3.5vw, 3.4rem); }
 /* Balanced member portraits */
 .member-portrait-placeholder img{object-position:center center}
 .member-portrait-placeholder--large{background:#e8eee5}
+
+/* Official light Lucknow palette */
+html{background:#faf9f5}
+.site-header--dark,.members-header{border-color:#cdaf7370;background:#1e4f31f2;color:#faf9f5}
+.home-members-scene,.archive-scene,.guidelines-scene,.join-scene,.invitation-scene{background:#1e4f31}
+.home-members-shade{background:linear-gradient(180deg,#1e4f31d9,#1e4f31f2),linear-gradient(90deg,#1e4f31e6,transparent 68%)}
+.archive-shade,.guidelines-shade,.join-shade,.invitation-shade{background:linear-gradient(180deg,#1e4f31b8,#1e4f31ed)}
+.join-form-shell{border-color:#cdaf7370;background:#1e4f31eb}
+.members-shell{background:#faf9f5;color:#342d20}
+.members-hero{background:linear-gradient(90deg,#1e4f31f5 0%,#1e4f31d6 55%,#1e4f3170),url('/images/heritage-arch.webp') center 43%/cover;color:#faf9f5}
+.members-list{background:#e8eee5}
+.members-footer{border-color:#cdaf7370;background:#1e4f31;color:#e8eee5}
+
+/* Member profile reference layout */
+.member-profile{padding:clamp(2.5rem,5vw,5rem) 5vw 0;background:#faf9f5;color:#342d20}
+.member-profile__intro{margin-bottom:clamp(2rem,4vw,3.5rem)}
+.member-profile__intro h1{max-width:72rem;color:#1e4f31;font-size:clamp(3.3rem,6vw,6.5rem);line-height:.95;letter-spacing:-.045em}
+.member-profile__intro>i{display:block;width:4rem;margin-top:1.2rem;border-top:3px solid #cdaf73}
+.member-profile__about{grid-template-columns:minmax(16rem,.85fr) minmax(22rem,1.4fr) minmax(18rem,.88fr);align-items:center;gap:clamp(2rem,4vw,4rem);margin:0;padding:0 0 clamp(3rem,6vw,6rem);border:0;background:#faf9f5}
+.member-profile__about>div:first-child{grid-column:auto;display:grid;padding:0;border:0}
+.member-profile__about .member-portrait-placeholder--large{min-height:0;aspect-ratio:4/5;border:1px solid #cdaf73;border-radius:.85rem;box-shadow:0 22px 55px #1e4f3112}
+.member-profile__bio{font-family:Roboto,Arial,sans-serif!important;font-size:clamp(1rem,1.35vw,1.22rem)!important;line-height:1.62!important}
+.member-profile__bio p{margin:0 0 1.2rem!important}
+.member-profile__role{color:#1e4f31;font-weight:700}
+.member-profile__qualification{color:#34754a}
+.member-profile__about blockquote{min-height:22rem;display:flex;align-items:center;position:relative;padding:clamp(2rem,4vw,3.5rem);border:1px solid #cdaf73;border-radius:1rem;background:linear-gradient(135deg,#e8eee5,#faf9f5);color:#1e4f31;font-family:Helvetica,Arial,sans-serif;font-size:clamp(1.7rem,2.5vw,2.65rem);font-weight:500;line-height:1.25;box-shadow:none}
+.member-profile__about blockquote::before{content:'“';position:absolute;top:1.3rem;left:1.8rem;color:#cdaf73;font-size:4.5rem;line-height:1}
+.member-profile__focus{margin-inline:-5vw;padding:clamp(3rem,5vw,5rem) 5vw;background:#e8eee5;color:#342d20}
+.member-profile__focus article{background:#faf9f5}
+.member-profile__focus article p{color:#34754a}
+.member-profile__nav{color:#1e4f31}
+.member-profile__ribbon{display:flex;align-items:center;gap:1.5rem;margin-inline:-5vw;padding:1.5rem 5vw;border-top:1px solid #cdaf73;background:#e8eee5;color:#1e4f31;font-size:.67rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase}
+.member-profile__ribbon span+span::before{content:'|';margin-right:1.5rem;color:#cdaf73}.member-profile__ribbon strong{margin-left:auto}
+@media(max-width:1050px){.member-profile__about{grid-template-columns:minmax(16rem,.8fr) minmax(0,1.2fr)}.member-profile__about blockquote{grid-column:1/-1;min-height:14rem}.member-profile__about>div:first-child{grid-column:auto}}
+@media(max-width:700px){.member-profile{padding:2rem 1rem 0}.member-profile__intro h1{font-size:clamp(2.8rem,13vw,4.2rem)}.member-profile__about{grid-template-columns:1fr}.member-profile__about .member-portrait-placeholder--large{min-height:0;aspect-ratio:4/5}.member-profile__about blockquote{grid-column:auto;min-height:15rem}.member-profile__focus{margin-inline:-1rem;padding-inline:1rem}.member-profile__ribbon{align-items:flex-start;flex-direction:column;gap:.7rem;margin-inline:-1rem;padding-inline:1rem}.member-profile__ribbon span+span::before{display:none}.member-profile__ribbon strong{margin:1rem 0 0}}
 .brand-logo{width:3.2rem;height:3.2rem;flex:0 0 auto;object-fit:contain}.members-brand .brand-logo,.managed-event-brand .brand-logo{width:3rem;height:3rem}.managed-event-footer .footer-logo{width:4.2rem;height:3.2rem;object-fit:contain}@media(max-width:600px){.brand-logo{width:2.55rem;height:2.55rem}.members-brand .brand-logo,.managed-event-brand .brand-logo{width:2.4rem;height:2.4rem}}
 .hero-copy .official-hero-name{font-size:clamp(4rem,7vw,7.4rem)}@media(max-width:600px){.hero-copy .official-hero-name{font-size:clamp(3.25rem,15vw,5rem)}}
