@@ -2207,18 +2207,6 @@ h3.event-content-heading { font-size: clamp(2rem, 3.5vw, 3.4rem); }
 .member-portrait-placeholder img{object-position:center center}
 .member-portrait-placeholder--large{background:#e8eee5}
 
-/* Official light Lucknow palette */
-html{background:#faf9f5}
-.site-header--dark,.members-header{border-color:#cdaf7370;background:#1e4f31f2;color:#faf9f5}
-.home-members-scene,.archive-scene,.guidelines-scene,.join-scene,.invitation-scene{background:#1e4f31}
-.home-members-shade{background:linear-gradient(180deg,#1e4f31d9,#1e4f31f2),linear-gradient(90deg,#1e4f31e6,transparent 68%)}
-.archive-shade,.guidelines-shade,.join-shade,.invitation-shade{background:linear-gradient(180deg,#1e4f31b8,#1e4f31ed)}
-.join-form-shell{border-color:#cdaf7370;background:#1e4f31eb}
-.members-shell{background:#faf9f5;color:#342d20}
-.members-hero{background:linear-gradient(90deg,#1e4f31f5 0%,#1e4f31d6 55%,#1e4f3170),url('/images/heritage-arch.webp') center 43%/cover;color:#faf9f5}
-.members-list{background:#e8eee5}
-.members-footer{border-color:#cdaf7370;background:#1e4f31;color:#e8eee5}
-
 /* Member profile reference layout */
 .member-profile{padding:clamp(2.5rem,5vw,5rem) 5vw 0;background:#faf9f5;color:#342d20}
 .member-profile__intro{margin-bottom:clamp(2rem,4vw,3.5rem)}
