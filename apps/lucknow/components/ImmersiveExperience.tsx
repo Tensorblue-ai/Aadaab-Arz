@@ -546,7 +546,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <a href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
+            <a className="mobile-menu__foreign" href="https://beautifully-purchase-singing-hydraulic.trycloudflare.com" onClick={onMenu}>
               <span>↗</span>Aadaab Arz Lucknow Abroad
             </a>
           </motion.nav>

@@ -1974,6 +1974,14 @@ a { -webkit-tap-highlight-color: transparent; }
     white-space: nowrap;
   }
   .mobile-menu a span { width: 1.2rem; flex: 0 0 1.2rem; }
+  .mobile-menu .mobile-menu__foreign {
+    align-items: flex-start;
+    padding-right: 0.75rem;
+    font-size: clamp(1.35rem, 6vw, 1.85rem);
+    line-height: 1.12;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 
   .hero-copy { padding: 1rem; }
   .hero-lede { font-size: 1.22rem; }
