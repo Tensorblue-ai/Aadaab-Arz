@@ -37,17 +37,17 @@ export const FOREIGN_MEMBERS = [
     ],
   },
   {
-    slug: "saif-norris", name: "Saif Norris", role: "Secretary", initials: "SN", image: "/images/members/saif-norris.png", qualification: null,
-    bio: [
-      "I am Saif Norris, an entrepreneur and business professional based in British Columbia, Canada. I have been involved in various business enterprises and have a strong interest in community development and cultural activities.",
-      "I have a deep connection to Lucknow and its rich culture and traditions, and I am honoured to be associated with Aadaab Arz Lucknow Abroad. I look forward to contributing my time, experience and efforts toward strengthening our community and preserving the beautiful culture, traditions and heritage of Lucknow abroad.",
-    ],
-  },
-  {
     slug: "ghulam-mujtaba", name: "Ghulam Mujtaba", role: "Vice President", initials: "GM", image: "/images/members/ghulam-mujtaba.png", qualification: "Earth Scientist & Environmental Engineer",
     bio: [
       "Ghulam Mujtaba is the Vice President of Aadaab Arz Lucknow Abroad, Vancouver. An earth scientist and environmental engineer by profession, Mujtaba is trained in the Urdu language, an essential part of the civilisation of Lucknow.",
       "His attraction toward ghazal singing and daastaan-goi, the finest forms of Urdu literature, and his love for different forms of art such as music, dance, painting and theatre have brought him close to the ideals of AALA.",
+    ],
+  },
+  {
+    slug: "saif-norris", name: "Saif Norris", role: "Secretary", initials: "SN", image: "/images/members/saif-norris.png", qualification: null,
+    bio: [
+      "I am Saif Norris, an entrepreneur and business professional based in British Columbia, Canada. I have been involved in various business enterprises and have a strong interest in community development and cultural activities.",
+      "I have a deep connection to Lucknow and its rich culture and traditions, and I am honoured to be associated with Aadaab Arz Lucknow Abroad. I look forward to contributing my time, experience and efforts toward strengthening our community and preserving the beautiful culture, traditions and heritage of Lucknow abroad.",
     ],
   },
   {
