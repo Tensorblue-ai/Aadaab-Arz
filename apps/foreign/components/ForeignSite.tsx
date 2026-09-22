@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
-const MAIN_SITE = "https://settlement-fcc-processes-tones.trycloudflare.com";
+const MAIN_SITE = "https://enable-screenshots-paintball-sunset.trycloudflare.com";
 export const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? MAIN_SITE;
 type ContentEvent = { id?: number; slug: string; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
 const DEFAULT_EVENTS: ContentEvent[] = [
@@ -101,7 +101,7 @@ function Header({ active = "" }: { active?: string }) {
   return <header className="header">
     <a href="/" className="brand"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" /><span>Aadaab Arz Lucknow <b>Abroad</b></span></a>
     <nav className={open ? "nav open" : "nav"} aria-label="Primary navigation" onClick={() => setOpen(false)}>
-      <a className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</a><a className={current === "events" ? "active" : ""} href="/#events">Events</a><a className={current === "stories" ? "active" : ""} href="/#stories">Stories</a><a className={current === "community" ? "active" : ""} href="/#community">Community</a><a className={current === "members" ? "active" : ""} href="/#members">Members</a><a className={current === "contact" ? "active" : ""} href="/#footer">Contact</a>
+      <a className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</a><a className={current === "events" ? "active" : ""} href="/#events">Events</a><a className={current === "stories" ? "active" : ""} href="/#stories">Stories</a><a className={current === "community" ? "active" : ""} href="/#community">Community</a><a className={current === "members" ? "active" : ""} href="/#members">Members</a><a className={current === "contact" ? "active" : ""} href="/#footer">Contact</a><a className="mobile-site-switch" href={MAIN_SITE}>Go to Aadaab Arz Lucknow <span>→</span></a>
     </nav>
     <div className="header-actions"><span className="header-search" aria-hidden="true">⌕</span><a className="site-switch" href={MAIN_SITE}>Back to Aadaab Arz Lucknow <span>→</span></a><button className="menu" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">☰</button></div>
   </header>;
