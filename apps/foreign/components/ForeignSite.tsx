@@ -80,9 +80,8 @@ function Header({ active = "" }: { active?: string }) {
       .filter(Boolean) as HTMLElement[];
     if (sections.length < 2) return;
     const update = () => {
-      const marker = window.scrollY + 140;
       let next = sections[0].id;
-      sections.forEach((section) => { if (section.offsetTop <= marker) next = section.id; });
+      sections.forEach((section) => { if (section.getBoundingClientRect().top <= 180) next = section.id; });
       if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24) next = "footer";
       setCurrent(next === "footer" ? "contact" : next);
     };
