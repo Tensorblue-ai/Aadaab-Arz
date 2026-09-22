@@ -9,6 +9,53 @@ body, nav, button, input, textarea, select,
   font-family: var(--font-roboto), Roboto, Arial, sans-serif !important;
 }
 
+/* Official brand role hierarchy */
+.primary-action,
+.join-button,
+.date-badge {
+  border-color: #1e4f31 !important;
+  background: #1e4f31 !important;
+}
+
+.primary-action:hover,
+.primary-action:focus-visible,
+.join-button:hover,
+.join-button:focus-visible {
+  background: #34754a !important;
+}
+
+.secondary-action {
+  border-color: #34754a !important;
+  color: #34754a !important;
+}
+
+.secondary-action:hover,
+.secondary-action:focus-visible {
+  background: #34754a !important;
+  color: #faf9f5 !important;
+}
+
+.main-nav a[aria-current='page'],
+.mobile-menu a[aria-current='page'] {
+  color: #1e4f31 !important;
+}
+
+.scene:not(.scene--dark) h1,
+.scene:not(.scene--dark) h2,
+.scene:not(.scene--dark) h3,
+.event-card h3 {
+  color: #1e4f31 !important;
+}
+
+.location-pin,
+.sound-toggle > span:first-child {
+  color: #34754a !important;
+}
+
+:focus-visible {
+  outline-color: #f9d750;
+}
+
 :root {
   --ivory: #faf9f5;
   --ivory-deep: #e8eee5;

@@ -1,6 +1,15 @@
 @import "tailwindcss";
 h1,h2,h3,h4,h5,h6{font-family:Helvetica,Arial,sans-serif!important}
 body,nav,button,input,textarea,select,.nav,.button,.outline{font-family:var(--font-roboto),Roboto,Arial,sans-serif!important}
+.button{border-color:#1e4f31!important;background:#1e4f31!important;color:#faf9f5!important}
+.button:hover,.button:focus-visible{border-color:#34754a!important;background:#34754a!important}
+.outline{border-color:#34754a!important;background:transparent!important;color:#34754a!important}
+.outline:hover,.outline:focus-visible{border-color:#34754a!important;background:#34754a!important;color:#faf9f5!important}
+.nav a.active,.nav a[aria-current='page']{color:#1e4f31!important}
+h1,h2,h3{color:#1e4f31!important}
+.detail-hero h1,.detail-hero h2,.detail-hero h3,.managed-event-hero h1,.managed-event-hero h2,.managed-event-hero h3,.community-links h1,.community-links h2,.community-links h3,.footer h1,.footer h2,.footer h3{color:#faf9f5!important}
+.mark,.event-place:before,.event-time:before,.managed-event-features span{color:#34754a!important}
+:focus-visible{outline-color:#f9d750}
 html:root {
   --ink: #342d20;
   --green: #34754a;
