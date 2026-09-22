@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? 'https://settlement-fcc-processes-tones.trycloudflare.com';
+const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? 'https://supplier-reporting-scott-violations.trycloudflare.com';
 
 type ContentBlock = { id: string; type: 'heading' | 'text' | 'image' | 'video' | 'quote' | 'callout' | 'list' | 'divider'; level?: 'h2' | 'h3'; title?: string; text?: string; url?: string; caption?: string; attribution?: string; items?: string[] };
 
