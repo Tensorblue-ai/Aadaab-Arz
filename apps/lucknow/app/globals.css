@@ -2349,3 +2349,6 @@ input,select,textarea,button{max-width:100%;min-width:0}
   .join-form-shell,.detail-panel__copy,.detail-panel__form-copy{padding-right:1rem;padding-left:1rem}
   .members-list,.member-profile,.managed-event-body,.managed-event-content,.managed-event-gallery{padding-right:var(--page-gutter);padding-left:var(--page-gutter)}
 }
+
+.webgl-layer,
+.location-card { display: none; }
