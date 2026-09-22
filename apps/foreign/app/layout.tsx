@@ -3,7 +3,6 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 
 const roboto = Roboto({ variable: "--font-roboto", subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Aadaab Arz Lucknow Abroad — Discover Lucknow",
   description: "A thoughtful international guide to Lucknow’s heritage, people, craft and living culture.",
