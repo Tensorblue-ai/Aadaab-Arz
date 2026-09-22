@@ -2,7 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
-const MAIN_SITE = "https://enable-screenshots-paintball-sunset.trycloudflare.com";
+const MAIN_SITE = "https://instances-dealer-atmospheric-irrigation.trycloudflare.com";
 export const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? MAIN_SITE;
 type ContentEvent = { id?: number; slug: string; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
 const DEFAULT_EVENTS: ContentEvent[] = [

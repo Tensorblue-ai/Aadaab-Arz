@@ -519,7 +519,7 @@ function Header({
           <a href="#contact" aria-current={active === 10 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
-          <a className="foreign-link" href="https://firewire-beside-claims-instance.trycloudflare.com">Foreign site ↗</a>
+          <a className="foreign-link" href="https://stars-passed-cruz-ceo.trycloudflare.com">Foreign site ↗</a>
           <button className="sound-toggle" type="button" onClick={onSound} aria-pressed={soundOn} aria-label={soundOn ? 'Turn ambient sound off' : 'Turn ambient sound on'}>
             <span aria-hidden="true">{soundOn ? '◖))' : '◖·'}</span>
             <span>{soundOn ? 'Sound on' : 'Sound off'}</span>
@@ -546,7 +546,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <a className="mobile-menu__foreign" href="https://firewire-beside-claims-instance.trycloudflare.com" onClick={onMenu}>
+            <a className="mobile-menu__foreign" href="https://stars-passed-cruz-ceo.trycloudflare.com" onClick={onMenu}>
               <span>↗</span>Aadaab Arz Lucknow Abroad
             </a>
           </motion.nav>
