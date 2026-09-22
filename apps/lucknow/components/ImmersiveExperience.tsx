@@ -755,7 +755,7 @@ export default function ImmersiveExperience() {
       <section className="scene hero-scene" id="salaam" data-scene="0" aria-labelledby="hero-title">
         <div className="hero-copy">
           <p className="eyebrow">A living inheritance</p>
-          <h1 id="hero-title" className="official-hero-name">Aadaab Arz,<br />Lucknow.</h1>
+          <h1 id="hero-title" className="official-hero-name">Aadaab Arz,<br /><span>Lucknow.</span></h1>
           <div className="ornament" aria-hidden="true"><span /><Rosette small /><span /></div>
           <p className="hero-lede">Where heritage lives, stories gather, and culture continues.</p>
           <p className="hero-description">Step through a city remembered in stone, thread, rhythm and grace—an invitation to meet the Lucknow that still lives between generations.</p>
@@ -763,16 +763,16 @@ export default function ImmersiveExperience() {
             <a className="primary-action" href="#heritage">Enter the city <span aria-hidden="true">→</span></a>
             <a className="secondary-action" href="#stories">Discover stories <span aria-hidden="true">↗</span></a>
           </div>
+          <div className="location-card" aria-label="Lucknow, Uttar Pradesh, India">
+            <span className="location-pin" aria-hidden="true">●</span>
+            <span><small>You are here</small>Lucknow, Uttar Pradesh</span>
+            <span className="coordinates">26.8467° N · 80.9462° E</span>
+          </div>
         </div>
         <div className="hero-visual" aria-hidden="true">
           <div className="sun-haze" />
           <Image src="/images/hero-architecture.webp" alt="" fill priority sizes="(max-width: 800px) 100vw, 68vw" className="hero-image" />
           <div className="hero-vignette" />
-        </div>
-        <div className="location-card" aria-label="Lucknow, Uttar Pradesh, India">
-          <span className="location-pin" aria-hidden="true">●</span>
-          <span><small>You are here</small>Lucknow, Uttar Pradesh</span>
-          <span className="coordinates">26.8467° N · 80.9462° E</span>
         </div>
         <a className="scroll-cue" href="#heritage" aria-label="Scroll to explore Lucknow">
           <span className="mouse" aria-hidden="true"><i /></span>Scroll to explore<span aria-hidden="true">↓</span>
