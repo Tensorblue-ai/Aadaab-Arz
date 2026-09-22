@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Cinzel, Poppins } from "next/font/google";
 import "./globals.css";
 
-const roboto = Roboto({ variable: "--font-roboto", subsets: ["latin"] });
+const display = Cinzel({ variable: "--font-cinzel", subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"] });
+const bodyFont = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 export const metadata: Metadata = {
   title: "Aadaab Arz Lucknow Abroad — Discover Lucknow",
   description: "A thoughtful international guide to Lucknow’s heritage, people, craft and living culture.",
@@ -19,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.variable}>{children}</body>
+      <body className={`${display.variable} ${bodyFont.variable}`}>{children}</body>
     </html>
   );
 }
