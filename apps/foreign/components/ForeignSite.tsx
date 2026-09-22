@@ -92,7 +92,7 @@ function Header({ active = "" }: { active?: string }) {
     return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); window.removeEventListener("hashchange", update); };
   }, []);
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 1051px)");
+    const desktop = window.matchMedia("(min-width: 1281px)");
     const closeMenu = (event: MediaQueryListEvent) => { if (event.matches) setOpen(false); };
     desktop.addEventListener("change", closeMenu);
     return () => desktop.removeEventListener("change", closeMenu);
@@ -102,7 +102,7 @@ function Header({ active = "" }: { active?: string }) {
     <nav className={open ? "nav open" : "nav"} aria-label="Primary navigation" onClick={() => setOpen(false)}>
       <a className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</a><a className={current === "events" ? "active" : ""} href="/#events">Events</a><a className={current === "stories" ? "active" : ""} href="/#stories">Stories</a><a className={current === "community" ? "active" : ""} href="/#community">Community</a><a className={current === "members" ? "active" : ""} href="/#members">Members</a><a className={current === "contact" ? "active" : ""} href="/#footer">Contact</a><a className="mobile-site-switch" href={MAIN_SITE}>Go to Aadaab Arz Lucknow <span>→</span></a>
     </nav>
-    <div className="header-actions"><span className="header-search" aria-hidden="true">⌕</span><a className="site-switch" href={MAIN_SITE}>Back to Aadaab Arz Lucknow <span>→</span></a><button className="menu" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">☰</button></div>
+    <div className="header-actions"><a className="site-switch" href={MAIN_SITE}>Lucknow site <span>↗</span></a><button className="menu" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">☰</button></div>
   </header>;
 }
 function Footer() { return <footer id="footer" className="footer"><div className="footer-brand"><img className="footer-logo" src="/images/aadaab-arz-logo.png" alt="" /><h2>Aadaab Arz<br />Lucknow Abroad</h2><p>Carrying Lucknow’s living heritage across borders.</p></div><div><h3>Explore</h3><Link href="/#explore">Explore Lucknow</Link><Link href="/#events">Events</Link><Link href="/#stories">Stories</Link><Link href="/#community">Community</Link><Link href="/#members">Members</Link></div><div><h3>Contribute</h3><Link href="/#join">Share a Story</Link><Link href="/#join">Share Research</Link><Link href="/#join">Join Community</Link></div><div><h3>About</h3><Link href="/#community">Community</Link><a href="mailto:hello@aadaabarz.com">Contact</a><a href={MAIN_SITE}>Aadaab Arz Lucknow ↗</a></div><p className="copyright">© 2026 Aadaab Arz Lucknow Abroad · People · Places · Stories</p></footer>; }

@@ -215,3 +215,45 @@ input,select,textarea,button{max-width:100%;min-width:0}
   .hero-copy .official-hero-name{font-size:2.3rem}
   .button,.outline{padding-inline:.9rem}
 }
+
+@media(max-width:1280px){
+  .header{display:flex;height:5.25rem;padding-inline:1.25rem;gap:1rem}
+  .brand{max-width:calc(100% - 3.5rem);font-size:1.15rem}
+  .header-actions{margin-left:auto}
+  .header-search,.header-actions .site-switch,.header .button{display:none}
+  .menu{display:block;margin-left:auto;padding:.35rem}
+  .nav{position:absolute;top:5.25rem;right:0;left:0;display:none;max-height:calc(100svh - 5.25rem);align-items:flex-start;flex-direction:column;gap:0;overflow-y:auto;margin:0;padding:1.25rem;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 18px 35px rgb(52 45 32 / 12%)}
+  .nav.open{display:flex}
+  .nav a{width:100%;padding:.7rem 0;font-size:1rem}
+  .nav .mobile-site-switch{display:flex}
+  main{padding-top:5.25rem}
+}
+@media(max-width:700px){
+  .header{height:4.8rem;padding-inline:1rem}
+  .nav{top:4.8rem;max-height:calc(100svh - 4.8rem)}
+  main{padding-top:4.8rem}
+}
+
+:root{--page-gutter:clamp(1rem,4vw,4rem);--section-space:clamp(4rem,7vw,7rem)}
+@media(min-width:1281px){
+  .header{grid-template-columns:minmax(250px,1fr) auto minmax(190px,1fr);height:5.4rem;padding-inline:var(--page-gutter);gap:clamp(1rem,2vw,2rem)}
+  .brand{font-size:1.35rem}
+  .nav{gap:clamp(1.15rem,1.8vw,2rem)}
+  .nav a{font-size:.92rem}
+  .header-actions{gap:.75rem}
+  .site-switch{min-height:2.5rem;padding:0 0 0 1rem;border:0;border-left:1px solid var(--gold);border-radius:0;color:var(--gold);font-family:var(--font-poppins),Arial,sans-serif;font-size:.66rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+  main{padding-top:5.4rem}
+}
+.section{padding-inline:var(--page-gutter);padding-block:var(--section-space)}
+.events-preview,.events-list-section,.managed-event-content,.managed-event-gallery{padding-inline:var(--page-gutter)}
+.foreign-members,.foreign-member-profile{padding-inline:var(--page-gutter)}
+.footer{padding-inline:var(--page-gutter)}
+.event-card-copy,.category-grid article,.guidelines article{padding:clamp(1.1rem,2vw,2rem)}
+@media(max-width:700px){
+  :root{--page-gutter:1rem;--section-space:4rem}
+  .section,.events-preview,.events-list-section{padding-inline:var(--page-gutter)}
+  .section-heading{gap:1rem;margin-bottom:2rem}
+  .story-grid{gap:3rem}
+  .community-links a{padding:2rem var(--page-gutter)}
+  .footer{gap:2rem;padding-inline:var(--page-gutter)}
+}
