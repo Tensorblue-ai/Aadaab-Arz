@@ -1872,6 +1872,7 @@ a { -webkit-tap-highlight-color: transparent; }
   .progress-rail { display: none; }
   .pointer-glow { display: none; }
   .webgl-layer { opacity: 0.48; }
+  .location-card { display: none; }
 
   .hero-scene {
     align-items: flex-end;

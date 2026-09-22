@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
-const SCENE_COLORS = ['#c98a37', '#f4c36b', '#d79b44', '#e2a64c', '#b77b2e', '#efb94f', '#f1ca76'];
+const SCENE_COLORS = ['#CDAF73', '#F9D750', '#34754A', '#1E4F31', '#CDAF73', '#F9D750', '#34754A'];
 
 function seededRandom(seed: number) {
   let value = seed;
