@@ -23,9 +23,7 @@ h1, h1 *, h2, h2 *, h3, h3 *, h4, h4 *, h5, h5 *, h6, h6 * {
 
 .brand > span,
 .members-brand,
-.managed-event-brand,
-.official-hero-name,
-.official-hero-name * {
+.managed-event-brand {
   font-family: 'Baroka', var(--font-cinzel), Georgia, serif !important;
   font-weight: 400 !important;
 }
