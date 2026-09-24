@@ -3,7 +3,7 @@
 h1,h2,h3,h4,h5,h6{font-family:var(--font-cinzel),Georgia,serif!important}
 body,body *,nav,button,input,textarea,select,.nav,.button,.outline{font-family:var(--font-poppins),Arial,sans-serif!important}
 h1,h1 *,h2,h2 *,h3,h3 *,h4,h4 *,h5,h5 *,h6,h6 *{font-family:var(--font-cinzel),Georgia,serif!important}
-.brand>span{color:#1e4f31!important;font-family:"Baroka",var(--font-cinzel),Georgia,serif!important;font-weight:400!important;line-height:.85;letter-spacing:.01em;text-transform:uppercase}
+.brand>span{color:#1e4f31!important;font-family:"Baroka",var(--font-cinzel),Georgia,serif!important;font-weight:400!important;line-height:.85;letter-spacing:.06em;text-transform:uppercase}
 .brand b{margin-top:.2rem;color:#34754a!important;font-family:var(--font-allura),cursive!important;font-size:clamp(.9rem,1vw,1.1rem)!important;line-height:.9;letter-spacing:.04em!important;text-transform:lowercase!important}
 .button{border-color:#1e4f31!important;background:#1e4f31!important;color:#faf9f5!important}
 .button:hover,.button:focus-visible{border-color:#34754a!important;background:#34754a!important}
