@@ -2353,6 +2353,9 @@ input,select,textarea,button{max-width:100%;min-width:0}
   .site-header .sound-toggle,.site-header .join-button{display:none}
   .header-actions{gap:0}
 }
+@media(min-width:1051px){
+  .site-header .brand{font-size:clamp(1.05rem,1.05vw,1.25rem)}
+}
 
 :root{--page-gutter:clamp(1rem,4vw,4rem);--content-space:clamp(4rem,7vw,7rem)}
 .events-layout,.archive-layout,.guidelines-layout,.join-layout{padding-right:var(--page-gutter);padding-left:var(--page-gutter)}
