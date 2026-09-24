@@ -508,7 +508,7 @@ function Header({
       <header className={`site-header ${dark ? 'site-header--dark' : ''}`}>
         <a className="brand" href="#salaam" aria-label="Aadaab Arz Lucknow home">
           <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
-          <span>AADAB ARZ LUCKNOW</span>
+          <span>AADAAB ARZ LUCKNOW</span>
         </a>
         <nav className="main-nav" aria-label="Primary navigation">
           <a href="#heritage" aria-current={active <= 1 ? 'page' : undefined}>Explore Lucknow</a>

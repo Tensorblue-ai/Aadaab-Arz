@@ -102,7 +102,7 @@ function Header({ active = "" }: { active?: string }) {
       <a href="/" className="brand">
         <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
         <span>
-          AADAB ARZ LUCKNOW <b>ABROAD</b>
+          AADAAB ARZ LUCKNOW <b>ABROAD</b>
         </span>
       </a>
       <nav
