@@ -97,13 +97,59 @@ function Header({ active = "" }: { active?: string }) {
     desktop.addEventListener("change", closeMenu);
     return () => desktop.removeEventListener("change", closeMenu);
   }, []);
-  return <header className="header">
-    <a href="/" className="brand"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" /><span>Aadaab Arz Lucknow <b>Abroad</b></span></a>
-    <nav className={open ? "nav open" : "nav"} aria-label="Primary navigation" onClick={() => setOpen(false)}>
-      <a className={current === "explore" ? "active" : ""} href="/#explore">Explore Lucknow</a><a className={current === "events" ? "active" : ""} href="/#events">Events</a><a className={current === "stories" ? "active" : ""} href="/#stories">Stories</a><a className={current === "community" ? "active" : ""} href="/#community">Community</a><a className={current === "members" ? "active" : ""} href="/#members">Members</a><a className={current === "contact" ? "active" : ""} href="/#footer">Contact</a><a className="mobile-site-switch" href={MAIN_SITE}>Go to Aadaab Arz Lucknow <span>→</span></a>
-    </nav>
-    <div className="header-actions"><a className="site-switch" href={MAIN_SITE}>Lucknow site <span>↗</span></a><button className="menu" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle menu">☰</button></div>
-  </header>;
+  return (
+    <header className="header">
+      <a href="/" className="brand">
+        <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
+        <span>
+          AADAB ARZ LUCKNOW <b>ABROAD</b>
+        </span>
+      </a>
+      <nav
+        className={open ? "nav open" : "nav"}
+        aria-label="Primary navigation"
+        onClick={() => setOpen(false)}
+      >
+        <a className={current === "explore" ? "active" : ""} href="/#explore">
+          Explore Lucknow
+        </a>
+        <a className={current === "events" ? "active" : ""} href="/#events">
+          Events
+        </a>
+        <a className={current === "stories" ? "active" : ""} href="/#stories">
+          Stories
+        </a>
+        <a
+          className={current === "community" ? "active" : ""}
+          href="/#community"
+        >
+          Community
+        </a>
+        <a className={current === "members" ? "active" : ""} href="/#members">
+          Members
+        </a>
+        <a className={current === "contact" ? "active" : ""} href="/#footer">
+          Contact
+        </a>
+        <a className="mobile-site-switch" href={MAIN_SITE}>
+          Go to Aadaab Arz Lucknow <span>→</span>
+        </a>
+      </nav>
+      <div className="header-actions">
+        <a className="site-switch" href={MAIN_SITE}>
+          Lucknow site <span>↗</span>
+        </a>
+        <button
+          className="menu"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+          aria-label="Toggle menu"
+        >
+          ☰
+        </button>
+      </div>
+    </header>
+  );
 }
 function Footer() { return <footer id="footer" className="footer"><div className="footer-brand"><img className="footer-logo" src="/images/aadaab-arz-logo.png" alt="" /><h2>Aadaab Arz<br />Lucknow Abroad</h2><p>Carrying Lucknow’s living heritage across borders.</p></div><div><h3>Explore</h3><Link href="/#explore">Explore Lucknow</Link><Link href="/#events">Events</Link><Link href="/#stories">Stories</Link><Link href="/#community">Community</Link><Link href="/#members">Members</Link></div><div><h3>Contribute</h3><Link href="/#join">Share a Story</Link><Link href="/#join">Share Research</Link><Link href="/#join">Join Community</Link></div><div><h3>About</h3><Link href="/#community">Community</Link><a href="mailto:hello@aadaabarz.com">Contact</a><a href={MAIN_SITE}>Aadaab Arz Lucknow ↗</a></div><p className="copyright">© 2026 Aadaab Arz Lucknow Abroad · People · Places · Stories</p></footer>; }
 function ScrollProgress() {
@@ -181,7 +227,158 @@ function JoinSection() {
   return <section className="join-wrap" id="join">{done ? <div className="success"><Mark /><h2>Shukriya.</h2><p>Your request has been received.</p></div> : <form onSubmit={submit}><p className="eyebrow">Become part of the story</p><h2>Join the Community</h2><div className="form-grid"><label>Full Name<input required name="name" placeholder="Enter your full name" /></label><label>Email Address<input required type="email" name="email" placeholder="Enter your email address" /></label><label>City / Location<input required name="city" placeholder="Enter your city or location" /></label><label>What interests you most?<select required defaultValue=""><option value="" disabled>Select an option</option><option>Heritage & Architecture</option><option>History</option><option>Craft</option><option>Music & Dance</option><option>Memories</option></select></label><label className="wide">Why do you want to join?<textarea required rows={3} placeholder="Share a few lines about your connection with Lucknow…" /></label><label className="wide consent"><input required type="checkbox" />I agree to follow the Community Guidelines.</label></div><button className="button" type="submit">Request to Join →</button></form>}</section>;
 }
 
-export function HomePage() { return <Shell active="explore"><main><section className="home-hero" id="explore"><div className="hero-copy"><p className="eyebrow">A city of living heritage</p><h1 className="official-hero-name">Aadaab Arz,<br /><em>Lucknow Abroad</em></h1><h2>Where heritage lives, stories gather, and culture continues.</h2><p>A thoughtful introduction to Lucknow and Awadh—for visitors who want to look beyond monuments and meet the people, traditions and stories that keep the city alive.</p><div className="actions"><Link className="button" href="#events">Explore Lucknow <span>→</span></Link><Link className="outline" href="#stories">Discover Stories</Link></div><p className="hero-topics">Heritage · Culture · Craft · History · Music · Dance · Wildlife</p></div><div className="hero-image"><img src="/images/hero-architecture.webp" alt="An ornate gateway in Lucknow at sunrise" /><blockquote>More than a city.<br />A living inheritance.</blockquote></div></section><section className="section events-preview" id="events"><div className="section-heading"><div><p className="eyebrow">Featured experiences</p><h2>Unforgettable Experiences in Lucknow</h2></div><div className="section-heading-side"><p>Join walks, music evenings and craft sessions that offer a deeper connection to the city’s rich heritage.</p><Link href="/events">View All Events <span>→</span></Link></div></div><EventCards onePage /></section><section className="values"><div>Authentic experiences<small>Go beyond the guidebooks</small></div><div>Meet local people<small>Real stories, real connections</small></div><div>A richer perspective<small>Heritage, art, food and more</small></div><div>A meaningful journey<small>Travel with purpose</small></div></section><section className="section" id="stories"><div className="section-heading"><div><p className="eyebrow">Stories of a timeless city</p><h2>Discover Lucknow</h2></div><p>Meet the city through its architecture, music, manners, memory and craft.</p></div><div className="story-grid">{stories.map(story=><article key={story.title}><img src={story.image} alt="" /><div><h2>{story.title}</h2><p>{story.text}</p><Link className="button" href={story.href}>Read Story <span>→</span></Link></div></article>)}</div></section><section className="community-hero" id="community"><div><p className="eyebrow">Aadaab Arz · Lucknow</p><h1>Be part of<br />Lucknow’s story.</h1><p>Lucknow lives in its memories, crafts, music, streets and stories. Together, let’s celebrate, document and pass them on.</p><div className="actions"><Link className="button" href="#join">Join the Community →</Link><Link className="outline" href="#stories">Explore the Stories</Link></div><strong>4.5K+ <small>members across the world</small></strong></div><div className="collage"><img src="/images/community/archive-collage.webp" alt="A collage of Lucknow heritage and culture" /></div></section><section className="community-links"><Link href="#join"><b>Bring something to the archive</b><span>Share a place, craft, memory or story →</span></Link><Link href="#join"><b>Aadaab begins with respect</b><span>Join a thoughtful global community →</span></Link><Link href="#join"><b>Your Lucknow has a story too</b><span>Become part of the community →</span></Link></section><MembersSection /><JoinSection /></main></Shell>; }
+export function HomePage() {
+  return (
+    <Shell active="explore">
+      <main>
+        <section className="home-hero" id="explore">
+          <div className="hero-copy">
+            <p className="eyebrow">A city of living heritage</p>
+            <h1 className="official-hero-name">
+              Aadaab Arz
+              <br />
+              <em>Lucknow Abroad</em>
+            </h1>
+            <h2>
+              Where heritage lives, stories gather, and culture continues.
+            </h2>
+            <p>
+              A thoughtful introduction to Lucknow and Awadh—for visitors who
+              want to look beyond monuments and meet the people, traditions and
+              stories that keep the city alive.
+            </p>
+            <div className="actions">
+              <Link className="button" href="#events">
+                Explore Lucknow <span>→</span>
+              </Link>
+              <Link className="outline" href="#stories">
+                Discover Stories
+              </Link>
+            </div>
+            <p className="hero-topics">
+              Heritage · Culture · Craft · History · Music · Dance · Wildlife
+            </p>
+          </div>
+          <div className="hero-image">
+            <img
+              src="/images/hero-architecture.webp"
+              alt="An ornate gateway in Lucknow at sunrise"
+            />
+            <blockquote>
+              More than a city.
+              <br />A living inheritance.
+            </blockquote>
+          </div>
+        </section>
+        <section className="section events-preview" id="events">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Featured experiences</p>
+              <h2>Unforgettable Experiences in Lucknow</h2>
+            </div>
+            <div className="section-heading-side">
+              <p>
+                Join walks, music evenings and craft sessions that offer a
+                deeper connection to the city’s rich heritage.
+              </p>
+              <Link href="/events">
+                View All Events <span>→</span>
+              </Link>
+            </div>
+          </div>
+          <EventCards onePage />
+        </section>
+        <section className="values">
+          <div>
+            Authentic experiences<small>Go beyond the guidebooks</small>
+          </div>
+          <div>
+            Meet local people<small>Real stories, real connections</small>
+          </div>
+          <div>
+            A richer perspective<small>Heritage, art, food and more</small>
+          </div>
+          <div>
+            A meaningful journey<small>Travel with purpose</small>
+          </div>
+        </section>
+        <section className="section" id="stories">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Stories of a timeless city</p>
+              <h2>Discover Lucknow</h2>
+            </div>
+            <p>
+              Meet the city through its architecture, music, manners, memory and
+              craft.
+            </p>
+          </div>
+          <div className="story-grid">
+            {stories.map((story) => (
+              <article key={story.title}>
+                <img src={story.image} alt="" />
+                <div>
+                  <h2>{story.title}</h2>
+                  <p>{story.text}</p>
+                  <Link className="button" href={story.href}>
+                    Read Story <span>→</span>
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+        <section className="community-hero" id="community">
+          <div>
+            <p className="eyebrow">Aadaab Arz · Lucknow</p>
+            <h1>
+              Be part of
+              <br />
+              Lucknow’s story.
+            </h1>
+            <p>
+              Lucknow lives in its memories, crafts, music, streets and stories.
+              Together, let’s celebrate, document and pass them on.
+            </p>
+            <div className="actions">
+              <Link className="button" href="#join">
+                Join the Community →
+              </Link>
+              <Link className="outline" href="#stories">
+                Explore the Stories
+              </Link>
+            </div>
+            <strong>
+              4.5K+ <small>members across the world</small>
+            </strong>
+          </div>
+          <div className="collage">
+            <img
+              src="/images/community/archive-collage.webp"
+              alt="A collage of Lucknow heritage and culture"
+            />
+          </div>
+        </section>
+        <section className="community-links">
+          <Link href="#join">
+            <b>Bring something to the archive</b>
+            <span>Share a place, craft, memory or story →</span>
+          </Link>
+          <Link href="#join">
+            <b>Aadaab begins with respect</b>
+            <span>Join a thoughtful global community →</span>
+          </Link>
+          <Link href="#join">
+            <b>Your Lucknow has a story too</b>
+            <span>Become part of the community →</span>
+          </Link>
+        </section>
+        <MembersSection />
+        <JoinSection />
+      </main>
+    </Shell>
+  );
+}
 
 export function EventsPage() { return <Shell active="events"><main><section className="split-hero events-hero"><div><p className="eyebrow">Culture · People · Places · Together</p><h1>Gather Around<br />Heritage</h1><p>Walk historic lanes. Hear timeless music. Meet master artisans. Discover the living heritage of Lucknow through curated experiences that bring people, culture and stories together.</p><Link className="button" href="#events">Explore Events <span>→</span></Link></div><div className="events-hero-image"><img src="/images/heritage-arch.webp" alt="Lucknow heritage architecture at sunset" /><blockquote>More than a city.<br />A way of life.</blockquote></div></section><section className="section events-list-section" id="events"><div className="section-heading"><div><p className="eyebrow">Featured events</p><h2>Unforgettable<br />Experiences in Lucknow</h2></div><div className="section-heading-side"><p>Join walks, music evenings and craft sessions that offer a deeper connection to the city’s rich heritage.</p></div></div><EventCards /></section><section className="values events-values"><div>Authentic experiences<small>Go beyond the guidebooks</small></div><div>Meet local people<small>Real stories, real connections</small></div><div>A richer perspective<small>Heritage, art, food and more</small></div><div>A meaningful journey<small>Travel with purpose</small></div></section></main></Shell>; }
 

@@ -508,7 +508,7 @@ function Header({
       <header className={`site-header ${dark ? 'site-header--dark' : ''}`}>
         <a className="brand" href="#salaam" aria-label="Aadaab Arz Lucknow home">
           <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
-          <span>Aadaab Arz Lucknow</span>
+          <span>AADAB ARZ LUCKNOW</span>
         </a>
         <nav className="main-nav" aria-label="Primary navigation">
           <a href="#heritage" aria-current={active <= 1 ? 'page' : undefined}>Explore Lucknow</a>
@@ -737,255 +737,596 @@ export default function ImmersiveExperience() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <main className="experience">
-      <a className="skip-link" href="#heritage">Skip to the journey</a>
-      <div className="pointer-glow" aria-hidden="true" />
-      <div className="webgl-layer" aria-hidden="true">
-        {prefersReducedMotion ? null : <AtmosphereCanvas activeScene={activeScene} />}
-      </div>
-      <Header
-        active={activeScene}
-        soundOn={soundOn}
-        menuOpen={menuOpen}
-        onSound={toggleSound}
-        onMenu={toggleMenu}
-      />
-      <ProgressRail active={activeScene} />
-
-      <section className="scene hero-scene" id="salaam" data-scene="0" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <p className="eyebrow">A living inheritance</p>
-          <h1 id="hero-title" className="official-hero-name">Aadaab Arz,<br /><span>Lucknow.</span></h1>
-          <div className="ornament" aria-hidden="true"><span /><Rosette small /><span /></div>
-          <p className="hero-lede">Where heritage lives, stories gather, and culture continues.</p>
-          <p className="hero-description">Step through a city remembered in stone, thread, rhythm and grace—an invitation to meet the Lucknow that still lives between generations.</p>
-          <div className="hero-actions">
-            <a className="primary-action" href="#heritage">Enter the city <span aria-hidden="true">→</span></a>
-            <a className="secondary-action" href="#stories">Discover stories <span aria-hidden="true">↗</span></a>
-          </div>
-          <div className="location-card" aria-label="Lucknow, Uttar Pradesh, India">
-            <span className="location-pin" aria-hidden="true">●</span>
-            <span><small>You are here</small>Lucknow, Uttar Pradesh</span>
-            <span className="coordinates">26.8467° N · 80.9462° E</span>
-          </div>
-        </div>
-        <div className="hero-visual" aria-hidden="true">
-          <div className="sun-haze" />
-          <Image src="/images/hero-architecture.webp" alt="" fill priority sizes="(max-width: 800px) 100vw, 68vw" className="hero-image" />
-          <div className="hero-vignette" />
-        </div>
-        <a className="scroll-cue" href="#heritage" aria-label="Scroll to explore Lucknow">
-          <span className="mouse" aria-hidden="true"><i /></span>Scroll to explore<span aria-hidden="true">↓</span>
+      <main className="experience">
+        <a className="skip-link" href="#heritage">
+          Skip to the journey
         </a>
-      </section>
-
-      <section className="scene heritage-scene scene--dark" id="heritage" data-scene="1" aria-labelledby="heritage-title">
-        <SceneBackground src="/images/heritage-arch.webp" active={activeScene === 1} position="center" />
-        <div className="heritage-shade" aria-hidden="true" />
-        <motion.div
-          className="heritage-copy"
-          initial={{ opacity: 0, scale: 0.84, z: -160 }}
-          whileInView={{ opacity: 1, scale: 1, z: 0 }}
-          viewport={{ amount: 0.55 }}
-          transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <p className="scene-eyebrow"><span />The city opens in layers<span /></p>
-          <h2 id="heritage-title">Gather Around<br />Heritage</h2>
-          <p>Not simply to look back—but to listen, meet and take part.</p>
-          <a className="ghost-action" href="#events">See what is gathering <span>↓</span></a>
-        </motion.div>
-        <div className="portal-rings" aria-hidden="true"><span /><span /><span /></div>
-      </section>
-
-      <section className={`scene events-scene scene--dark${events.length > 3 ? ' events-scene--expanded' : ''}`} id="events" data-scene="2" aria-labelledby="events-title">
-        <SceneBackground src="/images/heritage-arch.webp" active={activeScene === 2} position="center" className="events-background" />
-        <div className="events-shade" aria-hidden="true" />
-        <div className="events-layout">
-          <div className="events-intro">
-            <p className="scene-eyebrow"><span />Gatherings in the city</p>
-            <h2 id="events-title">Meet Lucknow<br />in the present.</h2>
-            <p>Walk, listen and make alongside the people who carry Awadh’s living traditions forward.</p>
-          </div>
-          <div className={`events-grid${events.length > 3 ? ' events-grid--expanded' : ''}`}>
-            {events.map((event, index) => <EventCard key={event.id} event={event} index={index} />)}
-          </div>
+        <div className="pointer-glow" aria-hidden="true" />
+        <div className="webgl-layer" aria-hidden="true">
+          {prefersReducedMotion ? null : (
+            <AtmosphereCanvas activeScene={activeScene} />
+          )}
         </div>
-      </section>
+        <Header
+          active={activeScene}
+          soundOn={soundOn}
+          menuOpen={menuOpen}
+          onSound={toggleSound}
+          onMenu={toggleMenu}
+        />
+        <ProgressRail active={activeScene} />
 
-      <section className="scene stories-scene scene--dark" id="stories" data-scene="3" aria-labelledby="stories-title">
-        <SceneBackground src="/images/stories/rumi-gateway.webp" active={activeScene === 3} position="72% center" className="stories-background" />
-        <div className="stories-shade" aria-hidden="true" />
-        <div className="stories-layout">
-          <SceneHeading eyebrow="Discover Lucknow" title="Every arch holds an echo." body="Enter a city through the people who remember it—and the places that still speak." />
-          <button className="story-feature" type="button" onClick={() => setPanel('story-rumi')}>
-            <span>Featured story</span>
-            <strong id="stories-title">The Arches of<br />Rumi Darwaza</strong>
-            <i>Read the story <b aria-hidden="true">↗</b></i>
-          </button>
-          <div className="story-index">
-            {STORY_LINKS.map((story) => (
-              <button key={story.key} type="button" onClick={() => setPanel(story.key)}>
-                <span>{story.number}</span><strong>{story.title}</strong><i aria-hidden="true">↗</i>
+        <section
+          className="scene hero-scene"
+          id="salaam"
+          data-scene="0"
+          aria-labelledby="hero-title"
+        >
+          <div className="hero-copy">
+            <p className="eyebrow">A living inheritance</p>
+            <h1 id="hero-title" className="official-hero-name">
+              Aadaab Arz
+              <br />
+              <span>Lucknow</span>
+            </h1>
+            <div className="ornament" aria-hidden="true">
+              <span />
+              <Rosette small />
+              <span />
+            </div>
+            <p className="hero-lede">
+              Where heritage lives, stories gather, and culture continues.
+            </p>
+            <p className="hero-description">
+              Step through a city remembered in stone, thread, rhythm and
+              grace—an invitation to meet the Lucknow that still lives between
+              generations.
+            </p>
+            <div className="hero-actions">
+              <a className="primary-action" href="#heritage">
+                Enter the city <span aria-hidden="true">→</span>
+              </a>
+              <a className="secondary-action" href="#stories">
+                Discover stories <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+            <div
+              className="location-card"
+              aria-label="Lucknow, Uttar Pradesh, India"
+            >
+              <span className="location-pin" aria-hidden="true">
+                ●
+              </span>
+              <span>
+                <small>You are here</small>Lucknow, Uttar Pradesh
+              </span>
+              <span className="coordinates">26.8467° N · 80.9462° E</span>
+            </div>
+          </div>
+          <div className="hero-visual" aria-hidden="true">
+            <div className="sun-haze" />
+            <Image
+              src="/images/hero-architecture.webp"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 800px) 100vw, 68vw"
+              className="hero-image"
+            />
+            <div className="hero-vignette" />
+          </div>
+          <a
+            className="scroll-cue"
+            href="#heritage"
+            aria-label="Scroll to explore Lucknow"
+          >
+            <span className="mouse" aria-hidden="true">
+              <i />
+            </span>
+            Scroll to explore<span aria-hidden="true">↓</span>
+          </a>
+        </section>
+
+        <section
+          className="scene heritage-scene scene--dark"
+          id="heritage"
+          data-scene="1"
+          aria-labelledby="heritage-title"
+        >
+          <SceneBackground
+            src="/images/heritage-arch.webp"
+            active={activeScene === 1}
+            position="center"
+          />
+          <div className="heritage-shade" aria-hidden="true" />
+          <motion.div
+            className="heritage-copy"
+            initial={{ opacity: 0, scale: 0.84, z: -160 }}
+            whileInView={{ opacity: 1, scale: 1, z: 0 }}
+            viewport={{ amount: 0.55 }}
+            transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="scene-eyebrow">
+              <span />
+              The city opens in layers
+              <span />
+            </p>
+            <h2 id="heritage-title">
+              Gather Around
+              <br />
+              Heritage
+            </h2>
+            <p>Not simply to look back—but to listen, meet and take part.</p>
+            <a className="ghost-action" href="#events">
+              See what is gathering <span>↓</span>
+            </a>
+          </motion.div>
+          <div className="portal-rings" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </section>
+
+        <section
+          className={`scene events-scene scene--dark${events.length > 3 ? " events-scene--expanded" : ""}`}
+          id="events"
+          data-scene="2"
+          aria-labelledby="events-title"
+        >
+          <SceneBackground
+            src="/images/heritage-arch.webp"
+            active={activeScene === 2}
+            position="center"
+            className="events-background"
+          />
+          <div className="events-shade" aria-hidden="true" />
+          <div className="events-layout">
+            <div className="events-intro">
+              <p className="scene-eyebrow">
+                <span />
+                Gatherings in the city
+              </p>
+              <h2 id="events-title">
+                Meet Lucknow
+                <br />
+                in the present.
+              </h2>
+              <p>
+                Walk, listen and make alongside the people who carry Awadh’s
+                living traditions forward.
+              </p>
+            </div>
+            <div
+              className={`events-grid${events.length > 3 ? " events-grid--expanded" : ""}`}
+            >
+              {events.map((event, index) => (
+                <EventCard key={event.id} event={event} index={index} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scene stories-scene scene--dark"
+          id="stories"
+          data-scene="3"
+          aria-labelledby="stories-title"
+        >
+          <SceneBackground
+            src="/images/stories/rumi-gateway.webp"
+            active={activeScene === 3}
+            position="72% center"
+            className="stories-background"
+          />
+          <div className="stories-shade" aria-hidden="true" />
+          <div className="stories-layout">
+            <SceneHeading
+              eyebrow="Discover Lucknow"
+              title="Every arch holds an echo."
+              body="Enter a city through the people who remember it—and the places that still speak."
+            />
+            <button
+              className="story-feature"
+              type="button"
+              onClick={() => setPanel("story-rumi")}
+            >
+              <span>Featured story</span>
+              <strong id="stories-title">
+                The Arches of
+                <br />
+                Rumi Darwaza
+              </strong>
+              <i>
+                Read the story <b aria-hidden="true">↗</b>
+              </i>
+            </button>
+            <div className="story-index">
+              {STORY_LINKS.map((story) => (
+                <button
+                  key={story.key}
+                  type="button"
+                  onClick={() => setPanel(story.key)}
+                >
+                  <span>{story.number}</span>
+                  <strong>{story.title}</strong>
+                  <i aria-hidden="true">↗</i>
+                </button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scene craft-scene"
+          id="craft"
+          data-scene="4"
+          aria-labelledby="craft-title"
+        >
+          <div className="craft-image-wrap" aria-hidden="true">
+            <Image
+              src="/images/stories/craft-artisan.webp"
+              alt=""
+              fill
+              sizes="(max-width: 800px) 100vw, 58vw"
+              className="craft-image"
+            />
+            <div className="craft-image-shade" />
+          </div>
+          <div className="thread-field" aria-hidden="true">
+            {Array.from({ length: 7 }, (_, index) => (
+              <span
+                key={index}
+                style={{ "--thread": index } as React.CSSProperties}
+              />
+            ))}
+          </div>
+          <motion.div
+            className="craft-copy"
+            initial={{ opacity: 0, x: 70 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ amount: 0.45 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="scene-eyebrow">
+              <span />
+              The hand and the thread
+            </p>
+            <h2 id="craft-title">
+              A city carried
+              <br />
+              by hand.
+            </h2>
+            <p className="craft-lede">
+              Every stitch holds patience. Every motif carries memory.
+            </p>
+            <p>
+              From chikankari to zardozi, Lucknow’s craft traditions remain a
+              living conversation between material, maker and time.
+            </p>
+            <div className="craft-tags">
+              <span>Chikankari</span>
+              <span>Zardozi</span>
+              <span>Metalwork</span>
+              <span>Woodcraft</span>
+            </div>
+            <button
+              className="secondary-action"
+              type="button"
+              onClick={() => setPanel("story-craft")}
+            >
+              Meet the makers <span>↗</span>
+            </button>
+          </motion.div>
+        </section>
+
+        <section
+          className="scene community-scene scene--dark"
+          id="community"
+          data-scene="5"
+          aria-labelledby="community-title"
+        >
+          <SceneBackground
+            src="/images/community/archive-collage.webp"
+            active={activeScene === 5}
+            position="72% center"
+            className="community-background"
+          />
+          <div className="community-shade" aria-hidden="true" />
+          <motion.div
+            className="community-copy"
+            initial={{ opacity: 0, x: -65 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ amount: 0.5 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="scene-eyebrow">
+              <span />A living archive
+            </p>
+            <h2 id="community-title">
+              Your Lucknow
+              <br />
+              has a story too.
+            </h2>
+            <p>
+              Bring a photograph, a family memory, a neighbourhood tale, a song,
+              a recipe—or simply a place worth remembering.
+            </p>
+            <div
+              className="contribution-chips"
+              aria-label="Contribution categories"
+            >
+              {[
+                "Heritage",
+                "History",
+                "Craft",
+                "Music & dance",
+                "Nature",
+                "Memories",
+              ].map((chip) => (
+                <span key={chip}>{chip}</span>
+              ))}
+            </div>
+            <div className="community-actions">
+              <button
+                className="primary-action"
+                type="button"
+                onClick={() => setPanel("community")}
+              >
+                Contribute to the archive <span>→</span>
               </button>
-            ))}
+              <span>
+                <strong>4.5k+</strong> voices gathering
+              </span>
+            </div>
+          </motion.div>
+          <div className="floating-seal floating-seal--one" aria-hidden="true">
+            <Rosette />
           </div>
-        </div>
-      </section>
+          <div className="floating-seal floating-seal--two" aria-hidden="true">
+            <Rosette />
+          </div>
+        </section>
 
-      <section className="scene craft-scene" id="craft" data-scene="4" aria-labelledby="craft-title">
-        <div className="craft-image-wrap" aria-hidden="true">
-          <Image src="/images/stories/craft-artisan.webp" alt="" fill sizes="(max-width: 800px) 100vw, 58vw" className="craft-image" />
-          <div className="craft-image-shade" />
-        </div>
-        <div className="thread-field" aria-hidden="true">
-          {Array.from({ length: 7 }, (_, index) => <span key={index} style={{ '--thread': index } as React.CSSProperties} />)}
-        </div>
-        <motion.div
-          className="craft-copy"
-          initial={{ opacity: 0, x: 70 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ amount: 0.45 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        <section
+          className="scene home-members-scene scene--dark"
+          id="members"
+          data-scene="6"
+          aria-labelledby="members-title"
         >
-          <p className="scene-eyebrow"><span />The hand and the thread</p>
-          <h2 id="craft-title">A city carried<br />by hand.</h2>
-          <p className="craft-lede">Every stitch holds patience. Every motif carries memory.</p>
-          <p>From chikankari to zardozi, Lucknow’s craft traditions remain a living conversation between material, maker and time.</p>
-          <div className="craft-tags"><span>Chikankari</span><span>Zardozi</span><span>Metalwork</span><span>Woodcraft</span></div>
-          <button className="secondary-action" type="button" onClick={() => setPanel('story-craft')}>Meet the makers <span>↗</span></button>
-        </motion.div>
-      </section>
+          <SceneBackground
+            src="/images/heritage-arch.webp"
+            active={activeScene === 6}
+            position="center"
+            className="home-members-background"
+          />
+          <div className="home-members-shade" aria-hidden="true" />
+          <div className="home-members-layout">
+            <div className="home-members-heading">
+              <p className="scene-eyebrow">
+                <span />
+                The people of Aadaab Arz
+              </p>
+              <h2 id="members-title">
+                The people who
+                <br />
+                hold the circle.
+              </h2>
+              <p>
+                Meet the team guiding Aadaab Arz Lucknow with care, continuity
+                and a shared love for the city.
+              </p>
+            </div>
+            <div className="home-members-grid">
+              {MEMBERS.map((member, index) => (
+                <article className="home-member-card" key={member.slug}>
+                  <div className="home-member-portrait">
+                    {member.image ? (
+                      <img src={member.image} alt={member.name} />
+                    ) : (
+                      <>
+                        <span>{member.initials}</span>
+                        <small>Portrait to follow</small>
+                      </>
+                    )}
+                  </div>
+                  <div>
+                    <p>
+                      0{index + 1} · {member.role}
+                    </p>
+                    <h3>{member.name}</h3>
+                    <a href={`/members/${member.slug}`} target="_top">
+                      View profile <span aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
 
-      <section className="scene community-scene scene--dark" id="community" data-scene="5" aria-labelledby="community-title">
-        <SceneBackground src="/images/community/archive-collage.webp" active={activeScene === 5} position="72% center" className="community-background" />
-        <div className="community-shade" aria-hidden="true" />
-        <motion.div
-          className="community-copy"
-          initial={{ opacity: 0, x: -65 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ amount: 0.5 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        <section
+          className="scene archive-scene scene--dark"
+          id="archive"
+          data-scene="7"
+          aria-labelledby="archive-title"
         >
-          <p className="scene-eyebrow"><span />A living archive</p>
-          <h2 id="community-title">Your Lucknow<br />has a story too.</h2>
-          <p>Bring a photograph, a family memory, a neighbourhood tale, a song, a recipe—or simply a place worth remembering.</p>
-          <div className="contribution-chips" aria-label="Contribution categories">
-            {['Heritage', 'History', 'Craft', 'Music & dance', 'Nature', 'Memories'].map((chip) => <span key={chip}>{chip}</span>)}
+          <SceneBackground
+            src="/images/community/archive-collage.webp"
+            active={activeScene === 7}
+            position="center"
+          />
+          <div className="archive-shade" aria-hidden="true" />
+          <div className="archive-layout">
+            <div className="archive-intro">
+              <p className="scene-eyebrow">
+                <span />A living archive
+              </p>
+              <h2 id="archive-title">
+                Bring something
+                <br />
+                to the archive.
+              </h2>
+              <p>
+                Some of Lucknow’s most valuable stories live in family albums,
+                neighbourhood memories, traditional crafts and the people who
+                carry them forward.
+              </p>
+            </div>
+            <div className="archive-grid">
+              {ARCHIVE_CATEGORIES.map(([title, body], index) => (
+                <article key={title}>
+                  <span>0{index + 1}</span>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                  <a href="#join">
+                    Explore <b aria-hidden="true">→</b>
+                  </a>
+                </article>
+              ))}
+            </div>
           </div>
-          <div className="community-actions">
-            <button className="primary-action" type="button" onClick={() => setPanel('community')}>Contribute to the archive <span>→</span></button>
-            <span><strong>4.5k+</strong> voices gathering</span>
-          </div>
-        </motion.div>
-        <div className="floating-seal floating-seal--one" aria-hidden="true"><Rosette /></div>
-        <div className="floating-seal floating-seal--two" aria-hidden="true"><Rosette /></div>
-      </section>
+        </section>
 
-      <section className="scene home-members-scene scene--dark" id="members" data-scene="6" aria-labelledby="members-title">
-        <SceneBackground src="/images/heritage-arch.webp" active={activeScene === 6} position="center" className="home-members-background" />
-        <div className="home-members-shade" aria-hidden="true" />
-        <div className="home-members-layout">
-          <div className="home-members-heading">
-            <p className="scene-eyebrow"><span />The people of Aadaab Arz</p>
-            <h2 id="members-title">The people who<br />hold the circle.</h2>
-            <p>Meet the team guiding Aadaab Arz Lucknow with care, continuity and a shared love for the city.</p>
-          </div>
-          <div className="home-members-grid">
-            {MEMBERS.map((member, index) => (
-              <article className="home-member-card" key={member.slug}>
-                <div className="home-member-portrait">
-                  {member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
-                </div>
-                <div>
-                  <p>0{index + 1} · {member.role}</p>
-                  <h3>{member.name}</h3>
-                  <a href={`/members/${member.slug}`} target="_top">View profile <span aria-hidden="true">↗</span></a>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="scene archive-scene scene--dark" id="archive" data-scene="7" aria-labelledby="archive-title">
-        <SceneBackground src="/images/community/archive-collage.webp" active={activeScene === 7} position="center" />
-        <div className="archive-shade" aria-hidden="true" />
-        <div className="archive-layout">
-          <div className="archive-intro">
-            <p className="scene-eyebrow"><span />A living archive</p>
-            <h2 id="archive-title">Bring something<br />to the archive.</h2>
-            <p>Some of Lucknow’s most valuable stories live in family albums, neighbourhood memories, traditional crafts and the people who carry them forward.</p>
-          </div>
-          <div className="archive-grid">
-            {ARCHIVE_CATEGORIES.map(([title, body], index) => (
-              <article key={title}>
-                <span>0{index + 1}</span>
-                <h3>{title}</h3>
-                <p>{body}</p>
-                <a href="#join">Explore <b aria-hidden="true">→</b></a>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="scene guidelines-scene scene--dark" id="guidelines" data-scene="8" aria-labelledby="guidelines-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 8} position="center" />
-        <div className="guidelines-shade" aria-hidden="true" />
-        <div className="guidelines-layout">
-          <p className="scene-eyebrow"><span />Community guidelines<span /></p>
-          <h2 id="guidelines-title">Aadaab begins<br />with respect.</h2>
-          <p>Help us keep this a thoughtful, welcoming and trustworthy space for conversations about Lucknow.</p>
-          <div className="guidelines-grid">
-            {GUIDELINES.map(([title, body], index) => (
-              <article key={title}><span>0{index + 1}</span><h3>{title}</h3><p>{body}</p></article>
-            ))}
-          </div>
-          <a className="primary-action" href="#join">I understand — continue <span>→</span></a>
-        </div>
-      </section>
-
-      <section className="scene join-scene scene--dark" id="join" data-scene="9" aria-labelledby="join-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 9} position="center" />
-        <div className="join-shade" aria-hidden="true" />
-        <div className="join-layout">
-          <div className="join-heading">
-            <p className="scene-eyebrow"><span />Aadaab Arz · Lucknow<span /></p>
-            <h2 id="join-title">Join the community.</h2>
-            <p>Become part of a growing community that celebrates, documents and preserves the heritage and culture of Lucknow and Awadh.</p>
-          </div>
-          <div className="join-form-shell"><ContributionForm /></div>
-        </div>
-      </section>
-
-      <section className="scene invitation-scene scene--dark" id="contact" data-scene="10" aria-labelledby="invitation-title">
-        <SceneBackground src="/images/community/closing-atmosphere.webp" active={activeScene === 10} position="center" className="invitation-background" />
-        <div className="invitation-shade" aria-hidden="true" />
-        <motion.div
-          className="invitation-copy"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ amount: 0.5 }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        <section
+          className="scene guidelines-scene scene--dark"
+          id="guidelines"
+          data-scene="8"
+          aria-labelledby="guidelines-title"
         >
-          <Rosette />
-          <p className="scene-eyebrow"><span />Aadaab Arz · Lucknow<span /></p>
-          <h2 id="invitation-title">Preserve the past.<br />Celebrate the present.<br />Carry Lucknow forward.</h2>
-          <p>Join a thoughtful community for the heritage and culture of Lucknow & Awadh.</p>
-          <div className="invitation-actions">
-            <a className="primary-action" href="#join">Join the community <span>→</span></a>
-            <a className="ghost-action" href="#salaam">Return to the beginning <span>↑</span></a>
+          <SceneBackground
+            src="/images/community/closing-atmosphere.webp"
+            active={activeScene === 8}
+            position="center"
+          />
+          <div className="guidelines-shade" aria-hidden="true" />
+          <div className="guidelines-layout">
+            <p className="scene-eyebrow">
+              <span />
+              Community guidelines
+              <span />
+            </p>
+            <h2 id="guidelines-title">
+              Aadaab begins
+              <br />
+              with respect.
+            </h2>
+            <p>
+              Help us keep this a thoughtful, welcoming and trustworthy space
+              for conversations about Lucknow.
+            </p>
+            <div className="guidelines-grid">
+              {GUIDELINES.map(([title, body], index) => (
+                <article key={title}>
+                  <span>0{index + 1}</span>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </article>
+              ))}
+            </div>
+            <a className="primary-action" href="#join">
+              I understand — continue <span>→</span>
+            </a>
           </div>
-        </motion.div>
-        <footer className="site-footer">
-          <span>© 2026 Aadaab Arz Lucknow</span>
-          <span>Made with care in Lucknow</span>
-          <nav aria-label="Footer navigation"><a href="#heritage">Explore</a><a href="#events">Events</a><a href="#stories">Stories</a><a href="#members">Members</a><a href="#community">Community</a><a href="mailto:hello@aadaabarzlucknow.com">Contact</a></nav>
-        </footer>
-      </section>
+        </section>
 
-      <DetailOverlay panel={panel} event={selectedEvent} onClose={closePanel} />
-    </main>
+        <section
+          className="scene join-scene scene--dark"
+          id="join"
+          data-scene="9"
+          aria-labelledby="join-title"
+        >
+          <SceneBackground
+            src="/images/community/closing-atmosphere.webp"
+            active={activeScene === 9}
+            position="center"
+          />
+          <div className="join-shade" aria-hidden="true" />
+          <div className="join-layout">
+            <div className="join-heading">
+              <p className="scene-eyebrow">
+                <span />
+                Aadaab Arz · Lucknow
+                <span />
+              </p>
+              <h2 id="join-title">Join the community.</h2>
+              <p>
+                Become part of a growing community that celebrates, documents
+                and preserves the heritage and culture of Lucknow and Awadh.
+              </p>
+            </div>
+            <div className="join-form-shell">
+              <ContributionForm />
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="scene invitation-scene scene--dark"
+          id="contact"
+          data-scene="10"
+          aria-labelledby="invitation-title"
+        >
+          <SceneBackground
+            src="/images/community/closing-atmosphere.webp"
+            active={activeScene === 10}
+            position="center"
+            className="invitation-background"
+          />
+          <div className="invitation-shade" aria-hidden="true" />
+          <motion.div
+            className="invitation-copy"
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ amount: 0.5 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Rosette />
+            <p className="scene-eyebrow">
+              <span />
+              Aadaab Arz · Lucknow
+              <span />
+            </p>
+            <h2 id="invitation-title">
+              Preserve the past.
+              <br />
+              Celebrate the present.
+              <br />
+              Carry Lucknow forward.
+            </h2>
+            <p>
+              Join a thoughtful community for the heritage and culture of
+              Lucknow & Awadh.
+            </p>
+            <div className="invitation-actions">
+              <a className="primary-action" href="#join">
+                Join the community <span>→</span>
+              </a>
+              <a className="ghost-action" href="#salaam">
+                Return to the beginning <span>↑</span>
+              </a>
+            </div>
+          </motion.div>
+          <footer className="site-footer">
+            <span>© 2026 Aadaab Arz Lucknow</span>
+            <span>Made with care in Lucknow</span>
+            <nav aria-label="Footer navigation">
+              <a href="#heritage">Explore</a>
+              <a href="#events">Events</a>
+              <a href="#stories">Stories</a>
+              <a href="#members">Members</a>
+              <a href="#community">Community</a>
+              <a href="mailto:hello@aadaabarzlucknow.com">Contact</a>
+            </nav>
+          </footer>
+        </section>
+
+        <DetailOverlay
+          panel={panel}
+          event={selectedEvent}
+          onClose={closePanel}
+        />
+      </main>
     </MotionConfig>
   );
 }
