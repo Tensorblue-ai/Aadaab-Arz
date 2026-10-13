@@ -1,7 +1,8 @@
+import { sitePath } from '@/lib/site-path';
 import type { AnchorHTMLAttributes } from 'react';
 
 function Link({ href, ...props }: AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
-  return <a href={href} {...props} />;
+  return <a href={sitePath(href)} {...props} />;
 }
 
 export const MEMBERS = [
@@ -47,18 +48,18 @@ const MEMBER_FOCUS: Record<string, [string, string][]> = {
 function MembersHeader() {
   return (
     <header className="members-header">
-      <a className="members-brand" href="/">
-        <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
+      <a className="members-brand" href={sitePath('/')}>
+        <img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
         Aadaab Arz Lucknow
       </a>
       <nav aria-label="Members page navigation">
-        <a href="/#heritage">Explore</a>
-        <a href="/#events">Events</a>
-        <a href="/#stories">Stories</a>
-        <a className="is-active" href="/#members">Members</a>
-        <a href="/#community">Community</a>
+        <a href={sitePath('/#heritage')}>Explore</a>
+        <a href={sitePath('/#events')}>Events</a>
+        <a href={sitePath('/#stories')}>Stories</a>
+        <a className="is-active" href={sitePath('/#members')}>Members</a>
+        <a href={sitePath('/#community')}>Community</a>
       </nav>
-      <a className="members-home-link" href="/">Back to Lucknow <span aria-hidden="true">→</span></a>
+      <a className="members-home-link" href={sitePath('/')}>Back to Lucknow <span aria-hidden="true">→</span></a>
     </header>
   );
 }
@@ -80,13 +81,13 @@ export function MembersPage() {
           {MEMBERS.map((member, index) => (
             <article className="member-card" key={member.slug}>
               <div className="member-portrait-placeholder">
-                {Boolean(member.image) ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
+                {Boolean(member.image) ? <img src={sitePath(member.image)} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
               </div>
               <div className="member-card__copy">
                 <p className="members-eyebrow">0{index + 1} · {member.role}</p>
                 <h2>{member.name}</h2>
                 <p>{member.role}</p>
-                <a href={`/members/${member.slug}`} target="_top">View profile <span aria-hidden="true">↗</span></a>
+                <a href={sitePath(`/members/${member.slug}`)} target="_top">View profile <span aria-hidden="true">↗</span></a>
               </div>
             </article>
           ))}
@@ -100,7 +101,7 @@ export function MembersPage() {
 export function MemberProfilePage({ slug }: { slug: string }) {
   const member = MEMBERS.find((item) => item.slug === slug);
   if (!member) {
-    return <div className="members-shell"><MembersHeader /><main className="member-not-found"><p className="members-eyebrow">Member profile</p><h1>Profile not found.</h1><Link href="/#members">View all members →</Link></main></div>;
+    return <div className="members-shell"><MembersHeader /><main className="member-not-found"><p className="members-eyebrow">Member profile</p><h1>Profile not found.</h1><Link href={sitePath('/#members')}>View all members →</Link></main></div>;
   }
 
   return (
@@ -115,7 +116,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
 
         <section className="member-profile__about">
           <div className="member-portrait-placeholder member-portrait-placeholder--large">
-            {Boolean(member.image) ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
+            {Boolean(member.image) ? <img src={sitePath(member.image)} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
           </div>
           <div className="member-profile__bio">
             <p className="member-profile__role">{member.role}</p>
@@ -131,8 +132,8 @@ export function MemberProfilePage({ slug }: { slug: string }) {
         </section>
 
         <nav className="member-profile__nav" aria-label="Member profiles">
-          <Link href="/#members">← All members</Link>
-          <Link href="/#community">Join the community →</Link>
+          <Link href={sitePath('/#members')}>← All members</Link>
+          <Link href={sitePath('/#community')}>Join the community →</Link>
         </nav>
         <footer className="member-profile__ribbon"><span>People</span><span>Heritage</span><span>Creativity</span><span>Community</span><strong>Lucknow lives on</strong></footer>
       </main>

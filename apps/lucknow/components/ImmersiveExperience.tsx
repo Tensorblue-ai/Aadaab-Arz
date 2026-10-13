@@ -1,5 +1,7 @@
 'use client';
 
+import { sitePath } from '@/lib/site-path';
+
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -230,7 +232,7 @@ function SceneBackground({
       aria-hidden="true"
     >
       <Image
-        src={src}
+        src={sitePath(src)}
         alt=""
         fill
         sizes="100vw"
@@ -283,7 +285,7 @@ function EventCard({
       transition={{ duration: 0.85, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="event-card__image">
-        <img src={event.image} alt="" />
+        <img src={sitePath(event.image)} alt="" />
         <span className="date-badge"><small>{event.month}</small>{event.day}</span>
       </div>
       <div className="event-card__copy">
@@ -291,7 +293,7 @@ function EventCard({
         <h3>{event.title}</h3>
         <p><span aria-hidden="true">⌖</span>{event.location}</p>
         <p><span aria-hidden="true">◷</span>{event.time}</p>
-        <a href={`/events/${event.slug}`}>
+        <a href={sitePath(`/events/${event.slug}`)}>
           View gathering <span aria-hidden="true">↗</span>
         </a>
       </div>
@@ -447,7 +449,7 @@ function DetailOverlay({ panel, event, onClose }: { panel: PanelKey | null; even
             {event ? (
               <>
                 <div className="detail-panel__image">
-                  <img src={event.image} alt="" />
+                  <img src={sitePath(event.image)} alt="" />
                 </div>
                 <div className="detail-panel__copy">
                   <p className="scene-eyebrow"><span />{event.day} {event.month}</p>
@@ -467,7 +469,7 @@ function DetailOverlay({ panel, event, onClose }: { panel: PanelKey | null; even
             ) : panel ? (
               <>
                 <div className="detail-panel__image">
-                  <Image src={DETAILS[panel].image} alt={DETAILS[panel].imageAlt} fill sizes="(max-width: 760px) 100vw, 48vw" />
+                  <Image src={sitePath(DETAILS[panel].image)} alt={DETAILS[panel].imageAlt} fill sizes="(max-width: 760px) 100vw, 48vw" />
                 </div>
                 <div className="detail-panel__copy">
                   <p className="scene-eyebrow"><span />{DETAILS[panel].kicker}</p>
@@ -507,7 +509,7 @@ function Header({
     <>
       <header className={`site-header ${dark ? 'site-header--dark' : ''}`}>
         <a className="brand" href="#salaam" aria-label="Aadaab Arz Lucknow home">
-          <img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />
+          <img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
           <span>AADAAB ARZ LUCKNOW</span>
         </a>
         <nav className="main-nav" aria-label="Primary navigation">
@@ -806,7 +808,7 @@ export default function ImmersiveExperience() {
           <div className="hero-visual" aria-hidden="true">
             <div className="sun-haze" />
             <Image
-              src="/images/hero-architecture.webp"
+              src={sitePath('/images/hero-architecture.webp')}
               alt=""
               fill
               priority
@@ -834,7 +836,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="heritage-title"
         >
           <SceneBackground
-            src="/images/heritage-arch.webp"
+            src={sitePath('/images/heritage-arch.webp')}
             active={activeScene === 1}
             position="center"
           />
@@ -875,7 +877,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="events-title"
         >
           <SceneBackground
-            src="/images/heritage-arch.webp"
+            src={sitePath('/images/heritage-arch.webp')}
             active={activeScene === 2}
             position="center"
             className="events-background"
@@ -914,7 +916,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="stories-title"
         >
           <SceneBackground
-            src="/images/stories/rumi-gateway.webp"
+            src={sitePath('/images/stories/rumi-gateway.webp')}
             active={activeScene === 3}
             position="72% center"
             className="stories-background"
@@ -965,7 +967,7 @@ export default function ImmersiveExperience() {
         >
           <div className="craft-image-wrap" aria-hidden="true">
             <Image
-              src="/images/stories/craft-artisan.webp"
+              src={sitePath('/images/stories/craft-artisan.webp')}
               alt=""
               fill
               sizes="(max-width: 800px) 100vw, 58vw"
@@ -1027,7 +1029,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="community-title"
         >
           <SceneBackground
-            src="/images/community/archive-collage.webp"
+            src={sitePath('/images/community/archive-collage.webp')}
             active={activeScene === 5}
             position="72% center"
             className="community-background"
@@ -1095,7 +1097,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="members-title"
         >
           <SceneBackground
-            src="/images/heritage-arch.webp"
+            src={sitePath('/images/heritage-arch.webp')}
             active={activeScene === 6}
             position="center"
             className="home-members-background"
@@ -1122,7 +1124,7 @@ export default function ImmersiveExperience() {
                 <article className="home-member-card" key={member.slug}>
                   <div className="home-member-portrait">
                     {Boolean(member.image) ? (
-                      <img src={member.image} alt={member.name} />
+                      <img src={sitePath(member.image)} alt={member.name} />
                     ) : (
                       <>
                         <span>{member.initials}</span>
@@ -1135,7 +1137,7 @@ export default function ImmersiveExperience() {
                       0{index + 1} · {member.role}
                     </p>
                     <h3>{member.name}</h3>
-                    <a href={`/members/${member.slug}`} target="_top">
+                    <a href={sitePath(`/members/${member.slug}`)} target="_top">
                       View profile <span aria-hidden="true">↗</span>
                     </a>
                   </div>
@@ -1152,7 +1154,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="archive-title"
         >
           <SceneBackground
-            src="/images/community/archive-collage.webp"
+            src={sitePath('/images/community/archive-collage.webp')}
             active={activeScene === 7}
             position="center"
           />
@@ -1195,7 +1197,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="guidelines-title"
         >
           <SceneBackground
-            src="/images/community/closing-atmosphere.webp"
+            src={sitePath('/images/community/closing-atmosphere.webp')}
             active={activeScene === 8}
             position="center"
           />
@@ -1237,7 +1239,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="join-title"
         >
           <SceneBackground
-            src="/images/community/closing-atmosphere.webp"
+            src={sitePath('/images/community/closing-atmosphere.webp')}
             active={activeScene === 9}
             position="center"
           />
@@ -1268,7 +1270,7 @@ export default function ImmersiveExperience() {
           aria-labelledby="invitation-title"
         >
           <SceneBackground
-            src="/images/community/closing-atmosphere.webp"
+            src={sitePath('/images/community/closing-atmosphere.webp')}
             active={activeScene === 10}
             position="center"
             className="invitation-background"

@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Baroka';
-  src: url('/fonts/baroka.woff2') format('woff2');
+  src: url('../public/fonts/baroka.woff2') format('woff2');
   font-display: swap;
   font-style: normal;
   font-weight: 400;
@@ -2152,7 +2152,7 @@ a { -webkit-tap-highlight-color: transparent; }
 .members-header nav a { padding-block: .45rem; border-bottom: 1px solid transparent; }
 .members-header nav a:hover,.members-header nav .is-active { border-color: var(--gold); }
 .members-home-link { justify-self: end; padding: .8rem 1.15rem; border: 1px solid var(--gold); border-radius: 999px; color: var(--gold-light); font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.members-hero { min-height: 35rem; display: grid; grid-template-columns: minmax(0,1.4fr) minmax(18rem,.6fr); align-items: end; gap: clamp(3rem,8vw,9rem); padding: clamp(7rem,11vw,10rem) 5.5vw 4rem; background: linear-gradient(90deg,rgb(52 45 32 / 96%) 0%,rgb(52 45 32 / 75%) 52%,rgb(52 45 32 / 38%)),url('/images/heritage-arch.webp') center 43%/cover; }
+.members-hero { min-height: 35rem; display: grid; grid-template-columns: minmax(0,1.4fr) minmax(18rem,.6fr); align-items: end; gap: clamp(3rem,8vw,9rem); padding: clamp(7rem,11vw,10rem) 5.5vw 4rem; background: linear-gradient(90deg,rgb(52 45 32 / 96%) 0%,rgb(52 45 32 / 75%) 52%,rgb(52 45 32 / 38%)),url('../public/images/heritage-arch.webp') center 43%/cover; }
 .members-eyebrow { margin: 0 0 1rem; color: var(--copper); font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
 .members-hero h1,.member-profile h1 { margin: 0; font-family: var(--font-display),serif; font-size: clamp(4.5rem,8vw,8.6rem); font-weight: 500; line-height: .78; letter-spacing: -.06em; }
 .members-hero h1 em { color: var(--gold-light); font-weight: 400; }

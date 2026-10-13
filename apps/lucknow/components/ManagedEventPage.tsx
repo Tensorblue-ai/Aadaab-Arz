@@ -1,5 +1,7 @@
 'use client';
 
+import { sitePath } from '@/lib/site-path';
+
 import { useEffect, useState } from 'react';
 
 const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? '';
@@ -35,10 +37,10 @@ function EventContentBlock({ block }: { block: ContentBlock }) {
     return <Heading className="event-content-heading">{block.text}</Heading>;
   }
   if (block.type === 'text') return <div className="event-content-text">{block.text?.split(/\n+/).filter(Boolean).map((text) => <p key={text}>{text}</p>)}</div>;
-  if (block.type === 'image') return <figure className="event-content-image"><img src={block.url} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
+  if (block.type === 'image') return <figure className="event-content-image"><img src={sitePath(block.url)} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
   if (block.type === 'video') {
     const embed = videoEmbedUrl(block.url);
-    return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : /\.(mp4|webm|ogg)(?:[?#]|$)/i.test(block.url || '') ? <video className="event-content-video" src={block.url} controls preload="metadata" /> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
+    return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : /\.(mp4|webm|ogg)(?:[?#]|$)/i.test(block.url || '') ? <video className="event-content-video" src={sitePath(block.url)} controls preload="metadata" /> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
   }
   if (block.type === 'quote') return <blockquote className="event-content-quote"><p>{block.text}</p>{block.attribution && <cite>— {block.attribution}</cite>}</blockquote>;
   if (block.type === 'callout') return <aside className="event-content-callout"><h3>{block.title}</h3><p>{block.text}</p></aside>;
@@ -58,27 +60,27 @@ export default function ManagedEventPage() {
       .catch(() => setMissing(true));
   }, []);
 
-  if (missing) return <main className="managed-event-state"><a href="/#events">← Back to events</a><h1>Event not found.</h1></main>;
+  if (missing) return <main className="managed-event-state"><a href={sitePath('/#events')}>← Back to events</a><h1>Event not found.</h1></main>;
   if (!event) return <main className="managed-event-state"><p>Loading event…</p></main>;
 
   const paragraphs = (event.fullDescription || event.description).split(/\n+/).filter(Boolean);
   return (
     <div className="managed-event-page">
       <header className="managed-event-header">
-        <a className="managed-event-brand" href="/"><img className="brand-logo" src="/images/aadaab-arz-logo.png" alt="" />Aadaab Arz Lucknow</a>
+        <a className="managed-event-brand" href={sitePath('/')}><img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />Aadaab Arz Lucknow</a>
         <nav aria-label="Event page navigation">
-          <a href="/#heritage">Explore</a>
-          <a href="/#events">Events</a>
-          <a href="/#stories">Stories</a>
-          <a href="/#community">Community</a>
-          <a href="/#members">Members</a>
-          <a href="/#contact">Contact</a>
+          <a href={sitePath('/#heritage')}>Explore</a>
+          <a href={sitePath('/#events')}>Events</a>
+          <a href={sitePath('/#stories')}>Stories</a>
+          <a href={sitePath('/#community')}>Community</a>
+          <a href={sitePath('/#members')}>Members</a>
+          <a href={sitePath('/#contact')}>Contact</a>
         </nav>
-        <a className="managed-event-back" href="/#events">All gatherings</a>
+        <a className="managed-event-back" href={sitePath('/#events')}>All gatherings</a>
       </header>
       <main>
         <section className="managed-event-hero">
-          <img src={event.imageUrl} alt={event.title} />
+          <img src={sitePath(event.imageUrl)} alt={event.title} />
           <div>
             <p className="managed-event-eyebrow">Aadaab Arz · Gathering</p>
             <h1>{event.title}</h1>
@@ -97,7 +99,7 @@ export default function ManagedEventPage() {
           <aside className="managed-event-payment">
             <p className="managed-event-eyebrow">Registration payment</p>
             <h2>Pay by UPI</h2>
-            {event.qrImageUrl ? <img src={event.qrImageUrl} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}
+            {event.qrImageUrl ? <img src={sitePath(event.qrImageUrl)} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}
             <p><strong>Fee</strong><span>{event.paymentAmount || 'To be announced'}</span></p>
             <p><strong>UPI ID</strong><span>{event.upiId || 'Coming soon'}</span></p>
           </aside>
@@ -110,10 +112,10 @@ export default function ManagedEventPage() {
         {event.gallery.length > 0 && <section className="managed-event-gallery">
           <p className="managed-event-eyebrow">Event gallery</p>
           <h2>A glimpse of the experience.</h2>
-          <div>{event.gallery.map((image, index) => <img key={image} src={image} alt={`${event.title} gallery ${index + 1}`} />)}</div>
+          <div>{event.gallery.map((image, index) => <img key={image} src={sitePath(image)} alt={`${event.title} gallery ${index + 1}`} />)}</div>
         </section>}
       </main>
-      <footer className="managed-event-footer"><img className="footer-logo" src="/images/aadaab-arz-logo.png" alt="" /><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
+      <footer className="managed-event-footer"><img className="footer-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" /><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
     </div>
   );
 }
