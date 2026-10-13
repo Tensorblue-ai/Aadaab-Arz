@@ -64,7 +64,8 @@ function render() {
   events.forEach((item) => {
     const row = document.createElement('article');
     row.className = 'event-row';
-    row.innerHTML = `<img src="${item.imageUrl}" alt=""><div><span class="badge ${item.published ? '' : 'draft'}">${item.published ? item.site : 'Draft'}</span><h3></h3><p class="meta"></p><p></p></div><div class="row-actions"><button class="edit">Edit</button><button class="delete">Delete</button></div>`;
+    row.innerHTML = `<img alt=""><div><span class="badge ${item.published ? '' : 'draft'}">${item.published ? item.site : 'Draft'}</span><h3></h3><p class="meta"></p><p></p></div><div class="row-actions"><button class="edit">Edit</button><button class="delete">Delete</button></div>`;
+    row.querySelector('img').src = item.imageUrl;
     row.querySelector('h3').textContent = item.title;
     row.querySelector('.meta').textContent = `${item.dateLabel} · ${item.time}`;
     row.querySelector('div>p:last-child').textContent = item.place;
@@ -116,18 +117,6 @@ function textArea(value, placeholder, onInput, rows = 4) {
   area.rows = rows;
   area.addEventListener('input', () => onInput(area.value));
   return area;
-}
-
-async function uploadBlockImage(block, file, status) {
-  status.textContent = 'Uploading…';
-  const data = new FormData();
-  data.append('file', file);
-  try {
-    const result = await request('/admin/api/media', { method: 'POST', body: data });
-    block.url = result.url;
-    block.storedUrl = result.url;
-    renderContentBlocks();
-  } catch (error) { status.textContent = error.message; }
 }
 
 function renderContentBlocks() {
@@ -192,17 +181,12 @@ function renderContentBlocks() {
         preview.alt = '';
         body.append(preview);
       }
-      const uploadRow = document.createElement('div');
-      uploadRow.className = 'content-block__upload';
-      const file = document.createElement('input');
-      file.type = 'file';
-      file.accept = 'image/jpeg,image/png,image/webp,image/gif';
-      const status = document.createElement('span');
-      status.className = 'upload-status';
-      status.textContent = currentUrl ? 'Image uploaded' : 'Choose an image';
-      file.addEventListener('change', () => file.files?.[0] && uploadBlockImage(block, file.files[0], status));
-      uploadRow.append(file, status);
-      body.append(uploadRow, controlLabel('Caption', textInput(block.caption, 'Optional image caption', (value) => update('caption', value))));
+      body.append(controlLabel('Image URL', textInput(currentUrl, 'https://example.com/image.jpg', (value) => {
+        block.storedUrl = '';
+        update('url', value);
+        const preview = body.querySelector('img');
+        if (preview) preview.src = value;
+      })), controlLabel('Caption', textInput(block.caption, 'Optional image caption', (value) => update('caption', value))));
     } else if (block.type === 'video') {
       body.append(controlLabel('Video URL', textInput(block.url, 'YouTube, Vimeo or direct video link', (value) => update('url', value), 'url')));
     } else if (block.type === 'quote') {
@@ -254,17 +238,16 @@ function renderEventMedia(item) {
   renderAssetPreview(galleryPreview, item?.gallery || [], item ? 'Current gallery image' : '');
 }
 
-function bindFilePreview(name, container, multiple = false) {
+function bindLinkPreview(name, container, multiple = false) {
   const input = eventForm?.elements[name];
-  input?.addEventListener('change', () => {
-    const files = [...(input.files || [])];
-    renderAssetPreview(container, (multiple ? files : files.slice(0, 1)).map((file) => URL.createObjectURL(file)), 'New selection');
+  input?.addEventListener('input', () => {
+    renderAssetPreview(container, multiple ? input.value.split('\n').map((url) => url.trim()) : input.value, 'Preview');
   });
 }
 
-bindFilePreview('image', coverPreview);
-bindFilePreview('qrImage', qrPreview);
-bindFilePreview('gallery', galleryPreview, true);
+bindLinkPreview('imageUrl', coverPreview);
+bindLinkPreview('qrImageUrl', qrPreview);
+bindLinkPreview('gallery', galleryPreview, true);
 
 function editEvent(item) {
   if (!eventForm) {
@@ -285,6 +268,10 @@ function editEvent(item) {
   form.registrationUrl.value = item.registrationUrl || '';
   form.upiId.value = item.upiId || '';
   form.paymentAmount.value = item.paymentAmount || '';
+  form.slug.value = item.slug || '';
+  form.imageUrl.value = item.imageUrl || '';
+  form.qrImageUrl.value = item.qrImageUrl || '';
+  form.gallery.value = (item.gallery || []).join('\n');
   form.removeQr.checked = false;
   form.published.checked = item.published;
   renderEventMedia(item);
@@ -328,11 +315,13 @@ eventForm?.addEventListener('submit', async (event) => {
   event.preventDefault();
   formMessage.textContent = 'Saving…';
   syncContentBlocks();
-  const data = new FormData(eventForm);
-  data.set('published', String(eventForm.elements.published.checked));
-  const id = data.get('id');
+  const data = Object.fromEntries(new FormData(eventForm));
+  data.published = eventForm.elements.published.checked;
+  data.removeQr = eventForm.elements.removeQr.checked;
+  data.gallery = data.gallery.split('\n').map((url) => url.trim()).filter(Boolean);
+  const id = data.id;
   try {
-    await request(id ? `/admin/api/events/${id}` : '/admin/api/events', { method: id ? 'PUT' : 'POST', body: data });
+    await request(id ? `/admin/api/events/${id}` : '/admin/api/events', { method: id ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
     window.location.href = '/admin/current-events';
   } catch (error) { formMessage.textContent = error.message; }
 });

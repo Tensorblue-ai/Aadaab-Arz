@@ -2,9 +2,9 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
-const MAIN_SITE = "https://supplier-reporting-scott-violations.trycloudflare.com";
-export const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? MAIN_SITE;
-type ContentEvent = { id?: number; slug: string; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
+const MAIN_SITE = process.env.NEXT_PUBLIC_MAIN_SITE_URL ?? "https://supplier-reporting-scott-violations.trycloudflare.com";
+export const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? (process.env.NEXT_PUBLIC_MAIN_SITE_URL ? "" : MAIN_SITE);
+type ContentEvent = { id?: string | number; slug: string; date: string; title: string; place: string; time: string; image: string; href: string; description?: string };
 const DEFAULT_EVENTS: ContentEvent[] = [
   { slug: "heritage-walk-at-bara-imambara", date: "22 Jun", title: "Heritage Walk at Bara Imambara", place: "Bara Imambara, Lucknow", time: "7:00 AM – 10:30 AM", image: "/images/events/heritage-walk-v2.png", href: "/events/heritage-walk-at-bara-imambara" },
   { slug: "the-music-evening", date: "06 Jul", title: "The Music Evening", place: "Rumi Darwaza Courtyard", time: "6:30 PM – 9:00 PM", image: "/images/events/music-evening-v2.png", href: "/events/the-music-evening" },
@@ -191,7 +191,7 @@ function EventCards({ onePage = false }: { onePage?: boolean }) {
     let active = true;
     fetch(`${CONTENT_API_BASE}/api/public/events?site=foreign`, { cache: "no-store" })
       .then((response) => response.ok ? response.json() : Promise.reject())
-      .then((items: Array<{ id: number; slug: string; dateLabel: string; title: string; place: string; time: string; imageUrl: string; description: string }>) => {
+      .then((items) => {
         if (!active || !Array.isArray(items)) return;
         setEvents(items.map((item) => ({ id: item.id, slug: item.slug, date: item.dateLabel, title: item.title, place: item.place, time: item.time, image: item.imageUrl, description: item.description, href: `/events/${item.slug}` })));
       })
@@ -207,7 +207,7 @@ function EventCards({ onePage = false }: { onePage?: boolean }) {
   })}</div>;
 }
 
-function MemberPortrait({ member, large = false }: { member: typeof FOREIGN_MEMBERS[number]; large?: boolean }) {
+function MemberPortrait({ member, large = false }: { member: { image?: string; name: string; initials: string }; large?: boolean }) {
   return <div className={`foreign-member-portrait${large ? " foreign-member-portrait--large" : ""}`}>{member.image ? <img src={member.image} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}</div>;
 }
 

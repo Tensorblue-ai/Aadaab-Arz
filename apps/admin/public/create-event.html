@@ -14,9 +14,9 @@
         <div class="admin-header-actions"><a href="/admin/current-events">Current events</a><button id="logout-button" class="secondary">Sign out</button></div>
       </header>
       <div class="admin-page">
-        <form id="event-form" class="editor" enctype="multipart/form-data">
+        <form id="event-form" class="editor">
           <div class="editor-heading"><div><p class="eyebrow">Publish</p><h2 id="form-title">Add an event</h2></div><a id="cancel-edit" class="text-button" href="/admin/current-events" hidden>Cancel edit</a></div>
-          <input type="hidden" name="id" />
+          <input type="hidden" name="id" /><input type="hidden" name="slug" />
           <div class="form-grid">
             <div class="wide form-section-heading"><span>01</span><div><p class="eyebrow">Visibility</p><h3>Event basics</h3></div></div>
             <label>Show on<select name="site" required><option value="both">Both websites</option><option value="lucknow">Lucknow only</option><option value="foreign">Foreign only</option></select></label>
@@ -43,10 +43,10 @@
             <label>UPI ID<input name="upiId" placeholder="name@bank" /></label>
             <label>Payment amount / fee<input name="paymentAmount" placeholder="₹500 per person" /></label>
             <div class="wide form-section-heading"><span>05</span><div><p class="eyebrow">Visuals</p><h3>Event media</h3></div></div>
-            <label class="wide upload">Event cover photograph<input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Used on the card and page hero · maximum 8 MB</small><div id="cover-preview" class="asset-preview" hidden></div></label>
-            <label class="wide upload">UPI payment QR<input name="qrImage" type="file" accept="image/jpeg,image/png,image/webp,image/gif" /><small>Optional · uploading a new QR replaces the current one</small><div id="qr-preview" class="asset-preview asset-preview--qr" hidden></div></label>
+            <label class="wide upload">Event cover image link<input name="imageUrl" placeholder="https://example.com/image.jpg" /><small>Use a publicly accessible image link for the card and page hero.</small><div id="cover-preview" class="asset-preview" hidden></div></label>
+            <label class="wide upload">UPI payment QR link<input name="qrImageUrl" placeholder="https://example.com/qr.png" /><small>Optional public image link.</small><div id="qr-preview" class="asset-preview asset-preview--qr" hidden></div></label>
             <label class="wide publish"><input name="removeQr" type="checkbox" /> Remove current payment QR</label>
-            <label class="wide upload">Event gallery<input name="gallery" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif" /><small>Up to 8 images · a new upload replaces the current gallery</small><div id="gallery-preview" class="asset-preview asset-preview--gallery" hidden></div></label>
+            <label class="wide upload">Event gallery links<textarea name="gallery" rows="4" placeholder="https://example.com/image.jpg"></textarea><small>Up to 8 public image links, one per line. Clear to remove the gallery.</small><div id="gallery-preview" class="asset-preview asset-preview--gallery" hidden></div></label>
             <label class="publish"><input name="published" type="checkbox" checked /> Published</label>
           </div>
           <p class="message" id="form-message" role="status"></p>

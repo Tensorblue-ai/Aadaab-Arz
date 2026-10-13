@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "node server.mjs",
-    "build": "node --check server.mjs"
+    "build": "node --check server.mjs && node --check migrate-events.mjs",
+    "migrate:events": "node migrate-events.mjs"
   },
   "dependencies": {
     "express": "^5.1.0",
-    "multer": "^2.0.2"
+    "mongodb": "^7.7.0"
   }
 }

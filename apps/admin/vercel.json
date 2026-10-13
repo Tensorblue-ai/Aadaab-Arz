@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "express",
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/admin/create-event",
+      "destination": "/create-event.html"
+    },
+    {
+      "source": "/admin/current-events",
+      "destination": "/current-events.html"
+    },
+    {
+      "source": "/admin/assets/:path*",
+      "destination": "/:path*"
+    }
+  ]
+}

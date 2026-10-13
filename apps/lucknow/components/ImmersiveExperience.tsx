@@ -120,7 +120,7 @@ const DETAILS: Record<Exclude<PanelKey, 'community'>, DetailPanel> = {
 };
 
 type ManagedEvent = {
-  id: number;
+  id: string | number;
   slug: string;
   day: string;
   month: string;
@@ -519,7 +519,7 @@ function Header({
           <a href="#contact" aria-current={active === 10 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
-          <a className="foreign-link" href="https://events-greater-completely-boost.trycloudflare.com">Foreign site ↗</a>
+          <a className="foreign-link" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "https://events-greater-completely-boost.trycloudflare.com"}>Foreign site ↗</a>
           <button className="sound-toggle" type="button" onClick={onSound} aria-pressed={soundOn} aria-label={soundOn ? 'Turn ambient sound off' : 'Turn ambient sound on'}>
             <span aria-hidden="true">{soundOn ? '◖))' : '◖·'}</span>
             <span>{soundOn ? 'Sound on' : 'Sound off'}</span>
@@ -546,7 +546,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <a className="mobile-menu__foreign" href="https://events-greater-completely-boost.trycloudflare.com" onClick={onMenu}>
+            <a className="mobile-menu__foreign" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "https://events-greater-completely-boost.trycloudflare.com"} onClick={onMenu}>
               <span>↗</span>Aadaab Arz Lucknow Abroad
             </a>
           </motion.nav>
@@ -606,7 +606,7 @@ export default function ImmersiveExperience() {
     let active = true;
     fetch('/api/public/events?site=lucknow', { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : Promise.reject())
-      .then((items: Array<{ id: number; slug: string; title: string; dateLabel: string; place: string; time: string; description: string; imageUrl: string }>) => {
+      .then((items) => {
         if (!active || !Array.isArray(items)) return;
         setEvents(items.map((item) => {
           const [day, ...month] = item.dateLabel.trim().split(/\s+/);
@@ -1121,7 +1121,7 @@ export default function ImmersiveExperience() {
               {MEMBERS.map((member, index) => (
                 <article className="home-member-card" key={member.slug}>
                   <div className="home-member-portrait">
-                    {member.image ? (
+                    {Boolean(member.image) ? (
                       <img src={member.image} alt={member.name} />
                     ) : (
                       <>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? 'https://supplier-reporting-scott-violations.trycloudflare.com';
+const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? '';
 
 type ContentBlock = { id: string; type: 'heading' | 'text' | 'image' | 'video' | 'quote' | 'callout' | 'list' | 'divider'; level?: 'h2' | 'h3'; title?: string; text?: string; url?: string; caption?: string; attribution?: string; items?: string[] };
 
@@ -38,7 +38,7 @@ function EventContentBlock({ block }: { block: ContentBlock }) {
   if (block.type === 'image') return <figure className="event-content-image"><img src={block.url} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
   if (block.type === 'video') {
     const embed = videoEmbedUrl(block.url);
-    return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
+    return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : /\.(mp4|webm|ogg)(?:[?#]|$)/i.test(block.url || '') ? <video className="event-content-video" src={block.url} controls preload="metadata" /> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
   }
   if (block.type === 'quote') return <blockquote className="event-content-quote"><p>{block.text}</p>{block.attribution && <cite>— {block.attribution}</cite>}</blockquote>;
   if (block.type === 'callout') return <aside className="event-content-callout"><h3>{block.title}</h3><p>{block.text}</p></aside>;
@@ -53,7 +53,7 @@ export default function ManagedEventPage() {
   useEffect(() => {
     const slug = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() ?? '');
     fetch(`${CONTENT_API_BASE}/api/public/events/${encodeURIComponent(slug)}?site=lucknow`, { cache: 'no-store' })
-      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((response) => response.ok ? response.json() as Promise<EventDetails> : Promise.reject())
       .then(setEvent)
       .catch(() => setMissing(true));
   }, []);

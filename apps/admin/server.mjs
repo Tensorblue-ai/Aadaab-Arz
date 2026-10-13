@@ -1,65 +1,26 @@
 import crypto from 'node:crypto';
-import fs from 'node:fs';
 import path from 'node:path';
-import { DatabaseSync } from 'node:sqlite';
+import { MongoClient } from 'mongodb';
 import express from 'express';
-import multer from 'multer';
+import { fileURLToPath } from 'node:url';
 
 const port = Number(process.env.PORT ?? 3400);
-const dataDir = process.env.DATA_DIR ?? '/data';
-const uploadDir = path.join(dataDir, 'uploads');
+const publicDir = fileURLToPath(new URL('./public/', import.meta.url));
 const adminUsername = process.env.ADMIN_USERNAME;
 const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH;
 const sessionSecret = process.env.SESSION_SECRET;
-const publicBaseUrl = (process.env.PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
 
 if (!adminUsername || !adminPasswordHash || !sessionSecret) {
   throw new Error('ADMIN_USERNAME, ADMIN_PASSWORD_HASH and SESSION_SECRET are required');
 }
 
-fs.mkdirSync(uploadDir, { recursive: true });
-const db = new DatabaseSync(path.join(dataDir, 'content.sqlite'));
-db.exec(`
-  CREATE TABLE IF NOT EXISTS events (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    site TEXT NOT NULL CHECK (site IN ('lucknow', 'foreign', 'both')),
-    title TEXT NOT NULL,
-    date_label TEXT NOT NULL,
-    place TEXT NOT NULL,
-    time_label TEXT NOT NULL,
-    description TEXT NOT NULL DEFAULT '',
-    slug TEXT NOT NULL DEFAULT '',
-    full_description TEXT NOT NULL DEFAULT '',
-    registration_url TEXT NOT NULL DEFAULT '',
-    upi_id TEXT NOT NULL DEFAULT '',
-    payment_amount TEXT NOT NULL DEFAULT '',
-    qr_image_url TEXT NOT NULL DEFAULT '',
-    gallery_json TEXT NOT NULL DEFAULT '[]',
-    content_json TEXT NOT NULL DEFAULT '[]',
-    image_url TEXT NOT NULL,
-    published INTEGER NOT NULL DEFAULT 1,
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-  );
-  CREATE INDEX IF NOT EXISTS idx_events_site_published_sort
-  ON events(site, published, sort_order);
-`);
-
-const eventColumns = new Set(db.prepare('PRAGMA table_info(events)').all().map((column) => column.name));
-const eventMigrations = [
-  ['slug', "TEXT NOT NULL DEFAULT ''"],
-  ['full_description', "TEXT NOT NULL DEFAULT ''"],
-  ['registration_url', "TEXT NOT NULL DEFAULT ''"],
-  ['upi_id', "TEXT NOT NULL DEFAULT ''"],
-  ['payment_amount', "TEXT NOT NULL DEFAULT ''"],
-  ['qr_image_url', "TEXT NOT NULL DEFAULT ''"],
-  ['gallery_json', "TEXT NOT NULL DEFAULT '[]'"],
-  ['content_json', "TEXT NOT NULL DEFAULT '[]'"],
-];
-eventMigrations.forEach(([name, definition]) => {
-  if (!eventColumns.has(name)) db.exec(`ALTER TABLE events ADD COLUMN ${name} ${definition}`);
-});
+if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI is required');
+const client = new MongoClient(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
+await client.connect();
+const events = client.db('aadaab_arz').collection('events');
+await events.createIndex({ slug: 1 }, { unique: true });
+await events.createIndex({ id: 1 }, { unique: true });
+await events.createIndex({ site: 1, published: 1, sort_order: 1 });
 
 function slugify(value) {
   return String(value ?? '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -109,85 +70,15 @@ function displayTime(value) {
   return `${format(start)} – ${format(end)}`;
 }
 
-const usedSlugs = new Set();
-const updateSlug = db.prepare('UPDATE events SET slug = ? WHERE id = ?');
-db.prepare('SELECT id, title, slug FROM events ORDER BY id').all().forEach((event) => {
-  let slug = slugify(event.slug || event.title) || `event-${event.id}`;
-  const base = slug;
-  let suffix = 2;
-  while (usedSlugs.has(slug)) slug = `${base}-${suffix++}`;
-  usedSlugs.add(slug);
-  if (slug !== event.slug) updateSlug.run(slug, event.id);
-});
-db.exec('CREATE UNIQUE INDEX IF NOT EXISTS idx_events_slug ON events(slug)');
-
-const eventCount = db.prepare('SELECT COUNT(*) AS count FROM events').get().count;
-if (eventCount === 0) {
-  const insert = db.prepare(`
-    INSERT INTO events
-      (site, title, date_label, place, time_label, description, slug, full_description, image_url, published, sort_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
-  `);
-  const defaults = [
-    ['both', 'Heritage Walk at Bara Imambara', '22 Jun', 'Bara Imambara, Lucknow', '7:00 AM – 10:30 AM', 'Walk through one of Awadh’s most ingenious monuments with storytellers who bring its courtyards, corridors and legends to life.', 'heritage-walk-at-bara-imambara', 'Walk through one of Awadh’s most ingenious monuments with storytellers who bring its courtyards, corridors and legends to life.', '/images/events/heritage-walk.webp', 1],
-    ['both', 'The Music Evening', '06 Jul', 'Rumi Darwaza Courtyard', '6:30 PM – 9:00 PM', 'An intimate evening of ghazal, thumri, poetry and conversation in the heart of Lucknow.', 'the-music-evening', 'An intimate evening of ghazal, thumri, poetry and conversation in the heart of Lucknow.', '/images/events/music-evening.webp', 2],
-    ['both', 'Craft & Culture Baithak', '19 Jul', 'Husainabad Heritage Centre', '4:00 PM – 7:00 PM', 'Meet the artisans keeping chikankari and zardozi alive through material, memory and making.', 'craft-culture-baithak', 'Meet the artisans keeping chikankari and zardozi alive through material, memory and making.', '/images/events/craft-baithak.webp', 3],
-  ];
-  defaults.forEach((event) => insert.run(...event));
-}
-
-const seededImages = [
-  ['heritage-walk-at-bara-imambara', '/images/events/heritage-walk.webp', '/images/events/heritage-walk-v2.png'],
-  ['the-music-evening', '/images/events/music-evening.webp', '/images/events/music-evening-v2.png'],
-  ['craft-culture-baithak', '/images/events/craft-baithak.webp', '/images/events/craft-baithak-v2.png'],
-];
-const updateSeedImage = db.prepare('UPDATE events SET image_url = ? WHERE slug = ? AND image_url = ?');
-seededImages.forEach(([slug, previous, next]) => updateSeedImage.run(next, slug, previous));
-
-const insertSeedEvent = db.prepare(`
-  INSERT OR IGNORE INTO events
-    (site, title, date_label, place, time_label, description, slug, full_description, image_url, published, sort_order)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?)
-`);
-insertSeedEvent.run(
-  'both',
-  'Dastangoi Under the Stars',
-  '2026-08-03',
-  'Residency Gardens, Lucknow',
-  '18:00|20:30',
-  'An evening of classical oral storytelling, poetry and conversation beneath the Lucknow sky.',
-  'dastangoi-under-the-stars',
-  'Gather in the Residency gardens for an intimate evening of dastangoi, where voice, memory and imagination bring old Lucknow stories to life.',
-  '/images/events/dastangoi-under-stars-v2.png',
-  4,
-);
-db.exec('PRAGMA optimize');
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (_request, file, callback) => {
-      const extension = path.extname(file.originalname).toLowerCase() || '.jpg';
-      callback(null, `${Date.now()}-${crypto.randomBytes(8).toString('hex')}${extension}`);
-    },
-  }),
-  limits: { fileSize: 8 * 1024 * 1024 },
-  fileFilter: (_request, file, callback) => {
-    callback(null, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.mimetype));
-  },
-});
-const eventUploads = upload.fields([
-  { name: 'image', maxCount: 1 },
-  { name: 'qrImage', maxCount: 1 },
-  { name: 'gallery', maxCount: 8 },
-]);
-
 const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
 app.use(express.json({ limit: '1mb' }));
-app.use('/uploads', express.static(uploadDir, { maxAge: '30d', immutable: true }));
-app.use('/admin/assets', express.static(path.join(process.cwd(), 'public')));
+app.use('/admin', (_request, response, next) => {
+  response.set('Cache-Control', 'no-store');
+  next();
+});
+app.use('/admin/assets', express.static(publicDir));
 
 function parseCookies(request) {
   return Object.fromEntries(
@@ -235,14 +126,6 @@ function verifyPassword(password) {
   return stored.length === actual.length && crypto.timingSafeEqual(Buffer.from(stored), Buffer.from(actual));
 }
 
-function publicAssetUrl(value, request) {
-  if (value?.startsWith('/uploads/')) {
-    const origin = publicBaseUrl || `${request.protocol}://${request.get('host')}`;
-    return `${origin}${value}`;
-  }
-  return value || '';
-}
-
 function parseGallery(value) {
   try {
     const gallery = JSON.parse(value || '[]');
@@ -274,24 +157,13 @@ function cleanContentBlocks(value) {
       level: block.level === 'h3' ? 'h3' : 'h2',
       title: String(block.title ?? '').trim().slice(0, 300),
       text: String(block.text ?? '').trim().slice(0, 12000),
-      url: String(block.storedUrl || block.url || '').trim().slice(0, 2000),
+      url: cleanMediaUrl(block.url ?? block.storedUrl, 'Section media'),
       caption: String(block.caption ?? '').trim().slice(0, 500),
       attribution: String(block.attribution ?? '').trim().slice(0, 300),
       items: Array.isArray(block.items) ? block.items.map((item) => String(item).trim().slice(0, 500)).filter(Boolean).slice(0, 30) : [],
     };
-    if (cleaned.url && !cleaned.url.startsWith('/uploads/') && !/^https?:\/\//i.test(cleaned.url)) cleaned.url = '';
     return [cleaned];
   });
-}
-
-function contentBlockPayload(block, request) {
-  return block.type === 'image'
-    ? { ...block, storedUrl: block.url, url: publicAssetUrl(block.url, request) }
-    : block;
-}
-
-function contentImageUrls(blocks) {
-  return blocks.filter((block) => block.type === 'image' && block.url).map((block) => block.url);
 }
 
 function eventPayload(row, request) {
@@ -312,10 +184,10 @@ function eventPayload(row, request) {
     registrationUrl: row.registration_url,
     upiId: row.upi_id,
     paymentAmount: row.payment_amount,
-    imageUrl: publicAssetUrl(row.image_url, request),
-    qrImageUrl: publicAssetUrl(row.qr_image_url, request),
-    gallery: parseGallery(row.gallery_json).map((image) => publicAssetUrl(image, request)),
-    contentBlocks: parseContentBlocks(row.content_json).map((block) => contentBlockPayload(block, request)),
+    imageUrl: row.image_url || '',
+    qrImageUrl: row.qr_image_url || '',
+    gallery: parseGallery(row.gallery_json),
+    contentBlocks: parseContentBlocks(row.content_json),
     published: Boolean(row.published),
     sortOrder: row.sort_order,
   };
@@ -344,27 +216,42 @@ function cleanEventInput(body) {
   return { site, title, dateLabel, place, time, description, slug, fullDescription, registrationUrl, upiId, paymentAmount, contentBlocks, published, sortOrder };
 }
 
-function removeUploadedImage(imageUrl) {
-  if (!imageUrl?.startsWith('/uploads/')) return;
-  const file = path.join(uploadDir, path.basename(imageUrl));
-  if (file.startsWith(uploadDir) && fs.existsSync(file)) fs.unlinkSync(file);
+function eventDocument(input, imageUrl, qrImageUrl, gallery) {
+  return {
+    site: input.site, title: input.title, date_label: input.dateLabel,
+    place: input.place, time_label: input.time, description: input.description,
+    slug: input.slug, full_description: input.fullDescription,
+    registration_url: input.registrationUrl, upi_id: input.upiId,
+    payment_amount: input.paymentAmount, image_url: imageUrl, qr_image_url: qrImageUrl,
+    gallery_json: JSON.stringify(gallery), content_json: JSON.stringify(input.contentBlocks),
+    published: input.published, sort_order: input.sortOrder, updated_at: new Date().toISOString(),
+  };
 }
 
-function uploadedUrl(request, field) {
-  return request.files?.[field]?.[0] ? `/uploads/${request.files[field][0].filename}` : '';
+function cleanMediaUrl(value, label) {
+  const url = String(value ?? '').trim();
+  if (!url) return '';
+  if (/^\/images\/[A-Za-z0-9_./-]+$/.test(url) && !url.includes('..')) return url;
+  try {
+    const parsed = new URL(url);
+    if (url.length <= 2000 && ['http:', 'https:'].includes(parsed.protocol) && !parsed.username && !parsed.password) return parsed.href;
+  } catch {}
+  throw new Error(`${label} must be an http:// or https:// link`);
 }
 
-function uploadedGallery(request) {
-  return (request.files?.gallery ?? []).map((file) => `/uploads/${file.filename}`);
+function eventMedia(body, current = {}) {
+  const gallery = body.gallery === undefined ? parseGallery(current.gallery_json) : body.gallery;
+  if (!Array.isArray(gallery) || gallery.length > 8) throw new Error('Use up to 8 gallery links');
+  return {
+    imageUrl: cleanMediaUrl(body.imageUrl ?? current.image_url, 'Cover image') || '/images/heritage-arch.webp',
+    qrImageUrl: body.removeQr === true || body.removeQr === 'true' ? '' : cleanMediaUrl(body.qrImageUrl ?? current.qr_image_url, 'Payment QR'),
+    gallery: gallery.map((url) => cleanMediaUrl(url, 'Gallery image')).filter(Boolean),
+  };
 }
 
-function removeRequestUploads(request) {
-  Object.values(request.files ?? {}).flat().forEach((file) => removeUploadedImage(`/uploads/${file.filename}`));
-}
-
-app.get('/admin', (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'admin.html')));
-app.get('/admin/create-event', requireAdminPage, (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'create-event.html')));
-app.get('/admin/current-events', requireAdminPage, (_request, response) => response.sendFile(path.join(process.cwd(), 'public', 'current-events.html')));
+app.get('/admin', (_request, response) => response.sendFile(path.join(publicDir, 'admin.html')));
+app.get('/admin/create-event', requireAdminPage, (_request, response) => response.sendFile(path.join(publicDir, 'create-event.html')));
+app.get('/admin/current-events', requireAdminPage, (_request, response) => response.sendFile(path.join(publicDir, 'current-events.html')));
 app.get('/admin/api/session', requireAdmin, (_request, response) => response.json({ authenticated: true, username: adminUsername }));
 app.post('/admin/api/login', (request, response) => {
   const usernameMatches = request.body?.username === adminUsername;
@@ -378,102 +265,67 @@ app.post('/admin/api/logout', (_request, response) => {
   response.json({ ok: true });
 });
 
-app.post('/admin/api/media', requireAdmin, upload.single('file'), (request, response) => {
-  if (!request.file) return response.status(400).json({ error: 'Choose an image to upload' });
-  response.status(201).json({ url: `/uploads/${request.file.filename}` });
-});
-
-app.get('/api/public/events', (request, response) => {
+app.get('/api/public/events', async (request, response) => {
   const site = request.query.site === 'foreign' ? 'foreign' : 'lucknow';
-  const rows = db.prepare(`
-    SELECT * FROM events
-    WHERE published = 1 AND (site = ? OR site = 'both')
-    ORDER BY sort_order ASC, id ASC
-  `).all(site);
+  const rows = await events.find({ published: 1, site: { $in: [site, 'both'] } }).sort({ sort_order: 1, created_at: 1, id: 1 }).toArray();
   response.set('Access-Control-Allow-Origin', '*');
   response.set('Cache-Control', 'no-store');
   response.json(rows.map((row) => eventPayload(row, request)));
 });
 
-app.get('/api/public/events/:slug', (request, response) => {
+app.get('/api/public/events/:slug', async (request, response) => {
   const site = request.query.site === 'foreign' ? 'foreign' : 'lucknow';
-  const row = db.prepare(`
-    SELECT * FROM events
-    WHERE slug = ? AND published = 1 AND (site = ? OR site = 'both')
-  `).get(request.params.slug, site);
+  const row = await events.findOne({ slug: request.params.slug, published: 1, site: { $in: [site, 'both'] } });
   response.set('Access-Control-Allow-Origin', '*');
   response.set('Cache-Control', 'no-store');
   if (!row) return response.status(404).json({ error: 'Event not found' });
   response.json(eventPayload(row, request));
 });
 
-app.get('/admin/api/events', requireAdmin, (request, response) => {
-  const rows = db.prepare('SELECT * FROM events ORDER BY sort_order ASC, id ASC').all();
+app.get('/admin/api/events', requireAdmin, async (request, response) => {
+  const rows = await events.find().sort({ sort_order: 1, created_at: 1, id: 1 }).toArray();
   response.json(rows.map((row) => eventPayload(row, request)));
 });
 
-app.post('/admin/api/events', requireAdmin, eventUploads, (request, response) => {
+app.post('/admin/api/events', requireAdmin, async (request, response) => {
   try {
     const input = cleanEventInput(request.body);
-    const imageUrl = uploadedUrl(request, 'image') || '/images/heritage-arch.webp';
-    const qrImageUrl = uploadedUrl(request, 'qrImage');
-    const gallery = uploadedGallery(request);
-    const result = db.prepare(`
-      INSERT INTO events (site, title, date_label, place, time_label, description, slug, full_description, registration_url, upi_id, payment_amount, image_url, qr_image_url, gallery_json, content_json, published, sort_order)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), JSON.stringify(input.contentBlocks), input.published, input.sortOrder);
-    const row = db.prepare('SELECT * FROM events WHERE id = ?').get(result.lastInsertRowid);
+    const { imageUrl, qrImageUrl, gallery } = eventMedia(request.body);
+    const row = { id: crypto.randomUUID(), ...eventDocument(input, imageUrl, qrImageUrl, gallery), created_at: new Date().toISOString() };
+    await events.insertOne(row);
     response.status(201).json(eventPayload(row, request));
   } catch (error) {
-    removeRequestUploads(request);
-    response.status(400).json({ error: String(error.message).includes('UNIQUE constraint') ? 'This page slug is already in use' : error.message });
+    response.status(400).json({ error: error.code === 11000 ? 'This page slug is already in use' : error.message });
   }
 });
 
-app.put('/admin/api/events/:id', requireAdmin, eventUploads, (request, response) => {
-  const current = db.prepare('SELECT * FROM events WHERE id = ?').get(request.params.id);
+app.put('/admin/api/events/:id', requireAdmin, async (request, response) => {
+  const current = await events.findOne({ id: request.params.id });
   if (!current) return response.status(404).json({ error: 'Event not found' });
   try {
     const input = cleanEventInput(request.body);
-    const newImageUrl = uploadedUrl(request, 'image');
-    const newQrImageUrl = uploadedUrl(request, 'qrImage');
-    const newGallery = uploadedGallery(request);
-    const currentGallery = parseGallery(current.gallery_json);
-    const currentContentBlocks = parseContentBlocks(current.content_json);
-    const imageUrl = newImageUrl || current.image_url;
-    const qrImageUrl = request.body.removeQr === 'true' ? '' : (newQrImageUrl || current.qr_image_url);
-    const gallery = newGallery.length ? newGallery : currentGallery;
-    db.prepare(`
-      UPDATE events SET site = ?, title = ?, date_label = ?, place = ?, time_label = ?, description = ?, slug = ?, full_description = ?, registration_url = ?, upi_id = ?, payment_amount = ?, image_url = ?, qr_image_url = ?, gallery_json = ?, content_json = ?, published = ?, sort_order = ?, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `).run(input.site, input.title, input.dateLabel, input.place, input.time, input.description, input.slug, input.fullDescription, input.registrationUrl, input.upiId, input.paymentAmount, imageUrl, qrImageUrl, JSON.stringify(gallery), JSON.stringify(input.contentBlocks), input.published, input.sortOrder, request.params.id);
-    if (newImageUrl) removeUploadedImage(current.image_url);
-    if (newQrImageUrl || request.body.removeQr === 'true') removeUploadedImage(current.qr_image_url);
-    if (newGallery.length) currentGallery.forEach(removeUploadedImage);
-    const nextContentImages = new Set(contentImageUrls(input.contentBlocks));
-    contentImageUrls(currentContentBlocks).filter((image) => !nextContentImages.has(image)).forEach(removeUploadedImage);
-    const row = db.prepare('SELECT * FROM events WHERE id = ?').get(request.params.id);
+    const { imageUrl, qrImageUrl, gallery } = eventMedia(request.body, current);
+    await events.updateOne({ id: request.params.id }, { $set: eventDocument(input, imageUrl, qrImageUrl, gallery) });
+    const row = await events.findOne({ id: request.params.id });
     response.json(eventPayload(row, request));
   } catch (error) {
-    removeRequestUploads(request);
-    response.status(400).json({ error: String(error.message).includes('UNIQUE constraint') ? 'This page slug is already in use' : error.message });
+    response.status(400).json({ error: error.code === 11000 ? 'This page slug is already in use' : error.message });
   }
 });
 
-app.delete('/admin/api/events/:id', requireAdmin, (request, response) => {
-  const current = db.prepare('SELECT * FROM events WHERE id = ?').get(request.params.id);
+app.delete('/admin/api/events/:id', requireAdmin, async (request, response) => {
+  const current = await events.findOne({ id: request.params.id });
   if (!current) return response.status(404).json({ error: 'Event not found' });
-  db.prepare('DELETE FROM events WHERE id = ?').run(request.params.id);
-  removeUploadedImage(current.image_url);
-  removeUploadedImage(current.qr_image_url);
-  parseGallery(current.gallery_json).forEach(removeUploadedImage);
-  contentImageUrls(parseContentBlocks(current.content_json)).forEach(removeUploadedImage);
+  await events.deleteOne({ id: request.params.id });
   response.json({ ok: true });
 });
 
 app.use((error, _request, response, _next) => {
-  if (error instanceof multer.MulterError) return response.status(400).json({ error: error.message });
   response.status(500).json({ error: 'Something went wrong' });
 });
 
-app.listen(port, '0.0.0.0', () => console.log(`Admin service listening on ${port}`));
+export default app;
+
+if (!process.env.VERCEL) {
+  app.listen(port, '0.0.0.0', () => console.log(`Admin service listening on ${port}`));
+}
