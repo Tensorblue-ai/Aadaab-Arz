@@ -49,7 +49,7 @@ function MembersHeader() {
   return (
     <header className="members-header">
       <a className="members-brand" href={sitePath('/')}>
-        <img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
+        <img loading="lazy" decoding="async" className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
         Aadaab Arz Lucknow
       </a>
       <nav aria-label="Members page navigation">
@@ -81,7 +81,7 @@ export function MembersPage() {
           {MEMBERS.map((member, index) => (
             <article className="member-card" key={member.slug}>
               <div className="member-portrait-placeholder">
-                {Boolean(member.image) ? <img src={sitePath(member.image)} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
+                {Boolean(member.image) ? <img loading="lazy" decoding="async" src={sitePath(member.image)} alt={member.name} width="640" height="800" /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
               </div>
               <div className="member-card__copy">
                 <p className="members-eyebrow">0{index + 1} · {member.role}</p>
@@ -116,7 +116,7 @@ export function MemberProfilePage({ slug }: { slug: string }) {
 
         <section className="member-profile__about">
           <div className="member-portrait-placeholder member-portrait-placeholder--large">
-            {Boolean(member.image) ? <img src={sitePath(member.image)} alt={member.name} /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
+            {Boolean(member.image) ? <img loading="lazy" decoding="async" src={sitePath(member.image)} alt={member.name} width="640" height="800" /> : <><span>{member.initials}</span><small>Portrait to follow</small></>}
           </div>
           <div className="member-profile__bio">
             <p className="member-profile__role">{member.role}</p>

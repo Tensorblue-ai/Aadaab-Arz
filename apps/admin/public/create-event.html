@@ -26,6 +26,11 @@
             <label>Event date<input name="eventDate" type="date" required /></label>
             <label>Start time<input name="startTime" type="time" required /></label>
             <label>End time<input name="endTime" type="time" required /></label>
+            <label>Time zone<input name="timeZone" placeholder="Asia/Kolkata or America/Vancouver" /></label>
+            <label class="wide">Venue address<input name="venueAddress" placeholder="Full street address, city, region and country" /></label>
+            <label>Event status<select name="eventStatus"><option value="EventScheduled">Scheduled</option><option value="EventCancelled">Cancelled</option><option value="EventPostponed">Postponed</option><option value="EventRescheduled">Rescheduled</option></select></label>
+            <label>Ticket price<input name="offerPrice" type="number" min="0" step="0.01" placeholder="0 for free events" /></label>
+            <label>Currency<input name="offerCurrency" maxlength="3" placeholder="INR or CAD" /></label>
             <label class="wide">Place<input name="place" required placeholder="Bara Imambara, Lucknow" /></label>
             <div class="wide form-section-heading"><span>03</span><div><p class="eyebrow">Story</p><h3>Card & event page</h3></div></div>
             <label class="wide">Card description<textarea name="description" rows="3" placeholder="Short summary shown on the event card"></textarea></label>

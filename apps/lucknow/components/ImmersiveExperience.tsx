@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'motion/react';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import type { EventDetails } from '@/lib/events';
 import { MEMBERS } from './MembersExperience';
 
 const AtmosphereCanvas = dynamic(() => import('./AtmosphereCanvas'), { ssr: false });
@@ -131,54 +132,8 @@ type ManagedEvent = {
   time: string;
   image: string;
   description: string;
+  isPast?: boolean;
 };
-
-const DEFAULT_EVENTS: ManagedEvent[] = [
-  {
-    id: 1,
-    slug: 'heritage-walk-at-bara-imambara',
-    day: '22',
-    month: 'Jun',
-    title: 'Heritage Walk at Bara Imambara',
-    location: 'Bara Imambara',
-    time: '7:00 — 10:30 AM',
-    image: '/images/events/heritage-walk-v2.png',
-    description: 'Walk through one of Awadh’s most ingenious monuments with storytellers who bring its courtyards, corridors and legends to life.',
-  },
-  {
-    id: 2,
-    slug: 'the-music-evening',
-    day: '06',
-    month: 'Jul',
-    title: 'The Music Evening',
-    location: 'Rumi Darwaza Courtyard',
-    time: '6:30 — 9:00 PM',
-    image: '/images/events/music-evening-v2.png',
-    description: 'An intimate evening of ghazal, thumri, poetry and conversation in the heart of Lucknow.',
-  },
-  {
-    id: 3,
-    slug: 'craft-culture-baithak',
-    day: '19',
-    month: 'Jul',
-    title: 'Craft & Culture Baithak',
-    location: 'Husainabad Heritage Centre',
-    time: '4:00 — 7:00 PM',
-    image: '/images/events/craft-baithak-v2.png',
-    description: 'Meet the artisans keeping chikankari and zardozi alive through material, memory and making.',
-  },
-  {
-    id: 4,
-    slug: 'dastangoi-under-the-stars',
-    day: '03',
-    month: 'Aug',
-    title: 'Dastangoi Under the Stars',
-    location: 'Residency Gardens',
-    time: '6:00 — 8:30 PM',
-    image: '/images/events/dastangoi-under-stars-v2.png',
-    description: 'An evening of classical oral storytelling, poetry and conversation beneath the Lucknow sky.',
-  },
-];
 
 const STORY_LINKS = [
   { key: 'story-rumi' as const, number: '01', title: 'The Arches of Rumi Darwaza' },
@@ -257,7 +212,7 @@ function SceneHeading({
   return (
     <motion.div
       className={`scene-heading scene-heading--${align}`}
-      initial={{ opacity: 0, y: 54 }}
+      initial={{ opacity: 1, y: 54 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ amount: 0.45 }}
       transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
@@ -279,17 +234,17 @@ function EventCard({
   return (
     <motion.article
       className="event-card"
-      initial={{ opacity: 0, y: 90, rotateY: -10 }}
+      initial={{ opacity: 1, y: 90, rotateY: -10 }}
       whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
       viewport={{ amount: 0.35 }}
       transition={{ duration: 0.85, delay: index * 0.12, ease: [0.16, 1, 0.3, 1] }}
     >
       <div className="event-card__image">
-        <img src={sitePath(event.image)} alt="" />
+        {event.image && <Image src={sitePath(event.image)} alt={event.title} width={1200} height={800} sizes="(max-width: 760px) 100vw, 50vw" />}
         <span className="date-badge"><small>{event.month}</small>{event.day}</span>
       </div>
       <div className="event-card__copy">
-        <p className="event-card__number">0{index + 1}</p>
+        <p className="event-card__number">{event.isPast ? 'Past event' : `0${index + 1}`}</p>
         <h3>{event.title}</h3>
         <p><span aria-hidden="true">⌖</span>{event.location}</p>
         <p><span aria-hidden="true">◷</span>{event.time}</p>
@@ -440,7 +395,7 @@ function DetailOverlay({ panel, event, onClose }: { panel: PanelKey | null; even
             role="dialog"
             aria-modal="true"
             aria-labelledby="detail-title"
-            initial={{ opacity: 0, y: 70, rotateX: -7, scale: 0.96 }}
+            initial={{ opacity: 1, y: 70, rotateX: -7, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.97 }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
@@ -449,7 +404,7 @@ function DetailOverlay({ panel, event, onClose }: { panel: PanelKey | null; even
             {event ? (
               <>
                 <div className="detail-panel__image">
-                  <img src={sitePath(event.image)} alt="" />
+                  <img loading="lazy" decoding="async" src={sitePath(event.image)} alt={event.title} width="1200" height="800" srcSet={event.image.endsWith('-v2.webp') ? `${sitePath(event.image.replace('.webp', '-640.webp'))} 640w, ${sitePath(event.image)} 1200w` : undefined} sizes="(max-width: 760px) 100vw, 50vw" />
                 </div>
                 <div className="detail-panel__copy">
                   <p className="scene-eyebrow"><span />{event.day} {event.month}</p>
@@ -509,7 +464,7 @@ function Header({
     <>
       <header className={`site-header ${dark ? 'site-header--dark' : ''}`}>
         <a className="brand" href="#salaam" aria-label="Aadaab Arz Lucknow home">
-          <img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
+          <img loading="lazy" decoding="async" className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />
           <span>AADAAB ARZ LUCKNOW</span>
         </a>
         <nav className="main-nav" aria-label="Primary navigation">
@@ -521,7 +476,7 @@ function Header({
           <a href="#contact" aria-current={active === 10 ? 'page' : undefined}>Contact</a>
         </nav>
         <div className="header-actions">
-          <a className="foreign-link" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "https://events-greater-completely-boost.trycloudflare.com"}>Foreign site ↗</a>
+          <a className="foreign-link" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "/"}>Foreign site ↗</a>
           <button className="sound-toggle" type="button" onClick={onSound} aria-pressed={soundOn} aria-label={soundOn ? 'Turn ambient sound off' : 'Turn ambient sound on'}>
             <span aria-hidden="true">{soundOn ? '◖))' : '◖·'}</span>
             <span>{soundOn ? 'Sound on' : 'Sound off'}</span>
@@ -538,7 +493,7 @@ function Header({
             id="mobile-menu"
             className="mobile-menu"
             aria-label="Mobile navigation"
-            initial={{ opacity: 0, clipPath: 'circle(0% at 92% 6%)' }}
+            initial={{ opacity: 1, clipPath: 'circle(0% at 92% 6%)' }}
             animate={{ opacity: 1, clipPath: 'circle(145% at 92% 6%)' }}
             exit={{ opacity: 0, clipPath: 'circle(0% at 92% 6%)' }}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
@@ -548,7 +503,7 @@ function Header({
                 <span>0{index + 1}</span>{scene.label}
               </a>
             ))}
-            <a className="mobile-menu__foreign" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "https://events-greater-completely-boost.trycloudflare.com"} onClick={onMenu}>
+            <a className="mobile-menu__foreign" href={process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? "/"} onClick={onMenu}>
               <span>↗</span>Aadaab Arz Lucknow Abroad
             </a>
           </motion.nav>
@@ -583,11 +538,15 @@ function ProgressRail({ active }: { active: number }) {
   );
 }
 
-export default function ImmersiveExperience() {
+export default function ImmersiveExperience({ events: publishedEvents }: { events: EventDetails[] }) {
+  const events: ManagedEvent[] = publishedEvents.map((item) => {
+    const [day, ...month] = item.dateLabel.trim().split(/\s+/);
+    return { id: item.id, slug: item.slug, day, month: month.join(' '), title: item.title, location: item.place, time: item.time, image: item.imageUrl, description: item.description, isPast: item.isPast };
+  });
+  const [showAtmosphere, setShowAtmosphere] = useState(false);
   const [activeScene, setActiveScene] = useState(0);
   const [panel, setPanel] = useState<PanelKey | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<ManagedEvent | null>(null);
-  const [events, setEvents] = useState<ManagedEvent[]>(DEFAULT_EVENTS);
   const [menuOpen, setMenuOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<AudioContext | null>(null);
@@ -597,26 +556,20 @@ export default function ImmersiveExperience() {
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 921px)');
+    const update = () => setShowAtmosphere(desktop.matches && !document.hidden);
+    update();
+    desktop.addEventListener('change', update);
+    document.addEventListener('visibilitychange', update);
+    return () => { desktop.removeEventListener('change', update); document.removeEventListener('visibilitychange', update); };
+  }, []);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 921px)');
     const closeMobileMenu = (event: MediaQueryListEvent) => {
       if (event.matches) setMenuOpen(false);
     };
     desktop.addEventListener('change', closeMobileMenu);
     return () => desktop.removeEventListener('change', closeMobileMenu);
-  }, []);
-
-  useEffect(() => {
-    let active = true;
-    fetch('/api/public/events?site=lucknow', { cache: 'no-store' })
-      .then((response) => response.ok ? response.json() : Promise.reject())
-      .then((items) => {
-        if (!active || !Array.isArray(items)) return;
-        setEvents(items.map((item) => {
-          const [day, ...month] = item.dateLabel.trim().split(/\s+/);
-          return { id: item.id, slug: item.slug, day: day || '', month: month.join(' '), title: item.title, location: item.place, time: item.time, image: item.imageUrl, description: item.description };
-        }));
-      })
-      .catch(() => undefined);
-    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -745,7 +698,7 @@ export default function ImmersiveExperience() {
         </a>
         <div className="pointer-glow" aria-hidden="true" />
         <div className="webgl-layer" aria-hidden="true">
-          {prefersReducedMotion ? null : (
+          {prefersReducedMotion || !showAtmosphere ? null : (
             <AtmosphereCanvas activeScene={activeScene} />
           )}
         </div>
@@ -843,7 +796,7 @@ export default function ImmersiveExperience() {
           <div className="heritage-shade" aria-hidden="true" />
           <motion.div
             className="heritage-copy"
-            initial={{ opacity: 0, scale: 0.84, z: -160 }}
+            initial={{ opacity: 1, scale: 0.84, z: -160 }}
             whileInView={{ opacity: 1, scale: 1, z: 0 }}
             viewport={{ amount: 0.55 }}
             transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
@@ -897,11 +850,13 @@ export default function ImmersiveExperience() {
               <p>
                 Walk, listen and make alongside the people who carry Awadh’s
                 living traditions forward.
+                {' '}<a href={sitePath('/events')}>View all events →</a>
               </p>
             </div>
             <div
               className={`events-grid${events.length > 3 ? " events-grid--expanded" : ""}`}
             >
+              {events.length === 0 && <p>No published events yet.</p>}
               {events.map((event, index) => (
                 <EventCard key={event.id} event={event} index={index} />
               ))}
@@ -928,11 +883,7 @@ export default function ImmersiveExperience() {
               title="Every arch holds an echo."
               body="Enter a city through the people who remember it—and the places that still speak."
             />
-            <button
-              className="story-feature"
-              type="button"
-              onClick={() => setPanel("story-rumi")}
-            >
+            <a className="story-feature" href={sitePath('/stories/rumi-darwaza')}>
               <span>Featured story</span>
               <strong id="stories-title">
                 The Arches of
@@ -942,18 +893,17 @@ export default function ImmersiveExperience() {
               <i>
                 Read the story <b aria-hidden="true">↗</b>
               </i>
-            </button>
+            </a>
             <div className="story-index">
               {STORY_LINKS.map((story) => (
-                <button
+                <a
                   key={story.key}
-                  type="button"
-                  onClick={() => setPanel(story.key)}
+                  href={sitePath(`/stories/${story.key === 'story-rumi' ? 'rumi-darwaza' : story.key === 'story-music' ? 'music-and-memory' : 'craft-traditions'}`)}
                 >
                   <span>{story.number}</span>
                   <strong>{story.title}</strong>
                   <i aria-hidden="true">↗</i>
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -985,7 +935,7 @@ export default function ImmersiveExperience() {
           </div>
           <motion.div
             className="craft-copy"
-            initial={{ opacity: 0, x: 70 }}
+            initial={{ opacity: 1, x: 70 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ amount: 0.45 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -1037,7 +987,7 @@ export default function ImmersiveExperience() {
           <div className="community-shade" aria-hidden="true" />
           <motion.div
             className="community-copy"
-            initial={{ opacity: 0, x: -65 }}
+            initial={{ opacity: 1, x: -65 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ amount: 0.5 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -1124,7 +1074,7 @@ export default function ImmersiveExperience() {
                 <article className="home-member-card" key={member.slug}>
                   <div className="home-member-portrait">
                     {Boolean(member.image) ? (
-                      <img src={sitePath(member.image)} alt={member.name} />
+                      <img loading="lazy" decoding="async" src={sitePath(member.image)} alt={member.name} />
                     ) : (
                       <>
                         <span>{member.initials}</span>
@@ -1278,7 +1228,7 @@ export default function ImmersiveExperience() {
           <div className="invitation-shade" aria-hidden="true" />
           <motion.div
             className="invitation-copy"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 1, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ amount: 0.5 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}

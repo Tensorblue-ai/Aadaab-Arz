@@ -76,6 +76,7 @@ app.set('trust proxy', 1);
 app.use(express.json({ limit: '1mb' }));
 app.use('/admin', (_request, response, next) => {
   response.set('Cache-Control', 'no-store');
+  response.set('X-Robots-Tag', 'noindex, nofollow');
   next();
 });
 app.use('/admin/assets', express.static(publicDir));
@@ -173,8 +174,13 @@ function eventPayload(row, request) {
     site: row.site,
     title: row.title,
     dateLabel: displayDate(row.date_label),
-    eventDate: calendarDateValue(row.date_label),
+    eventDate: /^\d{4}-\d{2}-\d{2}$/.test(row.date_label) ? row.date_label : '',
     place: row.place,
+    timeZone: row.time_zone || '',
+    venueAddress: row.venue_address || '',
+    eventStatus: row.event_status || 'EventScheduled',
+    offerPrice: row.offer_price ?? '',
+    offerCurrency: row.offer_currency || '',
     time: displayTime(row.time_label),
     startTime,
     endTime,
@@ -198,6 +204,15 @@ function cleanEventInput(body) {
   const title = String(body.title ?? '').trim();
   const dateLabel = String(body.eventDate ?? body.dateLabel ?? '').trim();
   const place = String(body.place ?? '').trim();
+  const timeZone = String(body.timeZone ?? '').trim();
+  if (timeZone) { try { new Intl.DateTimeFormat('en', { timeZone }).format(); } catch { throw new Error('A valid IANA time zone is required'); } }
+  const venueAddress = String(body.venueAddress ?? '').trim();
+  const eventStatus = ['EventScheduled', 'EventCancelled', 'EventPostponed', 'EventRescheduled'].includes(body.eventStatus) ? body.eventStatus : 'EventScheduled';
+  const offerPrice = String(body.offerPrice ?? '').trim();
+  const offerCurrency = String(body.offerCurrency ?? '').trim().toUpperCase();
+  if (offerPrice && (!Number.isFinite(Number(offerPrice)) || Number(offerPrice) < 0)) throw new Error('Ticket price must be a non-negative number');
+  if (offerCurrency && !/^[A-Z]{3}$/.test(offerCurrency)) throw new Error('Use a three-letter currency code');
+  if ((offerPrice !== '') !== Boolean(offerCurrency)) throw new Error('Ticket price and currency must be supplied together');
   const startTime = String(body.startTime ?? '').trim();
   const endTime = String(body.endTime ?? '').trim();
   const time = startTime && endTime ? `${startTime}|${endTime}` : String(body.time ?? '').trim();
@@ -213,12 +228,14 @@ function cleanEventInput(body) {
   if (!title || !dateLabel || !place || !time) throw new Error('Title, date, place and time are required');
   if (!slug) throw new Error('A valid page slug is required');
   if (registrationUrl && !/^https?:\/\//i.test(registrationUrl)) throw new Error('Registration link must start with http:// or https://');
-  return { site, title, dateLabel, place, time, description, slug, fullDescription, registrationUrl, upiId, paymentAmount, contentBlocks, published, sortOrder };
+  return { site, title, dateLabel, place, timeZone, venueAddress, eventStatus, offerPrice, offerCurrency, time, description, slug, fullDescription, registrationUrl, upiId, paymentAmount, contentBlocks, published, sortOrder };
 }
 
 function eventDocument(input, imageUrl, qrImageUrl, gallery) {
   return {
     site: input.site, title: input.title, date_label: input.dateLabel,
+    time_zone: input.timeZone, venue_address: input.venueAddress, event_status: input.eventStatus,
+    offer_price: input.offerPrice, offer_currency: input.offerCurrency,
     place: input.place, time_label: input.time, description: input.description,
     slug: input.slug, full_description: input.fullDescription,
     registration_url: input.registrationUrl, upi_id: input.upiId,

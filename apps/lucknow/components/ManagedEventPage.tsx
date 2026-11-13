@@ -1,28 +1,7 @@
-'use client';
-
+import Image from 'next/image';
 import { sitePath } from '@/lib/site-path';
 
-import { useEffect, useState } from 'react';
-
-const CONTENT_API_BASE = process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? '';
-
-type ContentBlock = { id: string; type: 'heading' | 'text' | 'image' | 'video' | 'quote' | 'callout' | 'list' | 'divider'; level?: 'h2' | 'h3'; title?: string; text?: string; url?: string; caption?: string; attribution?: string; items?: string[] };
-
-type EventDetails = {
-  title: string;
-  dateLabel: string;
-  place: string;
-  time: string;
-  description: string;
-  fullDescription: string;
-  imageUrl: string;
-  qrImageUrl: string;
-  gallery: string[];
-  registrationUrl: string;
-  upiId: string;
-  paymentAmount: string;
-  contentBlocks: ContentBlock[];
-};
+import type { ContentBlock, EventDetails } from '@/lib/events';
 
 function videoEmbedUrl(url = '') {
   const youtube = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
@@ -37,7 +16,7 @@ function EventContentBlock({ block }: { block: ContentBlock }) {
     return <Heading className="event-content-heading">{block.text}</Heading>;
   }
   if (block.type === 'text') return <div className="event-content-text">{block.text?.split(/\n+/).filter(Boolean).map((text) => <p key={text}>{text}</p>)}</div>;
-  if (block.type === 'image') return <figure className="event-content-image"><img src={sitePath(block.url)} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
+  if (block.type === 'image') return <figure className="event-content-image"><img loading="lazy" decoding="async" src={sitePath(block.url)} alt={block.caption || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
   if (block.type === 'video') {
     const embed = videoEmbedUrl(block.url);
     return embed ? <div className="event-content-video"><iframe src={embed} title="Event video" allowFullScreen /></div> : /\.(mp4|webm|ogg)(?:[?#]|$)/i.test(block.url || '') ? <video className="event-content-video" src={sitePath(block.url)} controls preload="metadata" /> : <a className="event-content-video-link" href={block.url} target="_blank" rel="noreferrer">Watch event video ↗</a>;
@@ -48,26 +27,12 @@ function EventContentBlock({ block }: { block: ContentBlock }) {
   return <hr className="event-content-divider" />;
 }
 
-export default function ManagedEventPage() {
-  const [event, setEvent] = useState<EventDetails | null>(null);
-  const [missing, setMissing] = useState(false);
-
-  useEffect(() => {
-    const slug = decodeURIComponent(window.location.pathname.split('/').filter(Boolean).pop() ?? '');
-    fetch(`${CONTENT_API_BASE}/api/public/events/${encodeURIComponent(slug)}?site=lucknow`, { cache: 'no-store' })
-      .then((response) => response.ok ? response.json() as Promise<EventDetails> : Promise.reject())
-      .then(setEvent)
-      .catch(() => setMissing(true));
-  }, []);
-
-  if (missing) return <main className="managed-event-state"><a href={sitePath('/#events')}>← Back to events</a><h1>Event not found.</h1></main>;
-  if (!event) return <main className="managed-event-state"><p>Loading event…</p></main>;
-
+export default function ManagedEventPage({ event }: { event: EventDetails }) {
   const paragraphs = (event.fullDescription || event.description).split(/\n+/).filter(Boolean);
   return (
     <div className="managed-event-page">
       <header className="managed-event-header">
-        <a className="managed-event-brand" href={sitePath('/')}><img className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />Aadaab Arz Lucknow</a>
+        <a className="managed-event-brand" href={sitePath('/')}><img loading="lazy" decoding="async" className="brand-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" />Aadaab Arz Lucknow</a>
         <nav aria-label="Event page navigation">
           <a href={sitePath('/#heritage')}>Explore</a>
           <a href={sitePath('/#events')}>Events</a>
@@ -80,7 +45,7 @@ export default function ManagedEventPage() {
       </header>
       <main>
         <section className="managed-event-hero">
-          <img src={sitePath(event.imageUrl)} alt={event.title} />
+          {event.imageUrl && <Image priority sizes="(max-width: 760px) 100vw, 60vw" width={1200} height={800} src={sitePath(event.imageUrl)} alt={event.title} />}
           <div>
             <p className="managed-event-eyebrow">Aadaab Arz · Gathering</p>
             <h1>{event.title}</h1>
@@ -99,7 +64,7 @@ export default function ManagedEventPage() {
           <aside className="managed-event-payment">
             <p className="managed-event-eyebrow">Registration payment</p>
             <h2>Pay by UPI</h2>
-            {event.qrImageUrl ? <img src={sitePath(event.qrImageUrl)} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}
+            {event.qrImageUrl ? <img loading="lazy" decoding="async" src={sitePath(event.qrImageUrl)} alt="UPI payment QR code" /> : <div className="managed-payment-placeholder">QR code<br />coming soon</div>}
             <p><strong>Fee</strong><span>{event.paymentAmount || 'To be announced'}</span></p>
             <p><strong>UPI ID</strong><span>{event.upiId || 'Coming soon'}</span></p>
           </aside>
@@ -112,10 +77,10 @@ export default function ManagedEventPage() {
         {event.gallery.length > 0 && <section className="managed-event-gallery">
           <p className="managed-event-eyebrow">Event gallery</p>
           <h2>A glimpse of the experience.</h2>
-          <div>{event.gallery.map((image, index) => <img key={image} src={sitePath(image)} alt={`${event.title} gallery ${index + 1}`} />)}</div>
+          <div>{event.gallery.map((image, index) => <img loading="lazy" decoding="async" key={image} src={sitePath(image)} alt={`${event.title} gallery ${index + 1}`} />)}</div>
         </section>}
       </main>
-      <footer className="managed-event-footer"><img className="footer-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" /><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
+      <footer className="managed-event-footer"><img loading="lazy" decoding="async" className="footer-logo" src={sitePath('/images/aadaab-arz-logo.png')} alt="" /><p>Aadaab Arz Lucknow · People · Places · Stories</p></footer>
     </div>
   );
 }

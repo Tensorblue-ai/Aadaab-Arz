@@ -4,10 +4,11 @@ const contentApiOrigin = process.env.CONTENT_API_ORIGIN?.replace(/\/$/, '');
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? (process.env.VERCEL ? '/home' : '');
 
 const nextConfig: NextConfig = {
+  images: { remotePatterns: [{ protocol: 'https', hostname: '**' }, { protocol: 'http', hostname: '**' }] },
   basePath,
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
-    NEXT_PUBLIC_FOREIGN_SITE_URL: process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? (basePath ? '/' : 'https://events-greater-completely-boost.trycloudflare.com'),
+    NEXT_PUBLIC_FOREIGN_SITE_URL: process.env.NEXT_PUBLIC_FOREIGN_SITE_URL ?? '/',
   },
   async rewrites() {
     return contentApiOrigin ? [

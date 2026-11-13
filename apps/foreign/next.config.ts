@@ -3,9 +3,10 @@ import type { NextConfig } from 'next';
 const contentApiOrigin = process.env.CONTENT_API_ORIGIN?.replace(/\/$/, '');
 const lucknowOrigin = process.env.LUCKNOW_ORIGIN?.replace(/\/$/, '');
 const singleDomain = Boolean(process.env.VERCEL || lucknowOrigin);
-const mainSite = process.env.NEXT_PUBLIC_MAIN_SITE_URL ?? (singleDomain ? '/home' : 'https://supplier-reporting-scott-violations.trycloudflare.com');
+const mainSite = process.env.NEXT_PUBLIC_MAIN_SITE_URL ?? '/home';
 
 const nextConfig: NextConfig = {
+  images: { remotePatterns: [{ protocol: 'https', hostname: '**' }, { protocol: 'http', hostname: '**' }] },
   env: {
     NEXT_PUBLIC_MAIN_SITE_URL: mainSite,
     NEXT_PUBLIC_CONTENT_API_BASE: process.env.NEXT_PUBLIC_CONTENT_API_BASE ?? (singleDomain ? '' : mainSite),

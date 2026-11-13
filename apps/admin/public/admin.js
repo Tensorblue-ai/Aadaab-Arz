@@ -263,6 +263,11 @@ function editEvent(item) {
   form.startTime.value = item.startTime || '';
   form.endTime.value = item.endTime || '';
   form.place.value = item.place;
+  form.timeZone.value = item.timeZone || '';
+  form.venueAddress.value = item.venueAddress || '';
+  form.eventStatus.value = item.eventStatus || 'EventScheduled';
+  form.offerPrice.value = item.offerPrice ?? '';
+  form.offerCurrency.value = item.offerCurrency || '';
   form.description.value = item.description;
   form.fullDescription.value = item.fullDescription || '';
   form.registrationUrl.value = item.registrationUrl || '';

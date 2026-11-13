@@ -260,3 +260,9 @@ input,select,textarea,button{max-width:100%;min-width:0}
   .community-links a{padding:2rem var(--page-gutter)}
   .footer{gap:2rem;padding-inline:var(--page-gutter)}
 }
+
+.seo-story{max-width:960px;margin:0 auto;padding:3rem 1.5rem;line-height:1.7}.seo-story h1{font-size:clamp(2.5rem,6vw,4.5rem);line-height:1.1}.seo-story h2{margin-top:2rem;font-size:2rem}.seo-story nav{margin-bottom:2rem}.seo-story a{text-decoration:underline}
+
+.seo-event-breadcrumb{padding:1rem 4vw;background:var(--paper,#faf9f5);color:var(--ink,#342d20);font-size:.85rem}.seo-event-breadcrumb a{text-decoration:underline}
+
+.community-section-heading{font-size:clamp(4rem,8vw,7.7rem);letter-spacing:-.045em;margin:.4rem 0 1.4rem}@media(max-width:900px){.community-section-heading{font-size:clamp(2.6rem,10vw,4.5rem)}}@media(max-width:600px){.community-section-heading{font-size:clamp(2.45rem,11vw,3.8rem);line-height:.96}}
